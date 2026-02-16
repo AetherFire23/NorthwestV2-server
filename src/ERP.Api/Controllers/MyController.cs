@@ -18,14 +18,4 @@ public class MyController : ControllerBase
         _logger = logger;
         _mediator = mediator;
     }
-
-    //[HttpPost("createCompany")]
-    //[ProducesResponseType<Guid>(StatusCodes.Status200OK)]
-    //public async Task<ActionResult<Guid>> CreateCompany([FromBody] CreateCompanyRequest createCompanyRequest)
-    //{
-    //    await Task.Delay(1000);
-    //    _logger.LogInformation("Create company endpoint  reached.");
-    //    var companyId = await _mediator.Send(createCompanyRequest);
-    //    return Ok(companyId);
-    //}
 }

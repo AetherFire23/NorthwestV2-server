@@ -15,6 +15,5 @@ public class UnitTest1 : ErpIntegrationTestBase
     [Fact]
     public async Task GivenAManager_SetsProductQuantity_QuantityIsSet()
     {
- 
     }
 }
