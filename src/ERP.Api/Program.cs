@@ -1,0 +1,100 @@
+using AetherFire23.Commons.Composition;
+using AetherFire23.Commons.Scenarios;
+using AetherFire23.Commons.Seeding;
+using AetherFire23.ERP.Domain;
+using ERP.Seed;
+using Microsoft.EntityFrameworkCore;
+using NorthwestV2.Application.Installation;
+using NorthwestV2.Infrastructure.Contexts;
+using NorthwestV2.Practical;
+
+namespace NortwestV2.Api;
+
+public partial class Program
+{
+    //TODO: put it inside config ?
+    public static readonly string FRONTEND_URL = "http://localhost:5173";
+
+    public static async Task Main(string[] args)
+    {
+        var builder = WebApplication.CreateBuilder(args);
+
+        // Add services to the container.
+        // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+        builder.Services.AddOpenApi();
+
+        builder.Services.AddSwaggerGen();
+        builder.Services.AddLogging();
+        builder.Services.AddEndpointsApiExplorer();
+
+        Composer composer = new Composer();
+
+        composer.InstallServices(builder.Services, builder.Configuration,
+            typeof(ApplicationInstaller).Assembly,
+            typeof(DomainInstaller).Assembly,
+            typeof(ErpContextInstaller).Assembly);
+
+        builder.Services.AddControllers();
+
+        // Seed & scenario
+
+        builder.Services.AddSeedServices(typeof(SeededCompany).Assembly);
+        builder.Services.InstallScenarioLauncher();
+
+        var app = builder.Build();
+
+        composer.InitializeServices(app.Services);
+
+        app.MapControllers();
+        app.MapSwagger();
+
+        // Configure the HTTP request pipeline.
+        if (app.Environment.IsDevelopment())
+        {
+            app.MapOpenApi();
+            app.UseSwagger();
+            app.UseSwaggerUI(a => { a.SwaggerEndpoint("/swagger/v1/swagger.json", "ERP API V1"); });
+
+            // Seed and Scenario
+
+            // Deletes database after migrating it. 
+            using (var scope = app.Services.CreateScope())
+            {
+                var s = scope.ServiceProvider.GetRequiredService<ErpContext>();
+
+                // Deletes the database, tables, schemas
+                s.Database.EnsureDeleted();
+
+                // Re-creates the schemas, tables, 
+                s.Database.Migrate();
+            }
+
+            if (args.Contains("--seed") && args.Contains("--scenario"))
+            {
+                app.Services.ExecuteSeedFromSeedName(args.ElementAt(args.IndexOf("--seed") + 1));
+                // Leave as fire-and-forget async call. 
+                app.Services.LaunchScenarioBrowser(args[args.IndexOf("--scenario") + 1]);
+            }
+            else
+            {
+                app.Services.GetRequiredService<ILogger<Program>>()
+                    .LogInformation("Launching with seeds requires scenarios");
+            }
+        }
+
+        app.UseCors(x =>
+        {
+            x.AllowAnyOrigin();
+            x.AllowAnyHeader();
+        });
+
+        app.UseHttpsRedirection();
+
+        app.Run();
+    }
+}
+
+
+// Seed :
+
+// Map each seed method to a route via reflection 
