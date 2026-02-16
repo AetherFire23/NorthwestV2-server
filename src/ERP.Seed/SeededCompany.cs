@@ -1,6 +1,5 @@
 using AetherFire23.Commons.Seeding;
 using Mediator;
-using NorthwestV2.Application.Features.CompanyFeature.Commands.CreateCompany;
 
 namespace ERP.Seed;
 
@@ -15,11 +14,6 @@ public class SeededCompany : ISeeder
 
     public async Task SetupSeeding()
     {
-        await _mediator.Send(new CreateCompanyRequest
-        {
-            AdminUserName = "fred",
-            CompanyName = "FredCo",
-            Password = "BONJOUR"
-        });
+     // TODO: some seeding 
     }
 }

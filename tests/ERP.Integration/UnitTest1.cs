@@ -15,17 +15,6 @@ public class UnitTest1 : ErpIntegrationTestBase
     [Fact]
     public async Task GivenAManager_SetsProductQuantity_QuantityIsSet()
     {
-        await Mediator.Send(new CreateCompanyRequest
-        {
-            CompanyName = "FredCo",
-            AdminUserName = "admin",
-            Password = "BONJOUR"
-        });
-
-        await Mediator.Send(new CreateProductRequest
-        {
-            BasePrice = 14,
-            ProductName = "TN760 REU",
-        });
+ 
     }
 }

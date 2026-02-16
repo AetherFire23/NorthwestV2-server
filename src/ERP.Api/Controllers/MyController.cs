@@ -1,6 +1,5 @@
 ﻿using Mediator;
 using Microsoft.AspNetCore.Mvc;
-using NorthwestV2.Application.Features.CompanyFeature.Commands.CreateCompany;
 using NorthwestV2.Practical;
 
 namespace NortwestV2.Api.Controllers;
@@ -20,13 +19,13 @@ public class MyController : ControllerBase
         _mediator = mediator;
     }
 
-    [HttpPost("createCompany")]
-    [ProducesResponseType<Guid>(StatusCodes.Status200OK)]
-    public async Task<ActionResult<Guid>> CreateCompany([FromBody] CreateCompanyRequest createCompanyRequest)
-    {
-        await Task.Delay(1000);
-        _logger.LogInformation("Create company endpoint  reached.");
-        var companyId = await _mediator.Send(createCompanyRequest);
-        return Ok(companyId);
-    }
+    //[HttpPost("createCompany")]
+    //[ProducesResponseType<Guid>(StatusCodes.Status200OK)]
+    //public async Task<ActionResult<Guid>> CreateCompany([FromBody] CreateCompanyRequest createCompanyRequest)
+    //{
+    //    await Task.Delay(1000);
+    //    _logger.LogInformation("Create company endpoint  reached.");
+    //    var companyId = await _mediator.Send(createCompanyRequest);
+    //    return Ok(companyId);
+    //}
 }

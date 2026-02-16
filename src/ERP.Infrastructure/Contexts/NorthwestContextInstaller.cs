@@ -3,4 +3,4 @@ using NorthwestV2.Practical;
 
 namespace NorthwestV2.Infrastructure.Contexts;
 
-public class ErpContextInstaller : NpgsqlInitializable<ErpContext>;
+public class NorthwestContextInstaller : NpgsqlInitializable<ErpContext>;

@@ -29,15 +29,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AetherFire23.Commons.Seedin
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AetherFire23.Commons.Scenarios", "src\commons\AetherFire23.Commons.Scenarios\AetherFire23.Commons.Scenarios.csproj", "{BE5C05D2-2EAC-4BF9-B3C0-797BEEBA3B49}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERP.Unit", "tests\ERP.Unit\ERP.Unit.csproj", "{F4A68DD1-875A-40B9-BFB7-DD82C8BEAC80}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NorthwestV2.Unit", "tests\ERP.Unit\NorthwestV2.Unit.csproj", "{F4A68DD1-875A-40B9-BFB7-DD82C8BEAC80}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERP.Seed", "src\ERP.Seed\ERP.Seed.csproj", "{D0878719-9B3F-4378-904A-E8ACE98AE56B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NorthwestV2.Seed", "src\ERP.Seed\NorthwestV2.Seed.csproj", "{D0878719-9B3F-4378-904A-E8ACE98AE56B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NorthwestV2.Practical", "src\ERP.Practical\NorthwestV2.Practical.csproj", "{36871421-6641-4E8E-AC06-6E26F8C13EC5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERP.Integration", "tests\ERP.Integration\ERP.Integration.csproj", "{F83E3184-D33F-43B2-8047-EE9E41F814DD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NorthwestV2.Integration", "tests\ERP.Integration\NorthwestV2.Integration.csproj", "{F83E3184-D33F-43B2-8047-EE9E41F814DD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERP.Scenarios", "src\ERP.Scenarios\ERP.Scenarios.csproj", "{2DA843A6-A088-4C31-AFBE-70B418FA1E4E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NorthwestV2.Scenarios", "src\ERP.Scenarios\NorthwestV2.Scenarios.csproj", "{2DA843A6-A088-4C31-AFBE-70B418FA1E4E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{5F38B932-69FC-46B1-A05C-77E351ACD064}"
 	ProjectSection(SolutionItems) = preProject

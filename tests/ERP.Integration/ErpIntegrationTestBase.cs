@@ -29,7 +29,7 @@ public class ErpIntegrationTestBase : PostgresTestContainer
         [
             typeof(DomainInstaller).Assembly,
             typeof(ErpContext).Assembly,
-            typeof(ErpContextInstaller).Assembly,
+            typeof(NorthwestContextInstaller).Assembly,
             typeof(ApplicationInstaller).Assembly,
             typeof(ErpIntegrationTestBase).Assembly,
         ];

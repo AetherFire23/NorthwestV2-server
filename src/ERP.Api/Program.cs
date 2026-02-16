@@ -32,7 +32,7 @@ public partial class Program
         composer.InstallServices(builder.Services, builder.Configuration,
             typeof(ApplicationInstaller).Assembly,
             typeof(DomainInstaller).Assembly,
-            typeof(ErpContextInstaller).Assembly);
+            typeof(NorthwestContextInstaller).Assembly);
 
         builder.Services.AddControllers();
 

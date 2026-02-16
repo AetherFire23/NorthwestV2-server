@@ -1,6 +1,5 @@
 ﻿using Mediator;
 using Microsoft.AspNetCore.Mvc;
-using NorthwestV2.Application.Features.OrdersFeatures.Commands.CreateOrder;
 using NorthwestV2.Practical;
 
 namespace NortwestV2.Api.Controllers;
@@ -20,12 +19,12 @@ public class OrdersController : ControllerBase
         _mediator = mediator;
     }
 
-    [HttpPost("create-order")]
-    [ProducesResponseType<Guid>(StatusCodes.Status200OK)]
-    public async Task<ActionResult<Guid>> CreateCompany([FromBody] CreateOrderRequest createOrderRequest)
-    {
-        _logger.LogInformation("Create company endpoint  reached.");
-        Guid companyId = await _mediator.Send(createOrderRequest);
-        return Ok(companyId);
-    }
+    //[HttpPost("create-order")]
+    //[ProducesResponseType<Guid>(StatusCodes.Status200OK)]
+    //public async Task<ActionResult<Guid>> CreateCompany([FromBody] CreateOrderRequest createOrderRequest)
+    //{
+    //    _logger.LogInformation("Create company endpoint  reached.");
+    //    Guid companyId = await _mediator.Send(createOrderRequest);
+    //    return Ok(companyId);
+    //}
 }
