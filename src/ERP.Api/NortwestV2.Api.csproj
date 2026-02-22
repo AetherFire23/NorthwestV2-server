@@ -18,8 +18,8 @@
       <ProjectReference Include="..\commons\AetherFire23.Commons.Composition\AetherFire23.Commons.Composition.csproj" />
       <ProjectReference Include="..\ERP.Application\NorthwestV2.Application.csproj" />
       <ProjectReference Include="..\ERP.Infrastructure\NorthwestV2.Infrastructure.csproj" />
-      <ProjectReference Include="..\ERP.Scenarios\NorthwestV2.Scenarios.csproj" />
-      <ProjectReference Include="..\ERP.Seed\NorthwestV2.Seed.csproj" />
+      <ProjectReference Include="..\NorthwestV2.Scenarios\NorthwestV2.Scenarios.csproj" />
+      <ProjectReference Include="..\NorthwestV2.Seed\NorthwestV2.Seed.csproj" />
     </ItemGroup>
 
 </Project>
