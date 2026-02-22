@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Xunit.Abstractions;
 
-namespace ERP.Integration;
+namespace NorthwestV2.Integration;
 
 // TODO: Put this into the Commons library 
 public class XUnitLoggerProvider : ILoggerProvider

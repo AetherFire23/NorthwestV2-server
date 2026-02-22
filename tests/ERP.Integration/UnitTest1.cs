@@ -1,6 +1,6 @@
 ﻿using Xunit.Abstractions;
 
-namespace ERP.Integration;
+namespace NorthwestV2.Integration;
 
 public class UnitTest1 : ErpIntegrationTestBase
 {

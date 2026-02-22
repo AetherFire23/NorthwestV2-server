@@ -1,5 +1,4 @@
-﻿using ERP.Integration;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using NorthwestV2.Application.UseCases.Authentication.Register;
 using Xunit.Abstractions;
 

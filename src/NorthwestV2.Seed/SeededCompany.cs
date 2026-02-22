@@ -1,7 +1,7 @@
 using AetherFire23.Commons.Seeding;
 using Mediator;
 
-namespace ERP.Seed;
+namespace NorthwestV2.Seed;
 
 public class SeededCompany : ISeeder
 {

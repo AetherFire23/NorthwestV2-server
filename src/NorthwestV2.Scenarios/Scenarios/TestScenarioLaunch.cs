@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Playwright;
 
-namespace ERP.Scenarios.Scenarios;
+namespace NorthwestV2.Scenarios.Scenarios;
 
 [Scenario("SeededCompany")]
 public class TestScenarioLaunch : ScenarioBase

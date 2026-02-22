@@ -8,8 +8,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\commons\AetherFire23.Commons.Composition\AetherFire23.Commons.Composition.csproj" />
-      <ProjectReference Include="..\ERP.Domain\NorthwestV2.Domain.csproj" />
-      <ProjectReference Include="..\ERP.Practical\NorthwestV2.Practical.csproj" />
     </ItemGroup>
 
     <ItemGroup>

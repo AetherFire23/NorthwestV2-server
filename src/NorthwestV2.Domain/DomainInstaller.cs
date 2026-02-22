@@ -9,6 +9,6 @@ public class DomainInstaller : IInstaller
 {
     public void Install(IServiceCollection serviceCollection, IConfiguration configuration)
     {
-        serviceCollection.AddScoped<ERPDomainService>();
+        serviceCollection.AddScoped<NorthwestDomainService>();
     }
 }

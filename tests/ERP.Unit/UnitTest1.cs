@@ -1,5 +1,4 @@
-﻿using AetherFire23.ERP.Domain.Entity;
-using ERP.Integration;
+﻿using NorthwestV2.Integration;
 using Xunit.Abstractions;
 
 namespace ERP.Testing.Domain;

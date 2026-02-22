@@ -1,7 +1,4 @@
-﻿using AetherFire23.ERP.Domain.Entity;
-using Microsoft.EntityFrameworkCore;
-
-namespace NorthwestV2.Practical.Repositories;
+﻿namespace NorthwestV2.Practical.Repositories;
 
 public class WarehouseRepository
 {

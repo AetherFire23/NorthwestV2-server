@@ -1,4 +1,5 @@
-﻿using AetherFire23.Commons.Testing;
+﻿using System.Reflection;
+using AetherFire23.Commons.Testing;
 using AetherFire23.ERP.Domain;
 using Mediator;
 using Microsoft.Extensions.DependencyInjection;
@@ -6,10 +7,9 @@ using Microsoft.Extensions.Logging;
 using NorthwestV2.Application.Installation;
 using NorthwestV2.Infrastructure.Contexts;
 using NorthwestV2.Practical;
-using System.Reflection;
 using Xunit.Abstractions;
 
-namespace ERP.Integration;
+namespace NorthwestV2.Integration;
 
 public class ErpIntegrationTestBase : PostgresTestContainer
 {

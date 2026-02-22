@@ -2,11 +2,11 @@ using AetherFire23.Commons.Composition;
 using AetherFire23.Commons.Scenarios;
 using AetherFire23.Commons.Seeding;
 using AetherFire23.ERP.Domain;
-using ERP.Seed;
 using Microsoft.EntityFrameworkCore;
 using NorthwestV2.Application.Installation;
 using NorthwestV2.Infrastructure.Contexts;
 using NorthwestV2.Practical;
+using NorthwestV2.Seed;
 
 namespace NortwestV2.Api;
 
