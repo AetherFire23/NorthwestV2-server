@@ -46,13 +46,11 @@ public class NorthwestIntegrationTestBase : PostgresTestContainer
             builder.SetMinimumLevel(LogLevel.Debug);
         });
 
-        // TODO: Configure a RequestContextService
+       
     }
     
+    // TODO: Configure a InScope deleagate 
     
-
-    // TODO: Conceive method that provides a Scope for a request
-
     public void Dispose()
     {
     }

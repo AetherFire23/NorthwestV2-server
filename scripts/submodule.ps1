@@ -1,2 +1,1 @@
-﻿git submodule add --force "https://github.com/AetherFire23/AetherFire23.Commons.git" "../src/commons"
-
+﻿git submodule add --force "https://github.com/AetherFire23/AetherFire23.Commons.git" "../src/commons";

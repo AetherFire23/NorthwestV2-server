@@ -16,5 +16,6 @@ public class NorthwestContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        
     }
 }
