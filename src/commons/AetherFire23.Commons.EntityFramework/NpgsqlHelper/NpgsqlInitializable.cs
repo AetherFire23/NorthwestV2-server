@@ -28,7 +28,7 @@ public abstract class NpgsqlInitializable<TDbContext> : IInitializer, IDatabaseN
     {
         using var scope = serviceProvider.CreateScope();
 
-        var db = scope.ServiceProvider.GetRequiredService<TDbContext>();
+        using var db = scope.ServiceProvider.GetRequiredService<TDbContext>();
 
         // No need to do EnsureDeleted because it will always be a clean-slate test container by default.
         // Method is virtual, override as needed. 

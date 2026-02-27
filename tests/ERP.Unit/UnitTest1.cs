@@ -3,7 +3,7 @@ using Xunit.Abstractions;
 
 namespace ERP.Testing.Domain;
 
-public class UnitTest1 : ErpIntegrationTestBase
+public class UnitTest1 : NorthwestIntegrationTestBase
 {
     public UnitTest1(ITestOutputHelper output) : base(output)
     {

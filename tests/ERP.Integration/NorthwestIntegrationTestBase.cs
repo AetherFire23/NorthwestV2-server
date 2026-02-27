@@ -11,16 +11,15 @@ using Xunit.Abstractions;
 
 namespace NorthwestV2.Integration;
 
-public class ErpIntegrationTestBase : PostgresTestContainer
+public class NorthwestIntegrationTestBase : PostgresTestContainer
 {
-    protected IMediator Mediator;
-    protected ErpContext Context;
+    protected readonly IMediator Mediator;
+    protected readonly NorthwestContext Context;
 
-    // TODO: 
-    public ErpIntegrationTestBase(ITestOutputHelper output) : base(output)
+    public NorthwestIntegrationTestBase(ITestOutputHelper output) : base(output)
     {
         Mediator = GetService<IMediator>();
-        Context = GetService<ErpContext>();
+        Context = GetService<NorthwestContext>();
     }
 
     protected override IEnumerable<Assembly> ProvideInstallerAssemblies()
@@ -28,10 +27,10 @@ public class ErpIntegrationTestBase : PostgresTestContainer
         return
         [
             typeof(DomainInstaller).Assembly,
-            typeof(ErpContext).Assembly,
+            typeof(NorthwestContext).Assembly,
             typeof(NorthwestContextInstaller).Assembly,
             typeof(ApplicationInstaller).Assembly,
-            typeof(ErpIntegrationTestBase).Assembly,
+            typeof(NorthwestIntegrationTestBase).Assembly,
         ];
     }
 
@@ -47,7 +46,12 @@ public class ErpIntegrationTestBase : PostgresTestContainer
             builder.SetMinimumLevel(LogLevel.Debug);
         });
 
+        // TODO: Configure a RequestContextService
     }
+    
+    
+
+    // TODO: Conceive method that provides a Scope for a request
 
     public void Dispose()
     {

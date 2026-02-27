@@ -2,7 +2,7 @@
 
 namespace NorthwestV2.Integration;
 
-public class UnitTest1 : ErpIntegrationTestBase
+public class UnitTest1 : NorthwestIntegrationTestBase
 {
     /// <summary>
     /// Passing the testoutput provider in the output.

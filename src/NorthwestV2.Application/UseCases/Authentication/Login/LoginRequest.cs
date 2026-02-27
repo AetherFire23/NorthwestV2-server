@@ -2,7 +2,8 @@
 
 namespace NorthwestV2.Application.UseCases.Authentication.Login;
 
-public class LoginRequest : IRequest
+public class LoginRequest : IRequest<LoginResult>
 {
-    public string Password { get; set; } = string.Empty;
+    public required string Password { get; set; }
+    public required string Username { get; set; }
 }

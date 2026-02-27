@@ -5,14 +5,15 @@ using Xunit.Abstractions;
 namespace NorthwestV2.Integration.UseCases.Authentication.Register;
 
 [TestSubject(typeof(RegisterHandler))]
-public class RegisterHandlerTest : ErpIntegrationTestBase
+public class RegisterHandlerTest : NorthwestIntegrationTestBase
 {
     public RegisterHandlerTest(ITestOutputHelper output) : base(output)
     {
+        
     }
 
     [Fact]
-    public void GivenRegisterRequest_WhenRegister_ThenUserExisters()
+    public async Task GivenRegisterRequest_WhenHandleRegister_ThenUserExists()
     {
         RegisterRequest registerRequest = new RegisterRequest()
         {
@@ -20,7 +21,7 @@ public class RegisterHandlerTest : ErpIntegrationTestBase
             Password = "Password",
         };
 
-        Mediator.Send(registerRequest);
+        await Mediator.Send(registerRequest);
 
         Assert.NotEmpty(Context.Users);
     }

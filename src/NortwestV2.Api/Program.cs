@@ -60,7 +60,7 @@ public partial class Program
             // Deletes database after migrating it. 
             using (var scope = app.Services.CreateScope())
             {
-                var s = scope.ServiceProvider.GetRequiredService<ErpContext>();
+                var s = scope.ServiceProvider.GetRequiredService<NorthwestContext>();
 
                 // Deletes the database, tables, schemas
                 s.Database.EnsureDeleted();

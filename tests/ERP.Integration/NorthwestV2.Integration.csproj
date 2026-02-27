@@ -27,7 +27,6 @@
         
     
       <ProjectReference Include="..\..\src\commons\AetherFire23.Commons.Testing\AetherFire23.Commons.Testing.csproj" />
-      <ProjectReference Include="..\..\src\ERP.Application\NorthwestV2.Application.csproj" />
       <ProjectReference Include="..\..\src\NorthwestV2.Application\NorthwestV2.Application.csproj" />
       <ProjectReference Include="..\..\src\NorthwestV2.Domain\NorthwestV2.Domain.csproj" />
       <ProjectReference Include="..\..\src\NorthwestV2.Infrastructure\NorthwestV2.Infrastructure.csproj" />

@@ -8,11 +8,11 @@ namespace NortwestV2.Api.Controllers;
 [Route("company")]
 public class MyController : ControllerBase
 {
-    private readonly ErpContext _ctx;
+    private readonly NorthwestContext _ctx;
     private readonly ILogger<MyController> _logger;
     private readonly IMediator _mediator;
 
-    public MyController(ErpContext ctx, ILogger<MyController> logger, IMediator mediator)
+    public MyController(NorthwestContext ctx, ILogger<MyController> logger, IMediator mediator)
     {
         _ctx = ctx;
         _logger = logger;

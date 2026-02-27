@@ -2,10 +2,10 @@
 
 public class WarehouseRepository
 {
-    private readonly ErpContext _erpContext;
+    private readonly NorthwestContext _northwestContext;
 
-    public WarehouseRepository(ErpContext erpContext)
+    public WarehouseRepository(NorthwestContext northwestContext)
     {
-        _erpContext = erpContext;
+        _northwestContext = northwestContext;
     }
 }

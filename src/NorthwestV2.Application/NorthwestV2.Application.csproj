@@ -4,10 +4,12 @@
         <TargetFramework>net10.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <RootNamespace>NorthwestV2.Application</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\commons\AetherFire23.Commons.Composition\AetherFire23.Commons.Composition.csproj" />
+      <ProjectReference Include="..\NorthwestV2.Practical\NorthwestV2.Practical.csproj" />
     </ItemGroup>
 
     <ItemGroup>

@@ -1,6 +1,6 @@
 ﻿using Mediator;
 
-namespace NorthwestV2.Application.Features.Commands.GameInitialization;
+namespace NorthwestV2.Application.UseCases.Commands.GameInitialization;
 
 public class InitializeGame : IRequestHandler<InitializeGameRequest>
 {

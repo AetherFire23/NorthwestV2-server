@@ -1,17 +1,18 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using NorthwestV2.Application;
 
 namespace NorthwestV2.Practical;
 
 // TODO: check if Commons can handle a generic implementation 
-public class MigrationsFactory : IDesignTimeDbContextFactory<ErpContext>
+public class MigrationsFactory : IDesignTimeDbContextFactory<NorthwestContext>
 {
-    public ErpContext CreateDbContext(string[] args)
+    public NorthwestContext CreateDbContext(string[] args)
     {
-        var options = new DbContextOptionsBuilder<ErpContext>()
+        var options = new DbContextOptionsBuilder<NorthwestContext>()
             .UseNpgsql("Host=localhost;Database=FakeDesignTime;Username=fake;Password=fake;")
             .Options;
 
-        return new ErpContext(options);
+        return new NorthwestContext(options, new RequestContextService());
     }
 }
