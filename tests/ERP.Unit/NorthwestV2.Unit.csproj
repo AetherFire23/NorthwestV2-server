@@ -26,6 +26,7 @@
 
     <ItemGroup>
       <Folder Include="Entity\" />
+      <Folder Include="UseCases\" />
     </ItemGroup>
 
 </Project>

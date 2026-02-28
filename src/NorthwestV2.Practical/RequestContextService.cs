@@ -1,4 +1,4 @@
-﻿namespace NorthwestV2.Application;
+﻿namespace NorthwestV2.Practical;
 
 public class RequestContextService
 {

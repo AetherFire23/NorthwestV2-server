@@ -13,6 +13,7 @@ namespace NorthwestV2.Integration;
 
 public class NorthwestIntegrationTestBase : PostgresTestContainer
 {
+    // TODO: Remove these two as they are not scoped. 
     protected readonly IMediator Mediator;
     protected readonly NorthwestContext Context;
 
@@ -45,13 +46,8 @@ public class NorthwestIntegrationTestBase : PostgresTestContainer
             builder.AddProvider(new XUnitLoggerProvider(Output));
             builder.SetMinimumLevel(LogLevel.Debug);
         });
+    }
 
-       
-    }
-    
     // TODO: Configure a InScope deleagate 
-    
-    public void Dispose()
-    {
-    }
+
 }

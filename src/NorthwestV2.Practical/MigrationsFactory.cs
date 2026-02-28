@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-using NorthwestV2.Application;
 
 namespace NorthwestV2.Practical;
 
@@ -13,6 +12,6 @@ public class MigrationsFactory : IDesignTimeDbContextFactory<NorthwestContext>
             .UseNpgsql("Host=localhost;Database=FakeDesignTime;Username=fake;Password=fake;")
             .Options;
 
-        return new NorthwestContext(options, new RequestContextService());
+        return new NorthwestContext(options);
     }
 }
