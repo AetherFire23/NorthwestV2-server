@@ -9,4 +9,10 @@ public static class PremadeRegisterRequests
         Password = "123",
         Username = "Fred"
     };
+
+    public static RegisterRequest Otello = new RegisterRequest()
+    {
+        Password = "123",
+        Username = nameof(Otello)
+    };
 }

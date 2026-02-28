@@ -2,7 +2,7 @@
 using Mediator;
 using NorthwestV2.Practical;
 
-namespace NorthwestV2.Application.UseCases.Lobbies.Commands;
+namespace NorthwestV2.Application.UseCases.Lobbies.Commands.CreateLobby;
 
 public class CreateLobbyHandler : IRequestHandler<CreateLobbyRequest, Guid>
 {
@@ -21,6 +21,9 @@ public class CreateLobbyHandler : IRequestHandler<CreateLobbyRequest, Guid>
         Lobby newLobby = new Lobby();
 
         _northwestContext.Lobbies.Add(newLobby);
+
+        // Make user Join his own Lobby.
+        // TODO: Use joinLobby use case 
 
         await _northwestContext.SaveChangesAsync(cancellationToken);
 

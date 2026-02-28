@@ -5,7 +5,8 @@ using NorthwestV2.Practical;
 namespace NorthwestV2.Application.UseCases.Lobbies.Commands.JoinLobby;
 
 /// <summary>
-/// Makes a user join a lobby 
+/// Makes a user join a lobby
+/// 1 lobby per user 
 /// </summary>
 public class JoinLobbyHandler : IRequestHandler<JoinLobbyRequest, Guid>
 {
@@ -27,6 +28,6 @@ public class JoinLobbyHandler : IRequestHandler<JoinLobbyRequest, Guid>
 
         await _northwestContext.SaveChangesAsync(cancellationToken);
 
-        return Guid.Empty;
+        return lobby.Id;
     }
 }
