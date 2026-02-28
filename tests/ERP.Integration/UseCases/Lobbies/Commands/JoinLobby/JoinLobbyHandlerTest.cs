@@ -12,6 +12,7 @@ public class JoinLobbyHandlerTest : NorthwestIntegrationTestBase
     }
 
     [Fact]
+    
     public void GivenLobbyOtherPlayerCanJoinLobby()
     {
         
