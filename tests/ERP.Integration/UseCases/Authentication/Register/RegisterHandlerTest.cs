@@ -9,7 +9,6 @@ public class RegisterHandlerTest : NorthwestIntegrationTestBase
 {
     public RegisterHandlerTest(ITestOutputHelper output) : base(output)
     {
-        
     }
 
     [Fact]

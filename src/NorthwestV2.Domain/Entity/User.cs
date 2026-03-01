@@ -9,4 +9,7 @@ public class User : EntityBase
 
     public Guid? LobbyId { get; set; }
     public Lobby? Lobby { get; set; }
+
+    public Guid? PlayerId { get; set; }
+    public Player? Player { get; set; }
 }
