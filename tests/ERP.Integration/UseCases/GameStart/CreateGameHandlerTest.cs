@@ -15,11 +15,11 @@ public class CreateGameHandlerTest : NorthwestIntegrationTestBase
     }
 
     [Fact]
-    public async Task METHOD()
+    public async Task GivenGamePrerequisitesMet_WhenCreated_AllPlayersExist()
     {
         CreateGameSeedData seedData = await ArrangeUntilGameCreation();
 
-        Guid gameId = await Mediator.Send(new CreateGameRequest()
+        Guid gameId = await Mediator.Send(new CreateGameRequest
         {
             UserIds = seedData.UserIds
         });
