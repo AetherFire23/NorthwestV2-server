@@ -5,15 +5,15 @@ namespace NorthwestV2.Integration.Extensions;
 
 public static class EfCoreContextExtensions
 {
-    public static async Task<T> FindOrThrow<T>(this DbContext context, Guid id) where T : EntityBase
+    public static async Task<T> FindById<T>(this DbSet<T> ctx, Guid id) where T : EntityBase
     {
-        T entity = await context.Set<T>().FindAsync(id);
-
-        if (entity is null)
-        {
-            throw new Exception($"Entity not found with id{id} of type {typeof(T)} ");
-        }
-
-        return entity;
+        T? entity = await ctx.FindAsync(id);
+        
+        return entity ?? throw new Exception($"Enttiy should not be empty {id}, {typeof(T)}");
+    }
+    
+    public static async Task Anus<T>(this DbSet<T> ctx) where T : EntityBase
+    {
+        
     }
 }

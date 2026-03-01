@@ -1,6 +1,8 @@
 ﻿using AetherFire23.ERP.Domain.Entity;
 using JetBrains.Annotations;
+using Microsoft.EntityFrameworkCore;
 using NorthwestV2.Application.UseCases.Lobbies.Commands;
+using NorthwestV2.Application.UseCases.Lobbies.Commands.CreateLobby;
 using NorthwestV2.Application.UseCases.Lobbies.Commands.JoinLobby;
 using NorthwestV2.Integration.UseCases.Authentication.Register;
 using Xunit.Abstractions;
@@ -14,39 +16,50 @@ public class JoinLobbyHandlerTest : NorthwestIntegrationTestBase
     {
     }
 
-
     [Fact]
     public async Task GivenJoiningUser_JoinsLobby_ThenIsMarkedAsJoinedInsideJoiningUser()
     {
         Guid lobbyCreatorId = await Mediator.Send(PremadeRegisterRequests.Fred);
         Guid lobbyJoinerId = await Mediator.Send(PremadeRegisterRequests.Otello);
-
         Guid lobbyId = await Mediator.Send(new CreateLobbyRequest
         {
             UserId = lobbyCreatorId,
         });
 
-        await Mediator.Send(new JoinLobbyRequest()
+        await Mediator.Send(new JoinLobbyRequest
         {
             UserId = lobbyJoinerId,
-            LobbyId = lobbyId,
+            LobbyId = lobbyId
         });
 
-        await base.Context.FindAsync(lobbyJoinerId);
-        Assert.Equal(lobbyId,);
+        User user = await base.Context.Users
+            .Include(x => x.Lobby)
+            .FirstAsync(u => u.Id == lobbyJoinerId) ?? throw new InvalidOperationException("Null");
+        Assert.Equal(lobbyId, user?.Lobby?.Id);
     }
 
 
-    // TODO: verify lobbb
+    [Fact]
+    public async Task GivenLobby_WhenUserJoins_ThenHasPlayerInIt()
+    {
+        Guid lobbyCreatorId = await Mediator.Send(PremadeRegisterRequests.Fred);
+        Guid lobbyJoinerId = await Mediator.Send(PremadeRegisterRequests.Otello);
+        Guid lobbyId = await Mediator.Send(new CreateLobbyRequest
+        {
+            UserId = lobbyCreatorId,
+        });
 
-    // private SeedInfo CreateLobby()
-    // {
-    //     return new SeedInfo
-    //     {
-    //         LobbyCreatorId = 
-    //     };
-    // }
+        await Mediator.Send(new JoinLobbyRequest
+        {
+            UserId = lobbyJoinerId,
+            LobbyId = lobbyId
+        });
 
+        Lobby lobby = await Context.Lobbies
+            .Include(l => l.Users)
+            .FirstAsync(x => x.Id == lobbyId);
+        Assert.NotEmpty(lobby.Users);
+    }
 
     private class SeedInfo
     {

@@ -1,8 +1,11 @@
-﻿using JetBrains.Annotations;
+﻿using AetherFire23.ERP.Domain.Entity;
+using JetBrains.Annotations;
+using Microsoft.EntityFrameworkCore;
 using NorthwestV2.Application.UseCases.Authentication.Login;
 using NorthwestV2.Application.UseCases.Authentication.Register;
 using NorthwestV2.Application.UseCases.Lobbies.Commands;
 using NorthwestV2.Application.UseCases.Lobbies.Commands.CreateLobby;
+using NorthwestV2.Application.UseCases.Lobbies.Commands.JoinLobby;
 using NorthwestV2.Integration.UseCases.Authentication.Login;
 using NorthwestV2.Integration.UseCases.Authentication.Register;
 using Xunit.Abstractions;
@@ -17,10 +20,9 @@ public class CreateLobbyHandlerTest : NorthwestIntegrationTestBase
     }
 
     [Fact]
-    public async Task GivenCreateLobbyRequest_WhenRequested_ThenLobbyCreated()
+    public async Task GivenUser_WhenCreateLobby_ThenLobbyIdNotNull()
     {
         Guid userId = await Mediator.Send(PremadeRegisterRequests.Fred);
-
         LoginResult loginResult = await Mediator.Send(PremadeLoginRequests.Fred);
 
         Guid lobbyId = await Mediator.Send(new CreateLobbyRequest()
@@ -29,5 +31,21 @@ public class CreateLobbyHandlerTest : NorthwestIntegrationTestBase
         });
 
         Assert.NotEqual(lobbyId, Guid.Empty);
+    }
+
+    [Fact]
+    public async Task GivenUser_WhenCreateLobby_ThenUserJoinsLobby()
+    {
+        Guid lobbyCreatorId = await Mediator.Send(PremadeRegisterRequests.Fred);
+        Guid lobbyId = await Mediator.Send(new CreateLobbyRequest
+        {
+            UserId = lobbyCreatorId,
+        });
+        
+        User user = await Context.Users
+            .Include(x=> x.Lobby)
+            .FirstAsync(u => u.Id == lobbyCreatorId);
+
+        Assert.NotNull(user.Lobby);
     }
 }

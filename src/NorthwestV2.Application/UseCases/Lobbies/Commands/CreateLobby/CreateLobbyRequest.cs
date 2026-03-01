@@ -1,7 +1,10 @@
 ﻿using Mediator;
 
-namespace NorthwestV2.Application.UseCases.Lobbies.Commands;
+namespace NorthwestV2.Application.UseCases.Lobbies.Commands.CreateLobby;
 
+/// <summary>
+///Returns a lobby Id. 
+/// </summary>
 public class CreateLobbyRequest : IRequest<Guid>
 {
     public required Guid UserId { get; set; }

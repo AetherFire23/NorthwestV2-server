@@ -19,10 +19,11 @@ public class JoinLobbyHandler : IRequestHandler<JoinLobbyRequest, Guid>
 
     public async ValueTask<Guid> Handle(JoinLobbyRequest request, CancellationToken cancellationToken)
     {
-        User user = await _northwestContext.Users.FindAsync(request.UserId) ?? throw new Exception("User not found");
+        User user = await _northwestContext.Users.FindAsync(request.UserId)
+                    ?? throw new Exception("User not found");
 
-        Lobby lobby = await _northwestContext.Lobbies.FindAsync(request.LobbyId) ??
-                      throw new Exception("Lobby not found");
+        Lobby lobby = await _northwestContext.Lobbies.FindAsync(request.LobbyId)
+                      ?? throw new Exception("Lobby not found");
 
         user.Lobby = lobby;
 
