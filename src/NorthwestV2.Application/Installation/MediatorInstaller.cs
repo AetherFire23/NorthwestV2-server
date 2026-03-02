@@ -11,6 +11,7 @@ public class MediatorInstaller : IInstaller
         serviceCollection.AddMediator(o =>
         {
             o.Assemblies = [typeof(MediatorInstaller).Assembly];
+
             //o.PipelineBehaviors = [typeof(CreateCompanyValidation)];
 
             /* VERY IMPORTANT that this is added as scoped.

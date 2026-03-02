@@ -18,7 +18,7 @@ public class PlayerFactory
     // Implementation idea : Shuffle the list of Roles
     // then use iterator to create a new player.
     /// <summary>
-    /// Creates the fresh players for the game.
+    /// Creates the fresh players for the game.  
     /// Each Player has a role. 
     /// </summary>
     /// <returns></returns>

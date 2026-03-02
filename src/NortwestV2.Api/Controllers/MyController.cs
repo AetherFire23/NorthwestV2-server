@@ -1,4 +1,5 @@
-﻿using Mediator;
+﻿using AetherFire23.ERP.Domain.Entity;
+using Mediator;
 using Microsoft.AspNetCore.Mvc;
 using NorthwestV2.Practical;
 

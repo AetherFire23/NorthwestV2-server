@@ -44,7 +44,7 @@ public class NorthwestIntegrationTestBase : PostgresTestContainer
         {
             builder.ClearProviders();
             builder.AddProvider(new XUnitLoggerProvider(Output));
-            builder.SetMinimumLevel(LogLevel.Debug);
+            builder.SetMinimumLevel(LogLevel.Information);
         });
     }
 
