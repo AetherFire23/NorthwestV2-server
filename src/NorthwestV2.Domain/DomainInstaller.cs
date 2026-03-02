@@ -10,5 +10,7 @@ public class DomainInstaller : IInstaller
     public void Install(IServiceCollection serviceCollection, IConfiguration configuration)
     {
         serviceCollection.AddScoped<NorthwestDomainService>();
+        serviceCollection.AddScoped<PlayerFactory>();
+        serviceCollection.AddScoped<IRandomProvider, RealRandom>();
     }
 }

@@ -22,15 +22,23 @@ public class PlayerFactory
     /// Each Player has a role. 
     /// </summary>
     /// <returns></returns>
-    public IEnumerable<Player> CreateFreshPlayersForGame()
+    public IEnumerable<Player> CreateFreshPlayersForGame(List<User> users)
     {
-        IEnumerable<Roles> allRoles = _randomProvider.Shuffle(Enum.GetValues<Roles>());
+        IEnumerable<Roles> allShuffledRoles = _randomProvider.Shuffle(Enum.GetValues<Roles>());
 
-        for (int i = 0; i < GameSettings.RequiredPlayerCountToStartGame; i++)
+        if (users.Count() != allShuffledRoles.Count())
         {
-            // TODO: Create players with their associated role. 
+            throw new ArgumentException(
+                "Should have as many users as roles in a game ");
         }
 
-        return [];
+        IEnumerable<Player> players = users.Zip(allShuffledRoles, (user, role) => (User: user, Role: role))
+            .Select(u => new Player()
+            {
+                User = u.User,
+                Role = u.Role,
+            });
+
+        return players;
     }
 }
