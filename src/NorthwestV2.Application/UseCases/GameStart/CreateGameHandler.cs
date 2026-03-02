@@ -21,7 +21,18 @@ public class CreateGameHandler : IRequestHandler<CreateGameRequest, Guid>
     {
         IEnumerable<User> users = await _northwestContext.Set<User>().FindAllById(request.UserIds);
 
-        _playerFactory.CreateFreshPlayersForGame(users.ToList());
+        IEnumerable<Player> players = _playerFactory.CreateFreshPlayersForGame(users.ToList());
+
+        // TODO: Create Rooms
+
+        // Room as builder patterns ?
+        // No, room as simple objects where I just do Add() to whichever 
+        // So it would be a many-to-many
+        // Each 
+
+        // TODO: Create Items 
+
+        // TODO: Create game and add Players, users, and items, and rooms 
 
         return Guid.Empty;
     }

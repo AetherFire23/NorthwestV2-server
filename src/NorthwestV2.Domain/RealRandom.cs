@@ -17,6 +17,7 @@ public class RealRandom : IRandomProvider
             int index = Random.Shared.Next(0, copy.Count);
 
             shuffled.Add(copy[index]);
+            copy.RemoveAt(index);
         }
 
         return shuffled;

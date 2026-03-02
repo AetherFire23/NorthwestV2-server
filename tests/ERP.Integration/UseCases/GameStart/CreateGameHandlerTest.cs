@@ -25,6 +25,7 @@ public class CreateGameHandlerTest : NorthwestIntegrationTestBase
         });
 
         Game? game = await Context.Games.FindAsync(gameId);
+
         Assert.NotNull(game);
     }
 

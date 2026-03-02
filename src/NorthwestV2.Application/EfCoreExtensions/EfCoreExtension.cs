@@ -11,7 +11,7 @@ public static class EfCoreExtension
     public static async Task<T> FindById<T>(this DbSet<T> curr, Guid id)
         where T : EntityBase
     {
-        var ent = await curr.FindAsync();
+        var ent = await curr.FindAsync(id);
 
         if (ent is null)
         {
