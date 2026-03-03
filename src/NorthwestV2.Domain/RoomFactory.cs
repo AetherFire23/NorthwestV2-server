@@ -18,116 +18,116 @@ public class RoomFactory
             RoomEnum = RoomEnum.Brig,
             Game = game,
         };
-        
+
         Room armory = new Room
         {
             RoomEnum = RoomEnum.Armory,
             Game = game,
         };
-        
+
         Room captainsQuarters = new Room
         {
             RoomEnum = RoomEnum.CaptainsQuarters,
             Game = game,
         };
-        
+
         Room chartsRoom = new Room
         {
             RoomEnum = RoomEnum.ChartsRoom,
             Game = game,
         };
-        
+
         Room coal = new Room
         {
             RoomEnum = RoomEnum.Coal,
             Game = game,
         };
-        
+
         Room crowsNest = new Room
         {
             RoomEnum = RoomEnum.CrowsNest,
             Game = game,
         };
-        
+
         Room crewsQuarters = new Room
         {
             RoomEnum = RoomEnum.CrewsQuarters,
             Game = game,
         };
-        
+
         Room engineRoom = new Room
         {
             RoomEnum = RoomEnum.EngineRoom,
             Game = game,
         };
-        
+
         Room food = new Room
         {
             RoomEnum = RoomEnum.Food,
             Game = game,
         };
-        
+
         Room forecastle = new Room
         {
             RoomEnum = RoomEnum.ForeCastle,
             Game = game,
         };
-        
+
         Room frontStairway = new Room
         {
             RoomEnum = RoomEnum.FrontStairway,
             Game = game,
         };
-        
+
         Room workshop = new Room
         {
             RoomEnum = RoomEnum.Workshop,
             Game = game,
         };
-        
+
         Room sickbay = new Room
         {
             RoomEnum = RoomEnum.Sickbay,
             Game = game,
         };
-        
+
         Room middleCorridor = new Room
         {
             RoomEnum = RoomEnum.MiddleCorridor,
             Game = game,
         };
-        
-        
+
+
         Room officersQuarters = new Room
         {
             RoomEnum = RoomEnum.OfficersQuarters,
             Game = game,
         };
-        
+
         Room hold = new Room
         {
             RoomEnum = RoomEnum.Hold,
             Game = game,
         };
-        
+
         Room magazine = new Room
         {
             RoomEnum = RoomEnum.Magazine,
             Game = game,
         };
-        
+
         Room mainDeck = new Room
         {
             RoomEnum = RoomEnum.MainDeck,
             Game = game,
         };
-        
+
         Room mess = new Room
         {
             RoomEnum = RoomEnum.Mess,
             Game = game,
         };
-        
+
         Room laundryRoom = new Room
         {
             RoomEnum = RoomEnum.LaundryRoom,
@@ -143,7 +143,7 @@ public class RoomFactory
             RoomEnum = RoomEnum.LowerCorridor,
             Game = game,
         };
-        
+
         Room lowerStairway = new Room
         {
             RoomEnum = RoomEnum.LowerStairway,
@@ -154,19 +154,16 @@ public class RoomFactory
             RoomEnum = RoomEnum.QuarterDeck,
             Game = game,
         };
-        
+
         Room rearStairway = new Room
         {
             RoomEnum = RoomEnum.RearStairway,
             Game = game,
         };
 
-        
-        crewsQuarters.AdjacentRooms.Add(crowsNest);
-        
-        coal.AdjacentRooms.Add(coal);
 
-        List<Room> rooms = new ([
+        //
+        List<Room> rooms = new([
             brig,
             boilerRoom,
             workshop,
@@ -196,5 +193,16 @@ public class RoomFactory
         ]);
 
         return rooms;
+    }
+
+    public void AssignConnectionsToRooms(IEnumerable<Room> rooms)
+    {
+        Func<Room, bool> SelectEnum(RoomEnum roomEnum) => (r) => r.RoomEnum == roomEnum;
+
+        Room mainDeck = rooms.First(SelectEnum(RoomEnum.MainDeck));
+        Room crowsNest = rooms.First(SelectEnum(RoomEnum.CrowsNest));
+        
+        mainDeck.AdjacentRooms.Add(crowsNest);
+        crowsNest.AdjacentRooms.Add(mainDeck);
     }
 }

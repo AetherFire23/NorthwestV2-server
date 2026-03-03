@@ -25,9 +25,15 @@ public class CreateGameHandlerTest : NorthwestIntegrationTestBase
         });
 
         Game? game = await Context.Games.FindAsync(gameId);
-
+        
         Assert.NotNull(game);
     }
+    
+    //TODO: 
+    // Many more asserts relating to the creation of a game 
+    
+    // TODO ASSert that game exists in database
+    // TODO Asser that crewsnest and mAINdECK are connected inside of the database 
 
     /// <summary>
     /// Arranges the database until we can create a game.

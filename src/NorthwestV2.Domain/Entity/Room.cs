@@ -9,4 +9,9 @@ public class Room : EntityBase
     public required RoomEnum RoomEnum { get; set; }
 
     public ICollection<Room> AdjacentRooms { get; set; } = [];
+
+    public override string ToString()
+    {
+        return this.RoomEnum.ToString();
+    }
 }
