@@ -1,10 +1,14 @@
 ﻿using AetherFire23.ERP.Domain.Entity;
 using AetherFire23.ERP.Domain.Role;
 
-namespace AetherFire23.ERP.Domain.GameInitialization.RoleInitializations;
+namespace AetherFire23.ERP.Domain.GameInitialization.RoleInitializations.PlayerInitializers;
 
-public class CaptainRoleInitializer : RoleInitializerBase
+public class CaptainRoleInitializer : RoleInitializer
 {
+    public CaptainRoleInitializer(Roles role) : base(role)
+    {
+    }
+
     public override Player CreateAndInitializePlayer(RoleInitializationContext context)
     {
         var player = new Player()

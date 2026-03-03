@@ -35,6 +35,7 @@ public class JoinLobbyHandlerTest : NorthwestIntegrationTestBase
         User user = await base.Context.Users
             .Include(x => x.Lobby)
             .FirstAsync(u => u.Id == lobbyJoinerId) ?? throw new InvalidOperationException("Null");
+
         Assert.Equal(lobbyId, user?.Lobby?.Id);
     }
 
