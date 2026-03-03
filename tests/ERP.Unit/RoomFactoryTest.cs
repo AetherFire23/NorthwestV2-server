@@ -1,6 +1,7 @@
 ﻿using System.Xml.Schema;
 using AetherFire23.ERP.Domain;
 using AetherFire23.ERP.Domain.Entity;
+using AetherFire23.ERP.Domain.GameInitialization;
 using JetBrains.Annotations;
 
 namespace ERP.Testing.Domain;

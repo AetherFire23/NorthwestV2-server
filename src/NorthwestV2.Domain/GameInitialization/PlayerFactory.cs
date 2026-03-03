@@ -1,7 +1,7 @@
 ﻿using AetherFire23.ERP.Domain.Entity;
 using AetherFire23.ERP.Domain.Role;
 
-namespace AetherFire23.ERP.Domain;
+namespace AetherFire23.ERP.Domain.GameInitialization;
 
 //TODO: Maybe rename to InitialzePlayersForgameService
 public class PlayerFactory
@@ -22,8 +22,10 @@ public class PlayerFactory
     /// Each Player has a role. 
     /// </summary>
     /// <returns></returns>
-    public IEnumerable<Player> CreateFreshPlayersForGame(List<User> users)
+    public IEnumerable<Player> CreateFreshPlayersForGame(List<User> users, Game game, IEnumerable<Room> rooms)
     {
+        // Shuffles the roles and assigns the role to each player while creating the player. 
+        // I must to this at the very end I think, using a for() loop because I also need to put some dependencies 
         IEnumerable<Roles> allShuffledRoles = _randomProvider.Shuffle(Enum.GetValues<Roles>());
 
         if (users.Count() != allShuffledRoles.Count())

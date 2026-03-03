@@ -1,5 +1,6 @@
 ﻿using AetherFire23.ERP.Domain;
 using AetherFire23.ERP.Domain.Entity;
+using AetherFire23.ERP.Domain.GameInitialization;
 using Mediator;
 using NorthwestV2.Practical;
 using NorthwestV2.Application.EfCoreExtensions;
@@ -29,14 +30,37 @@ public class CreateGameHandler : IRequestHandler<CreateGameRequest, Guid>
 
         IEnumerable<Room> rooms = _roomFactory.CreateRoomsForGame(game);
         _northwestContext.Games.Add(game);
-        _northwestContext.Rooms.AddRange(rooms);
-        
-        // Must add saveChangesAsync first because else it will try to create all entities in AdjacentRooms.  
         await _northwestContext.SaveChangesAsync();
 
-        _roomFactory.AssignConnectionsToRooms(rooms);
 
-        IEnumerable<Player> players = _playerFactory.CreateFreshPlayersForGame(users.ToList());
+        // Do a repository for this !
+        // I just wanted to keep my domain clean. 
+        // So I detach-reattach the adjacentROoms before ef core saves them.
+        // It sucks, but keeps my domain perfect 
+        Dictionary<Room, List<Room>> roomsToAdjacents = new Dictionary<Room, List<Room>>();
+        foreach (Room room in rooms)
+        {
+            roomsToAdjacents.Add(room, new List<Room>(room.AdjacentRooms));
+            room.AdjacentRooms.Clear();
+
+            _northwestContext.Rooms.Add(room);
+        }
+
+        await _northwestContext.SaveChangesAsync();
+
+        foreach (var roomsToAdjacent in roomsToAdjacents)
+        {
+            foreach (Room room in roomsToAdjacent.Value)
+            {
+                roomsToAdjacent.Key.AdjacentRooms.Add(room);
+            }
+        }
+
+        // Must add saveChangesAsync first because else it will try to create all entities in AdjacentRooms.  
+
+        // _roomFactory.AssignConnectionsToRooms(rooms);
+
+        IEnumerable<Player> players = _playerFactory.CreateFreshPlayersForGame(users.ToList(), game, rooms);
 
 
         // TODO: Create Rooms

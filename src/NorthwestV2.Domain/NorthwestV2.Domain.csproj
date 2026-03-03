@@ -12,4 +12,8 @@
       <ProjectReference Include="..\commons\AetherFire23.Commons.Domain\AetherFire23.Commons.Domain.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="GameInitialization\RoleInitializations\" />
+    </ItemGroup>
+
 </Project>
