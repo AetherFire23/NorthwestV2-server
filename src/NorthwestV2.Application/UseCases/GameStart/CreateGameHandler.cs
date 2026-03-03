@@ -33,7 +33,8 @@ public class CreateGameHandler : IRequestHandler<CreateGameRequest, Guid>
         IEnumerable<User> users = await _northwestContext.Set<User>().FindAllById(request.UserIds);
 
         IEnumerable<Player> players = _playerFactory.CreateFreshPlayersForGame(users.ToList(), game, rooms);
-
+        
+        _northwestContext.Players.AddRange(players);
       
         await _northwestContext.SaveChangesAsync();
 

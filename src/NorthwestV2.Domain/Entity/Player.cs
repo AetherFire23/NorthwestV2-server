@@ -7,7 +7,19 @@ namespace AetherFire23.ERP.Domain.Entity;
 public class Player : EntityBase
 {
     public Guid UserId { get; set; }
+
     public required User User { get; set; }
 
     public required Roles Role { get; set; }
+
+    public Guid GameId { get; set; }
+    public required Game Game { get; set; }
+
+    public Guid RoomId { get; set; }
+    public required Room Room { get; set; }
+
+    public override string ToString()
+    {
+        return this.Role.ToString();
+    }
 }

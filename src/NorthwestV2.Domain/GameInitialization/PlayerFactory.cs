@@ -39,6 +39,8 @@ public class PlayerFactory
             {
                 User = u.User,
                 Role = u.Role,
+                Game = game,
+                Room = rooms.First(),
             });
 
         return players;
