@@ -197,15 +197,4 @@ public class RoomFactory
 
         return rooms;
     }
-
-    public void AssignConnectionsToRooms(IEnumerable<Room> rooms)
-    {
-        // Func<Room, bool> SelectEnum(RoomEnum roomEnum) => (r) => r.RoomEnum == roomEnum;
-        //
-        // Room mainDeck = rooms.First(SelectEnum(RoomEnum.MainDeck));
-        // Room crowsNest = rooms.First(SelectEnum(RoomEnum.CrowsNest));
-        //
-        // mainDeck.AdjacentRooms.Add(crowsNest);
-        // crowsNest.AdjacentRooms.Add(mainDeck);
-    }
 }

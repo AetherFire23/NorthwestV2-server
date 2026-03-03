@@ -22,61 +22,56 @@ public class CreateGameHandler : IRequestHandler<CreateGameRequest, Guid>
 
     public async ValueTask<Guid> Handle(CreateGameRequest request, CancellationToken cancellationToken)
     {
-        IEnumerable<User> users = await _northwestContext.Set<User>().FindAllById(request.UserIds);
-
-        // Rooms will be automatically filled by ef core on savechangesasnyc 
+        // Rooms will be automatically filled by ef core on savechangesasnyc TODO: a test for this i usspoe 
         Game game = new Game();
-
-
-        IEnumerable<Room> rooms = _roomFactory.CreateRoomsForGame(game);
         _northwestContext.Games.Add(game);
-        await _northwestContext.SaveChangesAsync();
+        
+        // Using a trick to get to save the entities & the nested properties without ef core crying. 
+        IEnumerable<Room> rooms = _roomFactory.CreateRoomsForGame(game);
+        await SaveRoomAndAdjacents(rooms);
 
-
-        // Do a repository for this !
-        // I just wanted to keep my domain clean. 
-        // So I detach-reattach the adjacentROoms before ef core saves them.
-        // It sucks, but keeps my domain perfect 
-        Dictionary<Room, List<Room>> roomsToAdjacents = new Dictionary<Room, List<Room>>();
-        foreach (Room room in rooms)
-        {
-            roomsToAdjacents.Add(room, new List<Room>(room.AdjacentRooms));
-            room.AdjacentRooms.Clear();
-
-            _northwestContext.Rooms.Add(room);
-        }
-
-        await _northwestContext.SaveChangesAsync();
-
-        foreach (var roomsToAdjacent in roomsToAdjacents)
-        {
-            foreach (Room room in roomsToAdjacent.Value)
-            {
-                roomsToAdjacent.Key.AdjacentRooms.Add(room);
-            }
-        }
-
-        // Must add saveChangesAsync first because else it will try to create all entities in AdjacentRooms.  
-
-        // _roomFactory.AssignConnectionsToRooms(rooms);
+        IEnumerable<User> users = await _northwestContext.Set<User>().FindAllById(request.UserIds);
 
         IEnumerable<Player> players = _playerFactory.CreateFreshPlayersForGame(users.ToList(), game, rooms);
 
-
-        // TODO: Create Rooms
-
-        // Room as builder patterns ?
-        // No, room as simple objects where I just do Add() to whichever 
-        // So it would be a many-to-many
-        // Each 
+      
         await _northwestContext.SaveChangesAsync();
 
         // TODO: Create Items 
 
         // TODO: Create game and add Players, users, and items, and rooms 
 
-
         return game.Id;
+    }
+
+    // Do a repository for this !
+    // I just wanted to keep my domain clean. 
+    // So I detach-reattach the adjacentROoms before ef core saves them.
+    // It sucks, but keeps my domain perfect 
+    // TODO: Fun ? do an AddWithNestedProps extension
+    private async ValueTask SaveRoomAndAdjacents(IEnumerable<Room> rooms)
+    {
+        Dictionary<Room, List<Room>> roomsToAdjacents = new Dictionary<Room, List<Room>>();
+        foreach (Room room in rooms)
+        {
+            roomsToAdjacents.Add(room, new(room.AdjacentRooms));
+
+            _northwestContext.Rooms.Add(room);
+        }
+        
+        foreach (Room room in rooms)
+        {
+            room.AdjacentRooms.Clear();
+        }
+
+        // Saving first so that ef core can know about the existing rooms before trying to add cyclically 
+        // nested entities. 
+        await _northwestContext.SaveChangesAsync();
+
+        foreach (var roomsToAdjacent in roomsToAdjacents)
+        {
+            roomsToAdjacent.Key.AdjacentRooms.AddRange(roomsToAdjacent.Value);
+        }
     }
 
     private async Task<IEnumerable<User>> GetUsers(List<Guid> userIds)

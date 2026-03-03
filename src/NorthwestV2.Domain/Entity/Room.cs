@@ -8,7 +8,7 @@ public class Room : EntityBase
     public required Game Game { get; set; }
     public required RoomEnum RoomEnum { get; set; }
 
-    public ICollection<Room> AdjacentRooms { get; set; } = [];
+    public List<Room> AdjacentRooms { get; set; } = [];
 
     public override string ToString()
     {
