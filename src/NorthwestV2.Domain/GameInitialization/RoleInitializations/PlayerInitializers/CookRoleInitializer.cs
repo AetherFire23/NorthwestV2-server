@@ -3,9 +3,9 @@ using AetherFire23.ERP.Domain.Role;
 
 namespace AetherFire23.ERP.Domain.GameInitialization.RoleInitializations.PlayerInitializers;
 
-public class DoctorRoleInitializer : RoleInitializer
+public class CookRoleInitializer : RoleInitializer
 {
-    public DoctorRoleInitializer() : base(Roles.Doctor)
+    public CookRoleInitializer() : base(Roles.Cook)
     {
     }
 

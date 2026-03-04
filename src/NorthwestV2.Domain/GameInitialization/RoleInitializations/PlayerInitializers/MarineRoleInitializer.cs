@@ -11,6 +11,12 @@ public class MarineRoleInitializer : RoleInitializer
 
     public override Player CreateAndInitializePlayer(RoleInitializationContext context)
     {
-        return null;
+        return new Player()
+        {
+            Game = context.Game,
+            Role = this.Role,
+            Room = context.Rooms.First(),
+            User = context.User
+        };
     }
 }
