@@ -1,6 +1,7 @@
 ﻿using AetherFire23.ERP.Domain;
 using AetherFire23.ERP.Domain.Entity;
 using AetherFire23.ERP.Domain.GameInitialization;
+using AetherFire23.ERP.Domain.GameInitialization.RoleInitializations;
 using JetBrains.Annotations;
 using NorthwestV2.Integration;
 
@@ -10,13 +11,15 @@ namespace ERP.Testing.Domain;
 public class PlayerFactoryTest
 {
     [Fact]
-    public void GivenPlayerFactory_WhenCreatePlayers_AllPlayersHaveRoless()
+    public void GivenPlayerFactory_WhenCreatePlayers_ThenAllPlayersExist()
     {
         IEnumerable<int> OPPOSITE_OF_ENUM_GET_VALUES = [11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0];
         FakeRandom fakeRandom = new FakeRandom(OPPOSITE_OF_ENUM_GET_VALUES.ToList());
         Game fakeGame = new Game();
         IEnumerable<Room> fakeRooms = new RoomFactory().CreateRoomsForGame(fakeGame);
-        PlayerFactory factory = new PlayerFactory(fakeRandom);
+        var roleInitalizers = ScanRoleInitalizers();
+
+        PlayerFactory factory = new PlayerFactory(fakeRandom, roleInitalizers);
         List<User> dummyUsers = Enumerable.Range(0, 12)
             .Select(i => new User()
             {
@@ -24,8 +27,18 @@ public class PlayerFactoryTest
                 HashedPassword = "123",
             }).ToList();
 
+
         IEnumerable<Player> createdPlayers = factory.CreateFreshPlayersForGame(dummyUsers, fakeGame, fakeRooms);
 
-        Assert.True(createdPlayers.Count() == GameSettings.RequiredPlayerCountToStartGame);
+        Assert.Equal(GameSettings.RequiredPlayerCountToStartGame, createdPlayers.Count());
+    }
+
+    private IEnumerable<RoleInitializer> ScanRoleInitalizers()
+    {
+        var roleInitalizers = typeof(DomainInstaller).Assembly.GetTypes()
+            .Where(t => typeof(RoleInitializer).IsAssignableFrom(t) && !t.IsAbstract && !t.IsInterface)
+            .Select(r => (RoleInitializer)Activator.CreateInstance(r));
+
+        return roleInitalizers;
     }
 }

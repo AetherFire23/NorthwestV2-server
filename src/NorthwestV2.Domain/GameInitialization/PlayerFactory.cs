@@ -16,13 +16,8 @@ public class PlayerFactory
         _roleInitializers = roleInitializers;
     }
 
-    // TODO: Create a user and give it a role.
-    // Roles cant be repeated within a single game. 
-    // Implementation idea : Shuffle the list of Roles
-    // then use iterator to create a new player.
     /// <summary>
     /// Creates the fresh players for the game.  
-    /// Each Player has a role. 
     /// </summary>
     /// <returns></returns>
     public IEnumerable<Player> CreateFreshPlayersForGame(List<User> users, Game game, IEnumerable<Room> rooms)
@@ -41,10 +36,20 @@ public class PlayerFactory
 
         List<Player> players = new List<Player>();
 
-        foreach (var allShuffledRole in allShuffledRoles)
+        for (var i = 0; i < users.ToList().Count; i++)
         {
-            var createdPlayer = _roleInitializers.First(x => x.Role == allShuffledRole);
-            
+            // User user = users[i];
+            // Roles role = allShuffledRoles[i];
+            //
+            // RoleInitializer roleInitializer = _roleInitializers.First(x => x.Role == allShuffledRole);
+            //
+            // RoleInitializationContext roleInitializationContext = new RoleInitializationContext()
+            // {
+            //     Game = game,
+            //     Rooms = rooms,
+            //     User = 
+            // };
+            // Player createdPlayer = roleInitializer.CreateAndInitializePlayer();
         }
 
 

@@ -5,7 +5,7 @@ namespace AetherFire23.ERP.Domain.GameInitialization.RoleInitializations.PlayerI
 
 public class CaptainRoleInitializer : RoleInitializer
 {
-    public CaptainRoleInitializer(Roles role) : base(role)
+    public CaptainRoleInitializer() : base(Roles.Captain)
     {
     }
 
