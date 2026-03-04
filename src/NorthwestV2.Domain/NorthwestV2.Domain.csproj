@@ -12,4 +12,8 @@
       <ProjectReference Include="..\commons\AetherFire23.Commons.Domain\AetherFire23.Commons.Domain.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.2" />
+    </ItemGroup>
+
 </Project>

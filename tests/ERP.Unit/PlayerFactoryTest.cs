@@ -19,7 +19,7 @@ public class PlayerFactoryTest
         IEnumerable<Room> fakeRooms = new RoomFactory().CreateRoomsForGame(fakeGame);
         var roleInitalizers = ScanRoleInitalizers();
 
-        PlayerFactory factory = new PlayerFactory(fakeRandom, roleInitalizers);
+        PlayerFactory factory = new PlayerFactory(fakeRandom, roleInitalizers, );
         List<User> dummyUsers = Enumerable.Range(0, 12)
             .Select(i => new User()
             {
@@ -29,7 +29,6 @@ public class PlayerFactoryTest
 
 
         IEnumerable<Player> createdPlayers = factory.CreateFreshPlayersForGame(dummyUsers, fakeGame, fakeRooms);
-
         Assert.Equal(GameSettings.RequiredPlayerCountToStartGame, createdPlayers.Count());
     }
 
