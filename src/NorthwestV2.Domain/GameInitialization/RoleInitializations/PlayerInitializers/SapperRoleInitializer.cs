@@ -3,22 +3,20 @@ using AetherFire23.ERP.Domain.Role;
 
 namespace AetherFire23.ERP.Domain.GameInitialization.RoleInitializations.PlayerInitializers;
 
-public class CaptainRoleInitializer : RoleInitializer
+public class SapperRoleInitializer : RoleInitializer
 {
-    public CaptainRoleInitializer() : base(Roles.Captain)
+    public SapperRoleInitializer() : base(Roles.Sapper)
     {
     }
 
     public override Player CreateAndInitializePlayer(RoleInitializationContext context)
     {
-        Player player = new Player()
+        return new Player()
         {
             Game = context.Game,
-            User = context.User,
+            Role = this.Role,
             Room = context.Rooms.First(),
-            Role = Roles.Brute
+            User = context.User
         };
-
-        return player;
     }
 }

@@ -1,0 +1,16 @@
+﻿using AetherFire23.ERP.Domain.Entity;
+using AetherFire23.ERP.Domain.Role;
+
+namespace AetherFire23.ERP.Domain.GameInitialization.RoleInitializations.PlayerInitializers;
+
+public class SentryRoleInitializer : RoleInitializer
+{
+    public SentryRoleInitializer() : base(Roles.Sentry)
+    {
+    }
+
+    public override Player CreateAndInitializePlayer(RoleInitializationContext context)
+    {
+        return null;
+    }
+}

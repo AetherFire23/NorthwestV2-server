@@ -25,7 +25,7 @@ public class CreateGameHandler : IRequestHandler<CreateGameRequest, Guid>
         // Rooms will be automatically filled by ef core on savechangesasnyc TODO: a test for this i usspoe 
         Game game = new Game();
         _northwestContext.Games.Add(game);
-        
+
         // Using a trick to get to save the entities & the nested properties without ef core crying. 
         IEnumerable<Room> rooms = _roomFactory.CreateRoomsForGame(game);
         await SaveRoomAndAdjacents(rooms);
@@ -33,12 +33,13 @@ public class CreateGameHandler : IRequestHandler<CreateGameRequest, Guid>
         IEnumerable<User> users = await _northwestContext.Set<User>().FindAllById(request.UserIds);
 
         IEnumerable<Player> players = _playerFactory.CreateFreshPlayersForGame(users.ToList(), game, rooms);
-        
+
         _northwestContext.Players.AddRange(players);
-      
+
         await _northwestContext.SaveChangesAsync();
 
         // TODO: Create Items 
+
 
         // TODO: Create game and add Players, users, and items, and rooms 
 
@@ -59,7 +60,7 @@ public class CreateGameHandler : IRequestHandler<CreateGameRequest, Guid>
 
             _northwestContext.Rooms.Add(room);
         }
-        
+
         foreach (Room room in rooms)
         {
             room.AdjacentRooms.Clear();

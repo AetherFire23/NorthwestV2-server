@@ -24,7 +24,7 @@ public class PlayerFactory
     {
         // Shuffles the roles and assigns the role to each player while creating the player. 
         // I must to this at the very end I think, using a for() loop because I also need to put some dependencies 
-        IEnumerable<Roles> allShuffledRoles = _randomProvider.Shuffle(Enum.GetValues<Roles>());
+        List<Roles> allShuffledRoles = _randomProvider.Shuffle(Enum.GetValues<Roles>()).ToList();
         //
         if (users.Count() != allShuffledRoles.Count())
         {
@@ -32,35 +32,33 @@ public class PlayerFactory
                 "Must have as many users as roles in a game ");
         }
 
-        //TODO; 
-
         List<Player> players = new List<Player>();
+
+        // map each player to each role 
 
         for (var i = 0; i < users.ToList().Count; i++)
         {
-            // User user = users[i];
-            // Roles role = allShuffledRoles[i];
-            //
-            // RoleInitializer roleInitializer = _roleInitializers.First(x => x.Role == allShuffledRole);
-            //
-            // RoleInitializationContext roleInitializationContext = new RoleInitializationContext()
-            // {
-            //     Game = game,
-            //     Rooms = rooms,
-            //     User = 
-            // };
-            // Player createdPlayer = roleInitializer.CreateAndInitializePlayer();
+            User user = users[i];
+            Roles role = allShuffledRoles[i];
+
+            RoleInitializer? roleInitializer = _roleInitializers.SingleOrDefault(x => x.Role == role);
+
+            if (roleInitializer is null)
+            {
+                throw new Exception($"Did not find role {role}");
+            }
+
+            RoleInitializationContext roleInitializationContext = new RoleInitializationContext()
+            {
+                Game = game,
+                Rooms = rooms.ToList(),
+                User = user
+            };
+
+            Player createdPlayer = roleInitializer.CreateAndInitializePlayer(roleInitializationContext);
+
+            players.Add(createdPlayer);
         }
-
-
-        // var players = _roleInitializers.Select(x =>
-        // {
-        //     return new RoleInitializationContext()
-        //     {
-        //         Game = game,
-        //         Rooms = rooms
-        //     };
-        // });
 
         return players;
     }
