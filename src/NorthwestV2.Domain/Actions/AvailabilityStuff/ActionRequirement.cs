@@ -1,4 +1,4 @@
-﻿namespace NorthwestV2.Integration.UseCases.GameActions.Queries.GetActions.ReturnValue;
+﻿namespace NorthwestV2.Application.UseCases.GameActions.Queries.GetActions.ReturnValue;
 
 public class ActionRequirement
 {

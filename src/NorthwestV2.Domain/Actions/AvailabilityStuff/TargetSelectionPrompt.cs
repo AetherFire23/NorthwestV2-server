@@ -1,10 +1,10 @@
-﻿namespace NorthwestV2.Integration.UseCases.GameActions.Queries.GetActions.ReturnValue;
+﻿namespace NorthwestV2.Application.UseCases.GameActions.Queries.GetActions.ReturnValue;
 
 public class TargetSelectionPrompt
 {
     public required string Description { get; set; }
 
-    public required List<ActionTarget> Targets { get; set; }
+    public required List<ActionTarget> Targets { get; set; } = [];
 
     public int Min { get; set; } = 1;
     public int Max { get; set; } = 1;

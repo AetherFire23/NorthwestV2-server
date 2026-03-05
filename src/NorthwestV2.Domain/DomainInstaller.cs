@@ -1,4 +1,5 @@
 ﻿using AetherFire23.Commons.Composition;
+using AetherFire23.ERP.Domain.Actions;
 using AetherFire23.ERP.Domain.Entity;
 using AetherFire23.ERP.Domain.GameInitialization;
 using AetherFire23.ERP.Domain.GameInitialization.RoleInitializations;
@@ -18,8 +19,14 @@ public class DomainInstaller : IInstaller
         serviceCollection.AddScoped<RoomFactory>();
 
         serviceCollection.AddScoped<IRandomProvider, RealRandom>();
+        InstallActionServices(serviceCollection);
         RegisterPlayerFactory(serviceCollection);
         InstallRoleServices(serviceCollection);
+    }
+
+    private void InstallActionServices(IServiceCollection serviceCollection)
+    {
+        serviceCollection.AddScoped<SelfHealInstant>();
     }
 
     private void InstallRoleServices(IServiceCollection services)
@@ -38,6 +45,12 @@ public class DomainInstaller : IInstaller
         services.AddScoped<Quartermaster>();
     }
 
+    /// <summary>
+    /// A domain should never know about service providers because it has to be unit tested.
+    /// However I wouldnt do this in an applicaiton layer ( I would use reflection )
+    /// Also im not doing reflection here because you just do it once and it simply avoid reflection. 
+    /// </summary>
+    /// <param name="serviceCollection"></param>
     private void RegisterPlayerFactory(IServiceCollection serviceCollection)
     {
         serviceCollection.AddScoped<PlayerFactory>(s =>
