@@ -4,15 +4,14 @@ using NorthwestV2.Practical;
 
 namespace NorthwestV2.Application.UseCases.GameActions.Services.ActionBases.Bases;
 
-public abstract class ActionWithTargetsAppService
+public abstract class ActionWithTargetsBase : ActionBase
 {
     protected readonly NorthwestContext Context;
-    public string ActionName { get; set; }
 
-    protected ActionWithTargetsAppService(NorthwestContext context, string actionName)
+
+    protected ActionWithTargetsBase(NorthwestContext context, string actionName) : base(context,actionName)
     {
         Context = context;
-        ActionName = actionName;
     }
 
     public abstract Task<ActionWithTargetsAvailability> GetAvailabilityResult(GetActionsRequest request);

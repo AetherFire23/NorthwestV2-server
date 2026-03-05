@@ -12,7 +12,7 @@ public class ApplicationInstaller : IInstaller
     public void Install(IServiceCollection serviceCollection, IConfiguration configuration)
     {
         serviceCollection.AddSingleton<JwtTokenService>();
-        serviceCollection.AddScoped<SelfHealInstantAppService>();
+        serviceCollection.AddScoped<SelfHealInstantApp>();
         serviceCollection.AddScoped<DebugTargetsActionApp>();
         serviceCollection.AddScoped<ActionServices>();
     }

@@ -9,26 +9,31 @@ using NorthwestV2.Practical;
 
 namespace NorthwestV2.Application.UseCases.GameActions.Services.ActionBases;
 
-public class SelfHealInstantAppService : InstantActionAppService
+public class SelfHealInstantApp : InstantActionBase
 {
-    private readonly SelfHealInstant _selfHealInstant;
+    private readonly SelfHealInstantAction _selfHealInstantAction;
 
-    public SelfHealInstantAppService(NorthwestContext context, SelfHealInstant selfHealInstant) : base(context)
+    public SelfHealInstantApp(NorthwestContext context, SelfHealInstantAction selfHealInstantAction) : base(context,
+        ActionNames.InstantHeal)
     {
-        _selfHealInstant = selfHealInstant;
+        _selfHealInstantAction = selfHealInstantAction;
     }
 
     public override async Task<InstantActionAvailability> GetAvailabilityResult(GetActionsRequest request)
     {
         Player player = await Context.Players.FindById(request.PlayerId);
 
-        InstantActionAvailability availability = _selfHealInstant.GetAvailability(player);
+        InstantActionAvailability availability = _selfHealInstantAction.GetAvailability(player);
 
         return availability;
     }
 
-    public override Task Execute(ExecuteActionRequest request)
+    public override async Task Execute(ExecuteActionRequest request)
     {
-        return Task.CompletedTask;
+        Player player = await Context.Players.FindById(request.PlayerId);
+
+        player.Health += 2;
+
+        await Context.SaveChangesAsync();
     }
 }

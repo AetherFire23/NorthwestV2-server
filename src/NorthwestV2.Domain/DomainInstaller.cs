@@ -26,7 +26,7 @@ public class DomainInstaller : IInstaller
 
     private void InstallActionServices(IServiceCollection serviceCollection)
     {
-        serviceCollection.AddScoped<SelfHealInstant>();
+        serviceCollection.AddScoped<SelfHealInstantAction>();
         serviceCollection.AddScoped<DebugTargetAction>();
     }
 

@@ -21,14 +21,14 @@ public class ActionServices
 
     public async Task<List<InstantActionAvailability>> GetInstantActionAvailabilityResults(GetActionsRequest request)
     {
-        IEnumerable<InstantActionAppService> services = GetInstantActions();
+        IEnumerable<InstantActionBase> services = GetInstantActions();
 
         // Get all the tasks of respective nature ( instants, with targets)  
-        IEnumerable<InstantActionAppService> instantActions = services;
+        IEnumerable<InstantActionBase> instantActions = services;
 
         List<InstantActionAvailability> instantActionAvailabilities = new();
 
-        foreach (InstantActionAppService instantActionAppService in instantActions)
+        foreach (InstantActionBase instantActionAppService in instantActions)
         {
             InstantActionAvailability availability = await instantActionAppService.GetAvailabilityResult(request);
             instantActionAvailabilities.Add(availability);
@@ -37,43 +37,63 @@ public class ActionServices
         return instantActionAvailabilities;
     }
 
-    public IEnumerable<InstantActionAppService> GetInstantActions()
+    public IEnumerable<InstantActionBase> GetInstantActions()
     {
         List<Type> types = typeof(GetActionsHandler).Assembly
             .GetTypes()
-            .Where(x => !x.IsAbstract && typeof(InstantActionAppService).IsAssignableFrom(x)).ToList();
+            .Where(x => !x.IsAbstract && typeof(InstantActionBase).IsAssignableFrom(x)).ToList();
 
-        IEnumerable<InstantActionAppService> services =
-            types.Select(t => (InstantActionAppService)_serviceProvider.GetRequiredService(t));
+        IEnumerable<InstantActionBase> services =
+            types.Select(t => (InstantActionBase)_serviceProvider.GetRequiredService(t));
         return services;
     }
 
-    public async Task<List<ActionWithTargetsAvailability>> GetActionWithTargetsAvailabilityResults(GetActionsRequest request)
+    public async Task<List<ActionWithTargetsAvailability>> GetActionWithTargetsAvailabilityResults(
+        GetActionsRequest request)
     {
-        IEnumerable<ActionWithTargetsAppService> services = GetActionsWithTargets();
+        IEnumerable<ActionWithTargetsBase> services = GetActionsWithTargets();
 
         // Get all the tasks of respective nature ( instants, with targets)  
-        IEnumerable<ActionWithTargetsAppService> instantActions = services;
+        IEnumerable<ActionWithTargetsBase> instantActions = services;
 
         List<ActionWithTargetsAvailability> instantActionAvailabilities = new();
 
-        foreach (ActionWithTargetsAppService instantActionAppService in instantActions)
+        foreach (ActionWithTargetsBase instantActionAppService in instantActions)
         {
             ActionWithTargetsAvailability availability = await instantActionAppService.GetAvailabilityResult(request);
             instantActionAvailabilities.Add(availability);
         }
 
-        return instantActionAvailabilities; 
+        return instantActionAvailabilities;
     }
 
-    public IEnumerable<ActionWithTargetsAppService> GetActionsWithTargets()
+    public IEnumerable<ActionWithTargetsBase> GetActionsWithTargets()
     {
         List<Type> types = typeof(GetActionsHandler).Assembly
             .GetTypes()
-            .Where(x => !x.IsAbstract && typeof(ActionWithTargetsAppService).IsAssignableFrom(x)).ToList();
+            .Where(x => !x.IsAbstract && typeof(ActionWithTargetsBase).IsAssignableFrom(x)).ToList();
 
-        IEnumerable<ActionWithTargetsAppService> services =
-            types.Select(t => (ActionWithTargetsAppService)_serviceProvider.GetRequiredService(t));
+        IEnumerable<ActionWithTargetsBase> services =
+            types.Select(t => (ActionWithTargetsBase)_serviceProvider.GetRequiredService(t));
         return services;
+    }
+
+    /// <summary>
+    /// Scans all the actions for one given as a parameter.
+    /// Typically comes from ExecuteActionRequest
+    /// </summary>
+    /// <param name="actionName"></param>
+    /// <returns></returns>
+    public async Task<ActionBase> GetActionFromName(string actionName)
+    {
+        List<Type> types = typeof(GetActionsHandler).Assembly
+            .GetTypes()
+            .Where(x => !x.IsAbstract && typeof(ActionBase).IsAssignableFrom(x)).ToList();
+
+        IEnumerable<ActionBase> bases = types.Select(x => (ActionBase)_serviceProvider.GetRequiredService(x));
+
+        ActionBase actionBase = bases.First(x => x.ActionName == actionName);
+
+        return actionBase;
     }
 }

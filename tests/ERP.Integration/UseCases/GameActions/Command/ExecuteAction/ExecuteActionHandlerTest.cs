@@ -1,4 +1,8 @@
-﻿using JetBrains.Annotations;
+﻿using AetherFire23.ERP.Domain;
+using AetherFire23.ERP.Domain.Actions;
+using AetherFire23.ERP.Domain.Entity;
+using JetBrains.Annotations;
+using NorthwestV2.Application.EfCoreExtensions;
 using NorthwestV2.Application.UseCases.Authentication.Register;
 using NorthwestV2.Application.UseCases.GameActions.Command.ExecuteAction;
 using NorthwestV2.Application.UseCases.GameStart;
@@ -17,14 +21,15 @@ public class ExecuteActionHandlerTest : NorthwestIntegrationTestBase
     public async Task GivenInstantAction_WhenExecuted_ThenHasEffectApplied()
     {
         await RegisterUsersAndStartGame();
-
-        await Mediator.Send(new ExecuteActionRequest()
+        Guid playerId = Context.Players.First().Id;
+        var s = await Mediator.Send(new ExecuteActionRequest()
         {
             PlayerId = Context.Players.First().Id,
-            ActionName = "Self heal instant"
+            ActionName = ActionNames.InstantHeal
         });
-        
-        
+
+        Player player = await Context.Players.FindById(playerId);
+        Assert.True(player.Health == GameSettings.DefaultHealth + 2);
     }
 
     /// <summary>

@@ -23,6 +23,8 @@ public class Player : EntityBase
 
     public int ActionPoints { get; set; } = 8; // default 8
 
+    public int Health { get; set; } = GameSettings.DefaultHealth;
+
     public override string ToString()
     {
         return this.Role.ToString();

@@ -4,7 +4,7 @@ using NorthwestV2.Application.UseCases.GameActions.Queries.GetActions.ReturnValu
 
 namespace AetherFire23.ERP.Domain.Actions;
 
-public class SelfHealInstant
+public class SelfHealInstantAction
 {
     // The goal here is to keep the parameters unit-tested.
 
@@ -12,13 +12,14 @@ public class SelfHealInstant
     {
         ActionRequirement actionRequirement = new ActionRequirement()
         {
-            Description = "Action points requirement",
+            Description = "Heals for 2 points ",
             IsFulfilled = caster.ActionPoints > 2,
         };
 
-        InstantActionAvailability vs = new InstantActionAvailability([actionRequirement])
+        InstantActionAvailability vs = new InstantActionAvailability()
         {
-            ActionName = "Self heal instant",
+            ActionName = ActionNames.InstantHeal,
+            ActionRequirements = [actionRequirement]
         };
 
         return vs;

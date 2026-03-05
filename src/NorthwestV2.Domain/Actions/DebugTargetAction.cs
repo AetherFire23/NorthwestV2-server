@@ -16,10 +16,11 @@ public class DebugTargetAction
 
         List<TargetSelectionPrompt> targetSelectionPrompts = GetValidTargets(players);
 
-        return new ActionWithTargetsAvailability([actionRequirement])
+        return new ActionWithTargetsAvailability()
         {
-            ActionName = "Debug Target Action",
+            ActionName = ActionNames.DebugWithTargets,
             TargetSelectionPrompts = targetSelectionPrompts,
+            ActionRequirements = [actionRequirement]
         };
     }
 

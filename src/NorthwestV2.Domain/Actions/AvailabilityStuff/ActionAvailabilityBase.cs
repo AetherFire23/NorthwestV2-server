@@ -14,16 +14,6 @@ public abstract class ActionAvailabilityBase
 
     public List<ActionRequirement> ActionRequirements { get; set; }
 
-    protected ActionAvailabilityBase(List<ActionRequirement> actionRequirements)
-    {
-        if (actionRequirements.Count == 0)
-        {
-            throw new Exception("Cannot give empty action requirements to a ActionAvailabilityBase");
-        }
-
-        ActionRequirements = actionRequirements;
-    }
-
     public bool CanExecute
     {
         get { return this.ActionRequirements.All(a => a.IsFulfilled); }
