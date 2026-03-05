@@ -39,7 +39,7 @@ public class CreateGameHandler : IRequestHandler<CreateGameRequest, Guid>
         await _northwestContext.SaveChangesAsync(cancellationToken);
 
         // TODO: Create Items 
-        
+
 
         await _northwestContext.SaveChangesAsync(cancellationToken);
 
