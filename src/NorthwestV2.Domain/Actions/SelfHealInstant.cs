@@ -8,7 +8,7 @@ public class SelfHealInstant
 {
     // The goal here is to keep the parameters unit-tested.
 
-    public InstantGameActionAvailability GetAvailability(Player caster)
+    public InstantActionAvailability GetAvailability(Player caster)
     {
         ActionRequirement actionRequirement = new ActionRequirement()
         {
@@ -16,7 +16,7 @@ public class SelfHealInstant
             IsFulfilled = caster.ActionPoints > 2,
         };
 
-        InstantGameActionAvailability vs = new InstantGameActionAvailability([actionRequirement])
+        InstantActionAvailability vs = new InstantActionAvailability([actionRequirement])
         {
             ActionName = "Self heal instant",
         };

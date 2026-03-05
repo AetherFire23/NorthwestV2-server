@@ -21,15 +21,31 @@ public class GetActionsHandlerTest : NorthwestIntegrationTestBase
         await RegisterUsersAndStartGame();
         Player anyPlayer = Context.Players.First();
 
+        GetActionsResult response = await Mediator.Send(new GetActionsRequest
+        {
+            PlayerId = anyPlayer.Id,
+        });
+
+        Assert.NotEmpty(response.InstantActions);
+    }
+    
+    [Fact]
+    public async Task GivenDebugActionWithTargets_WhenGetGameActions_ThenTargetsAreVisible()
+    {
+        await RegisterUsersAndStartGame();
+        Player anyPlayer = Context.Players.First();
 
         GetActionsResult response = await Mediator.Send(new GetActionsRequest
         {
             PlayerId = anyPlayer.Id,
         });
 
-        Assert.NotNull(response);
+        Assert.NotEmpty(response.ActionWithTargets);
     }
 
+    /// <summary>
+    /// 12 users will exist and game would be started 
+    /// </summary>
     private async Task RegisterUsersAndStartGame()
     {
         List<Guid> userIds = new List<Guid>();
