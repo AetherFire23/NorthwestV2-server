@@ -1,5 +1,6 @@
 ﻿using AetherFire23.ERP.Domain.Entity;
 using JetBrains.Annotations;
+using NorthwestV2.Application.UseCases.Authentication.Register;
 using NorthwestV2.Application.UseCases.GameActions.Queries.GetActions;
 using NorthwestV2.Application.UseCases.GameStart;
 using Xunit.Abstractions;
@@ -17,6 +18,7 @@ public class GetActionsHandlerTest : NorthwestIntegrationTestBase
     [Fact]
     public async Task GivenAnyPlayerInGame_WhenGetGameActionsCalled_ThenIsSomeDebugActionRetrievable()
     {
+        await RegisterUsersAndStartGame();
         Player anyPlayer = Context.Players.First();
 
 
@@ -28,11 +30,24 @@ public class GetActionsHandlerTest : NorthwestIntegrationTestBase
         Assert.NotNull(response);
     }
 
-    private void RegisterUsersAndStartGame()
+    private async Task RegisterUsersAndStartGame()
     {
-        // await Mediator.Send(new CreateGameHandler())
-        // {
-        //     
-        // }
+        List<Guid> userIds = new List<Guid>();
+
+        for (int i = 0; i < 12; i++)
+        {
+            Guid userId = await Mediator.Send(new RegisterRequest
+            {
+                Username = $"User{i}",
+                Password = "123"
+            });
+
+            userIds.Add(userId);
+        }
+
+        await Mediator.Send(new CreateGameRequest
+        {
+            UserIds = userIds
+        });
     }
 }

@@ -7,5 +7,5 @@ namespace NorthwestV2.Application.UseCases.GameStart;
 /// </summary>
 public class CreateGameRequest : IRequest<Guid>
 {
-    public IEnumerable<Guid> UserIds { get; set; } = [];
+    public required IEnumerable<Guid> UserIds { get; set; } = [];
 }

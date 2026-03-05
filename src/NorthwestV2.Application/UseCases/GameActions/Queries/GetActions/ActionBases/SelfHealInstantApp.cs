@@ -1,5 +1,6 @@
 ﻿using AetherFire23.ERP.Domain.Actions;
 using AetherFire23.ERP.Domain.Actions.AvailabilityStuff;
+using AetherFire23.ERP.Domain.Entity;
 using NorthwestV2.Application.EfCoreExtensions;
 using NorthwestV2.Application.UseCases.GameActions.Queries.GetActions.ActionBases.Bases;
 using NorthwestV2.Practical;
@@ -17,7 +18,7 @@ public class SelfHealInstantApp : InstantActionAppService
 
     public override async Task<InstantGameActionAvailability> GetAvailabilityResult(GetActionsRequest request)
     {
-        var player = await Context.Players.FindById(request.PlayerId);
+        Player player = await Context.Players.FindById(request.PlayerId);
 
         InstantGameActionAvailability availability = _selfHealInstant.GetAvailability(player);
 
