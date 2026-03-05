@@ -9,6 +9,10 @@ public class Room : EntityBase
     public required RoomEnum RoomEnum { get; set; }
 
     public List<Room> AdjacentRooms { get; set; } = [];
+    
+    public Guid InventoryId { get; set; }
+    public Inventory Inventory { get; set; } = new Inventory();
+    
 
     public override string ToString()
     {

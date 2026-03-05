@@ -16,7 +16,8 @@ public class CaptainRoleInitializer : RoleInitializer
             Game = context.Game,
             User = context.User,
             Room = context.Rooms.First(),
-            Role = Roles.Brute
+            Role = Roles.Captain,
+          
         };
 
         return player;

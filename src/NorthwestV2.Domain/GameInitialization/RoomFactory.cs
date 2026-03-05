@@ -12,6 +12,11 @@ public class RoomFactory
             RoomEnum = RoomEnum.BoilerRoom,
             Game = game,
         };
+        
+        boilerRoom.Inventory.Items.Add(new Item()
+        {
+            ItemType = ItemTypes.BrittleSword
+        });
 
         Room brig = new Room
         {

@@ -3,13 +3,23 @@ using AetherFire23.ERP.Domain.Entity;
 using AetherFire23.ERP.Domain.GameInitialization;
 using AetherFire23.ERP.Domain.GameInitialization.RoleInitializations;
 using JetBrains.Annotations;
+using Microsoft.Extensions.Logging;
 using NorthwestV2.Integration;
+using Xunit.Abstractions;
 
 namespace ERP.Testing.Domain;
 
 [TestSubject(typeof(PlayerFactory))]
 public class PlayerFactoryTest
 {
+
+    private readonly ITestOutputHelper _outputHelper;
+
+    public PlayerFactoryTest(ITestOutputHelper outputHelper)
+    {
+        _outputHelper = outputHelper;
+    }
+
     [Fact]
     public void GivenPlayerFactory_WhenCreatePlayers_ThenPlayerCountIsCorrect()
     {
@@ -18,8 +28,8 @@ public class PlayerFactoryTest
         Game fakeGame = new Game();
         IEnumerable<Room> fakeRooms = new RoomFactory().CreateRoomsForGame(fakeGame);
         var roleInitalizers = ScanRoleInitalizers();
-
-        PlayerFactory factory = new PlayerFactory(fakeRandom, roleInitalizers, );
+        ILogger<PlayerFactory> lg = new TestOutputLogger<PlayerFactory>(_outputHelper);
+        PlayerFactory factory = new PlayerFactory(fakeRandom, roleInitalizers, lg);
         List<User> dummyUsers = Enumerable.Range(0, 12)
             .Select(i => new User()
             {
@@ -41,7 +51,8 @@ public class PlayerFactoryTest
         IEnumerable<Room> fakeRooms = new RoomFactory().CreateRoomsForGame(fakeGame);
         var roleInitalizers = ScanRoleInitalizers();
 
-        PlayerFactory factory = new PlayerFactory(fakeRandom, roleInitalizers);
+        ILogger<PlayerFactory> lg = new TestOutputLogger<PlayerFactory>(_outputHelper);
+        PlayerFactory factory = new PlayerFactory(fakeRandom, roleInitalizers, lg);
         List<User> dummyUsers = Enumerable.Range(0, 12)
             .Select(i => new User()
             {

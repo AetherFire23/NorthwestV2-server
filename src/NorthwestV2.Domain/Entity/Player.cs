@@ -18,6 +18,9 @@ public class Player : EntityBase
     public Guid RoomId { get; set; }
     public required Room Room { get; set; }
 
+    public Guid InventoryId { get; set; }
+    public Inventory Inventory { get; set; } = new Inventory();// Empty inventory by default 
+
     public override string ToString()
     {
         return this.Role.ToString();

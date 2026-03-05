@@ -1,6 +1,7 @@
 ﻿using AetherFire23.Commons.Composition;
 using AetherFire23.ERP.Domain.Entity;
 using AetherFire23.ERP.Domain.GameInitialization;
+using AetherFire23.ERP.Domain.GameInitialization.RoleInitializations;
 using AetherFire23.ERP.Domain.GameInitialization.RoleInitializations.PlayerInitializers;
 using AetherFire23.ERP.Domain.Services;
 using Microsoft.Extensions.Configuration;
@@ -15,16 +16,9 @@ public class DomainInstaller : IInstaller
     {
         serviceCollection.AddScoped<NorthwestDomainService>();
         serviceCollection.AddScoped<RoomFactory>();
-        serviceCollection.AddScoped<PlayerFactory>(s =>
-        {
-            var captainRole = s.GetRequiredService<CaptainRoleInitializer>();
-            var randomProvider = s.GetRequiredService<IRandomProvider>();
-            IEnumerable<CaptainRoleInitializer> initializers = [captainRole];
-            ILogger<PlayerFactory> logger = s.GetRequiredService<ILogger<PlayerFactory>>();
-            return new PlayerFactory(randomProvider, initializers, logger);
-        });
-        serviceCollection.AddScoped<IRandomProvider, RealRandom>();
 
+        serviceCollection.AddScoped<IRandomProvider, RealRandom>();
+        RegisterPlayerFactory(serviceCollection);
         InstallRoleServices(serviceCollection);
     }
 
@@ -36,9 +30,48 @@ public class DomainInstaller : IInstaller
         services.AddScoped<EngineerRoleInitializer>();
         services.AddScoped<SentryRoleInitializer>();
         services.AddScoped<RangerRoleInitializer>();
-        services.AddScoped<CaptainRoleInitializer>();
         services.AddScoped<DoctorRoleInitializer>();
         services.AddScoped<CookRoleInitializer>();
         services.AddScoped<MarineRoleInitializer>();
+        services.AddScoped<SapperRoleInitializer>();
+        services.AddScoped<Scholar>();
+        services.AddScoped<Quartermaster>();
+    }
+
+    private void RegisterPlayerFactory(IServiceCollection serviceCollection)
+    {
+        serviceCollection.AddScoped<PlayerFactory>(s =>
+        {
+            CaptainRoleInitializer captainRole = s.GetRequiredService<CaptainRoleInitializer>();
+            BruteRoleInitializer bruteRoleInitializer = s.GetRequiredService<BruteRoleInitializer>();
+            ChaplainRoleInitializer chaplainRoleInitializer = s.GetRequiredService<ChaplainRoleInitializer>();
+            EngineerRoleInitializer engineerRoleInitializer = s.GetRequiredService<EngineerRoleInitializer>();
+            SentryRoleInitializer entryRoleInitializer = s.GetRequiredService<SentryRoleInitializer>();
+            RangerRoleInitializer rangerRoleInitializer = s.GetRequiredService<RangerRoleInitializer>();
+            DoctorRoleInitializer doctorRoleInitializer = s.GetRequiredService<DoctorRoleInitializer>();
+            CookRoleInitializer cookRoleInitializer = s.GetRequiredService<CookRoleInitializer>();
+            MarineRoleInitializer marineRoleInitializer = s.GetRequiredService<MarineRoleInitializer>();
+            SapperRoleInitializer sapperRoleInitializer = s.GetRequiredService<SapperRoleInitializer>();
+            Scholar scholarRoleInitializer = s.GetRequiredService<Scholar>();
+            Quartermaster quartermaster = s.GetRequiredService<Quartermaster>();
+            IRandomProvider randomProvider = s.GetRequiredService<IRandomProvider>();
+            IEnumerable<RoleInitializer> initializers =
+            [
+                captainRole,
+                bruteRoleInitializer,
+                chaplainRoleInitializer,
+                engineerRoleInitializer,
+                entryRoleInitializer,
+                rangerRoleInitializer,
+                cookRoleInitializer,
+                marineRoleInitializer,
+                sapperRoleInitializer,
+                scholarRoleInitializer,
+                quartermaster,
+                doctorRoleInitializer
+            ];
+            ILogger<PlayerFactory> logger = s.GetRequiredService<ILogger<PlayerFactory>>();
+            return new PlayerFactory(randomProvider, initializers, logger);
+        });
     }
 }

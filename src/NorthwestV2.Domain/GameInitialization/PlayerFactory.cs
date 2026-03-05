@@ -46,9 +46,9 @@ public class PlayerFactory
             User user = users[i];
             Roles role = allShuffledRoles[i];
             
-            _logger.LogInformation(role.ToString());
+            _logger.LogInformation($"Created : {role.ToString()}");
             
-            RoleInitializer roleInitializer = _roleInitializers.Single(x => x.Role == role);
+            RoleInitializer roleInitializer = _roleInitializers.First(x => x.Role == role);
 
             RoleInitializationContext roleInitializationContext = new RoleInitializationContext
             {

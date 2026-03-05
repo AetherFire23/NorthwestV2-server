@@ -36,10 +36,12 @@ public class CreateGameHandler : IRequestHandler<CreateGameRequest, Guid>
 
         _northwestContext.Players.AddRange(players);
 
-        await _northwestContext.SaveChangesAsync();
+        await _northwestContext.SaveChangesAsync(cancellationToken);
 
         // TODO: Create Items 
+        
 
+        await _northwestContext.SaveChangesAsync(cancellationToken);
 
         // TODO: Create game and add Players, users, and items, and rooms 
 

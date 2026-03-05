@@ -10,10 +10,11 @@ public class NorthwestContext : DbContext
     public DbSet<Game> Games { get; set; }
     public DbSet<Room> Rooms { get; set; }
     public DbSet<Player> Players { get; set; }
+    public DbSet<Item> Items { get; set; }
+    public DbSet<Log> Logs { get; set; }
 
     public NorthwestContext(DbContextOptions<NorthwestContext> options) : base(options)
     {
-        
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
