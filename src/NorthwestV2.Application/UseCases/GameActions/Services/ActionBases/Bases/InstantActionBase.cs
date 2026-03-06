@@ -22,16 +22,4 @@ public abstract class InstantActionBase : ActionBase
 
     public abstract Task<InstantActionAvailability> GetAvailabilityResult(GetActionsRequest request);
 
-    /// <summary>
-    /// Verifying if an instant action can execute is vastly easier than with targets. 
-    /// </summary>
-    /// <param name="request"></param>
-    /// <returns></returns>
-    public async Task<bool> ValidateExecution(ExecuteActionRequest request)
-    {
-        InstantActionAvailability actionAvailability =
-            await GetAvailabilityResult(new GetActionsRequest { PlayerId = request.PlayerId });
-
-        return actionAvailability.CanExecute;
-    }
 }

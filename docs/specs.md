@@ -1,7 +1,5 @@
 ﻿-- Challenge:
 
-Will need to get the token + put it inside the query in React . 
+faudrait faire frontend + un scenarioo
 
--- currently doing :
-verifying that action services can execute 
-
+faudrait pouvoir 100% mmock le backend vrm avoi rtestrs isoles en react

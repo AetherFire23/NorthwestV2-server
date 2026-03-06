@@ -1,5 +1,6 @@
 ﻿using AetherFire23.ERP.Domain;
 using AetherFire23.ERP.Domain.Actions;
+using AetherFire23.ERP.Domain.Actions.AvailabilityStuff;
 using AetherFire23.ERP.Domain.Entity;
 using JetBrains.Annotations;
 using Mediator;
@@ -34,30 +35,33 @@ public class ExecuteActionHandlerTest : NorthwestIntegrationTestBase
     }
 
     [Fact]
-    public async Task GivenActionWithTargets_WhenExecuted_ThenHasEffectApplied()
+    public async Task GivenActionWithInvalidTargets_WhenExecuted_ThenThrows()
     {
         await RegisterUsersAndStartGame();
         Guid playerId = Context.Players.First().Id;
-        Unit s = await Mediator.Send(new ExecuteActionRequest
+        var s = async () => await Mediator.Send(new ExecuteActionRequest
         {
             PlayerId = playerId,
-            ActionName = ActionNames.InstantHeal
+            ActionName = ActionNames.DebugWithTargets,
+            ActionTargets =
+            [
+                [
+                    new ActionTarget
+                    {
+                        Value = "1",
+                    }
+                ],
+                [
+                    new ActionTarget
+                    {
+                        Value = "1",
+                    }
+                ],
+            ]
         });
 
-        
-        Player player = await Context.Players.FindById(playerId);
-        Assert.True(player.Health == GameSettings.DefaultHealth + 2);
+        await Assert.ThrowsAsync<Exception>(s);
     }
-
-    //TODO: Verify that if the player does not have enough actionPoints, it throws (verifies that simple task validation, without targets, works)
-    
-    // TODO: Verify minimum is respected
-
-    // TODO: Verify maximum is respected 
-
-    // TODO: Verify it throws when min is not respected
-
-    // TODO: Verify it throws when max is not respected ( for any screen )
 
     /// <summary>
     /// 12 users will exist and game would be started 

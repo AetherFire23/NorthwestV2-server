@@ -9,6 +9,12 @@ public class GameActionsWithTargetsValidator
     public void EnsureIsValidActionExecutionOrThrow(ActionWithTargetsAvailability actionWithTargetsAvailability,
         List<List<ActionTarget>> actionTargets)
     {
+        if (actionWithTargetsAvailability.TargetSelectionPrompts.Count != actionTargets.Count)
+        {
+            throw new Exception(
+                $"There is not the same amount of prompts in each screens {actionWithTargetsAvailability.TargetSelectionPrompts.Count} / {actionTargets.Count}");
+        }
+
         if (!actionWithTargetsAvailability.CanExecute)
         {
             throw new Exception("Cannot execute because the number of targets");
@@ -49,14 +55,18 @@ public class GameActionsWithTargetsValidator
         ActionWithTargetsAvailability actionWithTargetsAvailability,
         List<List<ActionTarget>> actionTargets)
     {
-        IEnumerable<ActionTarget> validTargets =
-            actionWithTargetsAvailability.TargetSelectionPrompts.SelectMany(x => x.ValidTargets);
 
-        IEnumerable<ActionTarget> selectedTargets = actionTargets.SelectMany(x => x);
 
-        if (!selectedTargets.All(validTargets.Contains))
+        for (var i = 0; i < actionWithTargetsAvailability.TargetSelectionPrompts.Count; i++)
         {
-            throw new Exception("Select targets are outside of bounds. ");
+            var prompt = actionWithTargetsAvailability.TargetSelectionPrompts[i];
+
+            var selectedTargets = actionTargets[i];
+
+            if (!selectedTargets.All(prompt.ValidTargets.Contains))
+            {
+                throw new Exception("Select targets are outside of bounds. ");
+            }
         }
     }
 }

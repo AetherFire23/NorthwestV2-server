@@ -35,6 +35,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{ECE8
 		scripts\migrations.ps1 = scripts\migrations.ps1
 		scripts\submodule.ps1 = scripts\submodule.ps1
 		scripts\update-submodule.ps1 = scripts\update-submodule.ps1
+		scripts\docker postgres.ps1 = scripts\docker postgres.ps1
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NorthwestV2.Seed", "src\NorthwestV2.Seed\NorthwestV2.Seed.csproj", "{DCC61629-4AA3-43FE-80DB-E701BD0B93FD}"

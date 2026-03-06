@@ -129,7 +129,7 @@ public class GameActionsWithTargetsValidatorTest
         [[ANY_TARGET_WITH_ID_1, ANY_TARGET_WITH_ID_2, ANY_TARGET_WITH_ID_3, ANY_TARGET_WITH_ID_4]];
 
     private static List<List<ActionTarget>> TWO_PROMPT_ONE_SELECTION_ACTION_TARGET =
-        [[ANY_TARGET_WITH_ID_1], [ANY_TARGET_WITH_ID_2]];
+        [[ANY_TARGET_WITH_ID_1], [ANY_TARGET_WITH_ID_3]];
 
 
     [Fact]

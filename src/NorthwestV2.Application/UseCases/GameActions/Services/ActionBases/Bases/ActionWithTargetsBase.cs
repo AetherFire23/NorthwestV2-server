@@ -15,15 +15,5 @@ public abstract class ActionWithTargetsBase : ActionBase
 
     public abstract Task<ActionWithTargetsAvailability> GetAvailabilityResult(GetActionsRequest request);
 
-    /// <summary>
-    /// Validation with an action with targets
-    /// </summary>
-    /// <param name="actions"></param>
-    /// <returns></returns>
-    public async Task<bool> Validate(ActionWithTargetsAvailability actions)
-    {
-        // var s = await GetAvailabilityResult(new GetActionsRequest(){PlayerId = actions.});
 
-        return true;
-    }
 }

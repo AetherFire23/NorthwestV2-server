@@ -17,7 +17,6 @@ public class JwtTokenService
         _tokenHandler = new JwtSecurityTokenHandler();
     }
 
-
     public async Task<string> GenerateToken(Guid userId, string name)
     {
         List<Claim> claims = new List<Claim>()
