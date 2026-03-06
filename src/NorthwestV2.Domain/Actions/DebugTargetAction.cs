@@ -44,7 +44,7 @@ public class DebugTargetAction
         return new TargetSelectionPrompt()
         {
             Description = "Select the amount of damage you want to do",
-            Targets = targets,
+            ValidTargets = targets,
             Max = 1
         };
     }
@@ -65,7 +65,7 @@ public class DebugTargetAction
         return new TargetSelectionPrompt()
         {
             Description = "Select the amount of damage you want to do",
-            Targets = targets
+            ValidTargets = targets
         };
     }
 }
