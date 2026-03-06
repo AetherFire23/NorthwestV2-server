@@ -23,6 +23,17 @@ public partial class Program
         // Add services to the container.
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();
+        
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("AllowAll", policy =>
+            {
+                policy
+                    .AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod(); // <-- allows PUT, POST, DELETE, etc.
+            });
+        });
 
         builder.Services.AddSwaggerGen(c =>
         {
@@ -54,6 +65,7 @@ public partial class Program
 
         var app = builder.Build();
 
+        app.UseCors("AllowAll");
         app.UseSession();
         composer.InitializeServices(app.Services);
 
