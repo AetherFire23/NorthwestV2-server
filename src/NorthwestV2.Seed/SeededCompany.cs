@@ -22,7 +22,7 @@ public class SeededCompany : ISeeder
             Guid userId = await _mediator.Send(new RegisterRequest
             {
                 Password = "123",
-                Username = $"baf-{i}"
+                Username = $"myuser-{i}"
             });
 
             userids.Add(userId);

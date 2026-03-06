@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NorthwestV2.Application.UseCases.Authentication.Login;
 using NorthwestV2.Application.UseCases.Authentication.Register;
+using NorthwestV2.Application.UseCases.GameActions.Command.ExecuteAction;
+using NorthwestV2.Application.UseCases.GameActions.Queries.GetActions;
 using NorthwestV2.Practical;
 
 namespace NortwestV2.Api.Controllers;
@@ -48,12 +50,6 @@ public class MyController : ControllerBase
         return Ok(lg);
     }
 
-    [HttpGet("games")]
-    public async Task<ActionResult> GetGames()
-    {
-        return Ok();
-    }
-
     // quand tu pick une game; ca met tes infos dans la session
     // dans le UI ce qu ca va faire :
     // setgame()
@@ -66,23 +62,70 @@ public class MyController : ControllerBase
     /// </summary>
     /// <param name="gameId"></param>
     /// <returns></returns>
-    [HttpPut("setgame")]
-    public async Task<ActionResult> Test(Guid gameId)
+    [HttpPut("joingame")]
+    public async Task<ActionResult> Test()
     {
-        Game game = _context.Games
-            .Include(x => x.Players)
-            .First(x => x.Id == gameId);
-
         UserData userData = this.HttpContext.Session.GetUserData();
 
-        Player player = game.Players.First(x => x.UserId == userData.UserId);
+        Player player = _context.Players.First(x => x.UserId == userData.UserId);
 
         userData.PlayerId = player.Id;
 
-        userData.GameId = gameId;
+        userData.GameId = player.GameId;
 
         HttpContext.Session.SetUserData(userData);
 
         return Ok();
     }
+
+    [HttpPut("getitems")]
+    public async Task<ActionResult> GetPlayers()
+    {
+        UserData userData = this.HttpContext.Session.GetUserData();
+
+        var items = _context.Players
+            .Include(x => x.Inventory)
+            .ThenInclude(x => x.Items)
+            .First(x => x.Id == userData.PlayerId).Inventory.Items.ToList();
+
+        return Ok();
+    }
+
+    [HttpGet("availabilities")]
+    public async Task<ActionResult> GetActionsAvailabilities()
+    {
+        UserData userData = this.HttpContext.Session.GetUserData();
+
+        if (!userData.PlayerId.HasValue)
+        {
+            throw new Exception("This data is required");
+        }
+
+        GetActionsResult result = await _mediator.Send(new GetActionsRequest()
+        {
+            PlayerId = userData.PlayerId.Value
+        });
+
+        return Ok(result);
+    }
+
+    [HttpPost("execute")]
+    public async Task<ActionResult> Execute()
+    {
+        UserData userData = this.HttpContext.Session.GetUserData();
+        //
+        // await _mediator.Send(new ExecuteActionRequest()
+        // {
+        //     PlayerId = userData.PlayerId,
+        //     ActionName = actionName,
+        //     ActionTargets = 
+        // })
+        return Ok();
+    }
+}
+
+public class ExecuteBody()
+{
+    public string ActionName { get; set; }
+    // public List
 }
