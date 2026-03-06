@@ -8,11 +8,22 @@ public abstract class ActionWithTargetsBase : ActionBase
 {
     protected readonly NorthwestContext Context;
 
-
-    protected ActionWithTargetsBase(NorthwestContext context, string actionName) : base(context,actionName)
+    protected ActionWithTargetsBase(NorthwestContext context, string actionName) : base(context, actionName)
     {
         Context = context;
     }
 
     public abstract Task<ActionWithTargetsAvailability> GetAvailabilityResult(GetActionsRequest request);
+
+    /// <summary>
+    /// Validation with an action with targets
+    /// </summary>
+    /// <param name="actions"></param>
+    /// <returns></returns>
+    public async Task<bool> Validate(ActionWithTargetsAvailability actions)
+    {
+        // var s = await GetAvailabilityResult(new GetActionsRequest(){PlayerId = actions.});
+
+        return true;
+    }
 }

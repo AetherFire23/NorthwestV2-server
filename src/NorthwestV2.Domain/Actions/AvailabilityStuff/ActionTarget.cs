@@ -1,5 +1,8 @@
 ﻿namespace AetherFire23.ERP.Domain.Actions.AvailabilityStuff;
 
+// TODO: Even more complex than expected. 
+// need to check if the actual required target is the Id or the value.
+// I had a bug wher eI needed to use always an Id because I didnt take this into account
 public class ActionTarget
 {
     /// <summary>

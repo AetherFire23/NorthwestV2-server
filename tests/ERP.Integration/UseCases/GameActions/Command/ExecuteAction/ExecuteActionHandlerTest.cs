@@ -2,6 +2,7 @@
 using AetherFire23.ERP.Domain.Actions;
 using AetherFire23.ERP.Domain.Entity;
 using JetBrains.Annotations;
+using Mediator;
 using NorthwestV2.Application.EfCoreExtensions;
 using NorthwestV2.Application.UseCases.Authentication.Register;
 using NorthwestV2.Application.UseCases.GameActions.Command.ExecuteAction;
@@ -22,9 +23,9 @@ public class ExecuteActionHandlerTest : NorthwestIntegrationTestBase
     {
         await RegisterUsersAndStartGame();
         Guid playerId = Context.Players.First().Id;
-        var s = await Mediator.Send(new ExecuteActionRequest()
+        var s = await Mediator.Send(new ExecuteActionRequest
         {
-            PlayerId = Context.Players.First().Id,
+            PlayerId = playerId,
             ActionName = ActionNames.InstantHeal
         });
 
@@ -32,12 +33,38 @@ public class ExecuteActionHandlerTest : NorthwestIntegrationTestBase
         Assert.True(player.Health == GameSettings.DefaultHealth + 2);
     }
 
+    [Fact]
+    public async Task GivenActionWithTargets_WhenExecuted_ThenHasEffectApplied()
+    {
+        await RegisterUsersAndStartGame();
+        Guid playerId = Context.Players.First().Id;
+        Unit s = await Mediator.Send(new ExecuteActionRequest
+        {
+            PlayerId = playerId,
+            ActionName = ActionNames.InstantHeal
+        });
+
+        
+        Player player = await Context.Players.FindById(playerId);
+        Assert.True(player.Health == GameSettings.DefaultHealth + 2);
+    }
+
+    //TODO: Verify that if the player does not have enough actionPoints, it throws (verifies that simple task validation, without targets, works)
+    
+    // TODO: Verify minimum is respected
+
+    // TODO: Verify maximum is respected 
+
+    // TODO: Verify it throws when min is not respected
+
+    // TODO: Verify it throws when max is not respected ( for any screen )
+
     /// <summary>
     /// 12 users will exist and game would be started 
     /// </summary>
     private async Task RegisterUsersAndStartGame()
     {
-        List<Guid> userIds = new List<Guid>();
+        List<Guid> userIds = new();
 
         for (int i = 0; i < 12; i++)
         {

@@ -12,7 +12,7 @@ public abstract class ActionAvailabilityBase
     /// </summary>
     public required string ActionName { get; set; }
 
-    public List<ActionRequirement> ActionRequirements { get; set; }
+    public List<ActionRequirement> ActionRequirements { get; set; } = [];
 
     public bool CanExecute
     {

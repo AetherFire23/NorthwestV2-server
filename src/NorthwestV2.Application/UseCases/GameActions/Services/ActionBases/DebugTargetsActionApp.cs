@@ -21,8 +21,10 @@ public class DebugTargetsActionApp : ActionWithTargetsBase
     public override async Task<ActionWithTargetsAvailability> GetAvailabilityResult(GetActionsRequest request)
     {
         Player player = await Context.Players.FindById(request.PlayerId);
+        
         List<Player> allPlayersIngame =
             Context.Players.Where(x => x.GameId == player.GameId && x.Id != request.PlayerId).ToList();
+        
         ActionWithTargetsAvailability availability = _debugTargetAction.GetAvailability(player, allPlayersIngame);
 
         return availability;

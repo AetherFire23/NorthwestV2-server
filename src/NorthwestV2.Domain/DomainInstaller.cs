@@ -17,6 +17,7 @@ public class DomainInstaller : IInstaller
     {
         serviceCollection.AddScoped<NorthwestDomainService>();
         serviceCollection.AddScoped<RoomFactory>();
+        serviceCollection.AddScoped<GameActionsWithTargetsValidator>();
 
         serviceCollection.AddScoped<IRandomProvider, RealRandom>();
         InstallActionServices(serviceCollection);
