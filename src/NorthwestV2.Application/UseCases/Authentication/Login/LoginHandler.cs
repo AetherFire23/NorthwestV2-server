@@ -11,12 +11,10 @@ namespace NorthwestV2.Application.UseCases.Authentication.Login;
 public class LoginHandler : IRequestHandler<LoginRequest, LoginResult>
 {
     private readonly NorthwestContext _northwestContext;
-    private readonly JwtTokenService _jwtTokenService;
-    
-    public LoginHandler(NorthwestContext northwestContext, JwtTokenService jwtTokenService)
+
+    public LoginHandler(NorthwestContext northwestContext)
     {
         _northwestContext = northwestContext;
-        _jwtTokenService = jwtTokenService;
     }
 
     public async ValueTask<LoginResult> Handle(LoginRequest request, CancellationToken cancellationToken)
@@ -30,12 +28,10 @@ public class LoginHandler : IRequestHandler<LoginRequest, LoginResult>
             throw new LoginException();
         }
 
-        string token = await _jwtTokenService.GenerateToken(user.Id, user.Username);
-        
+
         return new LoginResult
         {
             UserId = user.Id,
-            Token = token
         };
     }
 }

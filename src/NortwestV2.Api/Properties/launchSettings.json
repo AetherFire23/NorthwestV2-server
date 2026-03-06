@@ -10,7 +10,7 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "commandLineArgs": ""
+      "commandLineArgs": "--seed SeededCompany --scenario SeededCompany"
     },
     "https": {
       "commandName": "Project",

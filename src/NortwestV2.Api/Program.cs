@@ -27,6 +27,9 @@ public partial class Program
         builder.Services.AddLogging();
         builder.Services.AddEndpointsApiExplorer();
 
+        builder.Services.AddDistributedMemoryCache();
+        builder.Services.AddSession();
+
         Composer composer = new Composer();
 
         composer.InstallServices(builder.Services, builder.Configuration,
@@ -43,6 +46,7 @@ public partial class Program
 
         var app = builder.Build();
 
+        app.UseSession();
         composer.InitializeServices(app.Services);
 
         app.MapControllers();
@@ -73,7 +77,7 @@ public partial class Program
             {
                 app.Services.ExecuteSeedFromSeedName(args.ElementAt(args.IndexOf("--seed") + 1));
                 // Leave as fire-and-forget async call. 
-                app.Services.LaunchScenarioBrowser(args[args.IndexOf("--scenario") + 1]);
+                // app.Services.LaunchScenarioBrowser(args[args.IndexOf("--scenario") + 1]);
             }
             else
             {

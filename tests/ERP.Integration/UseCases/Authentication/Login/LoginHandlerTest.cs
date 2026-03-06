@@ -25,21 +25,7 @@ public class LoginHandlerTest : NorthwestIntegrationTestBase
 
         Assert.NotNull(loginResult.UserId);
     }
-
-    [Fact]
-    private async Task GivenRegistration_WhenLogin_ThenReturnsToken()
-    {
-        await SeedRegistration();
-
-        LoginResult loginResult = await base.Mediator.Send(new LoginRequest()
-        {
-            Username = "Fred",
-            Password = "Password"
-        });
-
-        const string JWT_TOKEN_START = "ey";
-        Assert.Contains(JWT_TOKEN_START, loginResult.Token);
-    }
+    
 
     private async Task<SeedResult> SeedRegistration()
     {

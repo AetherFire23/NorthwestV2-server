@@ -1,5 +1,7 @@
 using AetherFire23.Commons.Seeding;
 using Mediator;
+using NorthwestV2.Application.UseCases.Authentication.Register;
+using NorthwestV2.Application.UseCases.GameStart;
 
 namespace NorthwestV2.Seed;
 
@@ -14,6 +16,22 @@ public class SeededCompany : ISeeder
 
     public async Task SetupSeeding()
     {
-     // TODO: some seeding 
+        List<Guid> userids = new List<Guid>();
+        for (int i = 0; i < 12; i++)
+        {
+            Guid userId = await _mediator.Send(new RegisterRequest
+            {
+                Password = "123",
+                Username = $"baf-{i}"
+            });
+
+            userids.Add(userId);
+        }
+
+        await _mediator.Send(new CreateGameRequest()
+        {
+            UserIds = userids
+        });
+        // TODO: some seeding 
     }
 }
