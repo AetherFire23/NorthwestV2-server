@@ -43,6 +43,8 @@ public class AuthController : ControllerBase
     {
         LoginResult lg = await _mediator.Send(request, cancellationToken);
 
+        await Task.Delay(1000, cancellationToken);
+        ;
         this.HttpContext.Session.SetUserData(new UserData
         {
             UserId = lg.UserId
