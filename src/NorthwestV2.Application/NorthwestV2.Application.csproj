@@ -23,7 +23,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="UseCases\Lobbies\" />
+      <Folder Include="UseCases\MainMenu\" />
     </ItemGroup>
 
 </Project>

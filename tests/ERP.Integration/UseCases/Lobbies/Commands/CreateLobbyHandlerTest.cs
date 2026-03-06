@@ -2,10 +2,7 @@
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 using NorthwestV2.Application.UseCases.Authentication.Login;
-using NorthwestV2.Application.UseCases.Authentication.Register;
-using NorthwestV2.Application.UseCases.Lobbies.Commands;
-using NorthwestV2.Application.UseCases.Lobbies.Commands.CreateLobby;
-using NorthwestV2.Application.UseCases.Lobbies.Commands.JoinLobby;
+using NorthwestV2.Application.UseCases.MainMenu.Lobbies.Commands.CreateLobby;
 using NorthwestV2.Integration.UseCases.Authentication.Login;
 using NorthwestV2.Integration.UseCases.Authentication.Register;
 using Xunit.Abstractions;
