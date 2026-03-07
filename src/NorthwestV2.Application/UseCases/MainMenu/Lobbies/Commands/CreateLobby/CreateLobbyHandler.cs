@@ -1,9 +1,9 @@
 ﻿using AetherFire23.ERP.Domain.Entity;
 using Mediator;
-using NorthwestV2.Application.UseCases.Lobbies.Commands.JoinLobby;
+using NorthwestV2.Application.UseCases.MainMenu.Lobbies.Commands.JoinLobby;
 using NorthwestV2.Practical;
 
-namespace NorthwestV2.Application.UseCases.Lobbies.Commands.CreateLobby;
+namespace NorthwestV2.Application.UseCases.MainMenu.Lobbies.Commands.CreateLobby;
 
 public class CreateLobbyHandler : IRequestHandler<CreateLobbyRequest, Guid>
 {

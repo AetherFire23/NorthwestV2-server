@@ -1,3 +1,4 @@
+using System.Reflection;
 using AetherFire23.Commons.Composition;
 using AetherFire23.Commons.Scenarios;
 using AetherFire23.Commons.Seeding;
@@ -22,8 +23,26 @@ public partial class Program
         // Add services to the container.
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();
+        
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("AllowAll", policy =>
+            {
+                policy
+                    .AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod(); // <-- allows PUT, POST, DELETE, etc.
+            });
+        });
 
-        builder.Services.AddSwaggerGen();
+        builder.Services.AddSwaggerGen(c =>
+        {
+            // https://learn.microsoft.com/en-us/aspnet/core/fundamentals/openapi/openapi-comments?view=aspnetcore-10.0
+            // https://learn.microsoft.com/en-us/aspnet/core/tutorials/getting-started-with-swashbuckle?view=aspnetcore-8.0&tabs=visual-studio
+            // using System.Reflection;
+            var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+        });
         builder.Services.AddLogging();
         builder.Services.AddEndpointsApiExplorer();
 
@@ -46,6 +65,7 @@ public partial class Program
 
         var app = builder.Build();
 
+        app.UseCors("AllowAll");
         app.UseSession();
         composer.InitializeServices(app.Services);
 

@@ -1,6 +1,6 @@
 ﻿using Mediator;
 
-namespace NorthwestV2.Application.UseCases.Lobbies.Commands.CreateLobby;
+namespace NorthwestV2.Application.UseCases.MainMenu.Lobbies.Commands.CreateLobby;
 
 /// <summary>
 ///Returns a lobby Id. 

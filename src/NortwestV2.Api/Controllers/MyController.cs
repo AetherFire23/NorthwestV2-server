@@ -28,27 +28,6 @@ public class MyController : ControllerBase
         _context = context;
     }
 
-    [HttpPost("register")]
-    public async Task<ActionResult<Guid>> Register(RegisterRequest request,
-        CancellationToken cancellationToken)
-    {
-        Guid userId = await _mediator.Send(request, cancellationToken);
-        return Ok(userId);
-    }
-
-    [HttpPut("login")]
-    public async Task<ActionResult<Guid>> Login(LoginRequest request,
-        CancellationToken cancellationToken)
-    {
-        LoginResult lg = await _mediator.Send(request, cancellationToken);
-
-        this.HttpContext.Session.SetUserData(new UserData
-        {
-            UserId = lg.UserId
-        });
-
-        return Ok(lg);
-    }
 
     // quand tu pick une game; ca met tes infos dans la session
     // dans le UI ce qu ca va faire :
@@ -56,27 +35,6 @@ public class MyController : ControllerBase
     // une fois fini, navigate dans le main() du site web
     // et puis pouf, toutes les request seront magiquement rendues aware du user. 
 
-
-    /// <summary>
-    /// Is purely a session request; does not provide any new info. 
-    /// </summary>
-    /// <param name="gameId"></param>
-    /// <returns></returns>
-    [HttpPut("joingame")]
-    public async Task<ActionResult> Test()
-    {
-        UserData userData = this.HttpContext.Session.GetUserData();
-
-        Player player = _context.Players.First(x => x.UserId == userData.UserId);
-
-        userData.PlayerId = player.Id;
-
-        userData.GameId = player.GameId;
-
-        HttpContext.Session.SetUserData(userData);
-
-        return Ok();
-    }
 
     [HttpPut("getitems")]
     public async Task<ActionResult> GetPlayers()
@@ -91,37 +49,7 @@ public class MyController : ControllerBase
         return Ok();
     }
 
-    [HttpGet("availabilities")]
-    public async Task<ActionResult> GetActionsAvailabilities()
-    {
-        UserData userData = this.HttpContext.Session.GetUserData();
-
-        if (!userData.PlayerId.HasValue)
-        {
-            throw new Exception("This data is required");
-        }
-
-        GetActionsResult result = await _mediator.Send(new GetActionsRequest()
-        {
-            PlayerId = userData.PlayerId.Value
-        });
-
-        return Ok(result);
-    }
-
-    [HttpPost("execute")]
-    public async Task<ActionResult> Execute()
-    {
-        UserData userData = this.HttpContext.Session.GetUserData();
-        //
-        // await _mediator.Send(new ExecuteActionRequest()
-        // {
-        //     PlayerId = userData.PlayerId,
-        //     ActionName = actionName,
-        //     ActionTargets = 
-        // })
-        return Ok();
-    }
+ 
 }
 
 public class ExecuteBody()
