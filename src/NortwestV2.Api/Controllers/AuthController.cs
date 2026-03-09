@@ -38,6 +38,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPut("login")]
+    [ProducesResponseType<LoginResult>(StatusCodes.Status200OK)]
     public async Task<ActionResult<Guid>> Login(LoginRequest request,
         CancellationToken cancellationToken)
     {

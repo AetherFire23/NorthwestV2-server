@@ -24,7 +24,7 @@ public class GameController : ControllerBase
     }
     
     [HttpGet("actions/availabilities")]
-    public async Task<ActionResult> GetActionsAvailabilities()
+    public async Task<ActionResult<GetActionsResult>> GetActionsAvailabilities()
     {
         UserData userData = this.HttpContext.Session.GetUserData();
 

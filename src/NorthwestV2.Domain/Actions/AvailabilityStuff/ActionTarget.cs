@@ -1,24 +1,58 @@
 ﻿namespace AetherFire23.ERP.Domain.Actions.AvailabilityStuff;
 
+/// <summary>
+/// Represents a target for an action, which may be identified either by a
+/// <see cref="Guid"/> identifier or by a string value. Only one form of
+/// identification may be used at a time.
+/// </summary>
+/// <remarks>
+/// An <see cref="ActionTarget"/> can be defined in two mutually exclusive ways:
+/// <list type="bullet">
+/// <item><description><see cref="TargetId"/> — a strongly typed identifier.</description></item>
+/// <item><description><see cref="Value"/> — a free‑form string representation.</description></item>
+/// </list>
+/// 
+/// <para>
+/// If both are set simultaneously, the instance is considered invalid and
+/// <see cref="IsInvalidState"/> will return <c>true</c>.  
+/// Equality checks will throw if either operand is in an invalid state.
+/// </para>
+/// 
+/// <para>
+/// Equality is based on whichever representation is used:
+/// <list type="bullet">
+/// <item>Two targets with matching <see cref="TargetId"/> values are equal.</item>
+/// <item>Two targets with matching <see cref="Value"/> values are equal.</item>
+/// </list>
+/// </para>
+/// </remarks>
 public class ActionTarget : IEquatable<ActionTarget>
 {
 
     public string Name { get; set; } = "Not specified";
+    
+
     /// <summary>
-    /// Useful for targeting entities with Ids
-    /// </summary>
+    /// The identifier of the target, if the target is represented by a GUID.
+    /// Mutually exclusive with <see cref="Value"/>.
     public Guid? TargetId { get; set; } = null;
 
     /// <summary>
-    /// Useful for targeting values like quantities. 
+    /// A string representation of the target, used when no GUID identifier applies.
+    /// Mutually exclusive with <see cref="TargetId"/>.
     /// </summary>
     public string? Value { get; set; } = null;
 
-
-    // TODO: a Compare() or override Equals() to check if one is equal to anotehr 
-
+    /// <summary>
+    /// Indicates whether the target is in an invalid state, meaning both
+    /// <see cref="TargetId"/> and <see cref="Value"/> are set simultaneously.
+    /// </summary>
     public bool IsInvalidState => this.TargetId.HasValue && !string.IsNullOrEmpty(this.Value);
-
+    
+    /// <summary>
+    /// Determines whether this target is equal to another target.
+    /// Throws if either target is in an invalid state.
+    /// </summary>
     public bool Equals(ActionTarget? other)
     {
         if (other is null) return false;

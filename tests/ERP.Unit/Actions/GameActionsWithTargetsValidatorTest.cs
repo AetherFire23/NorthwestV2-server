@@ -1,7 +1,6 @@
 ﻿using AetherFire23.ERP.Domain.Actions;
 using AetherFire23.ERP.Domain.Actions.AvailabilityStuff;
 using JetBrains.Annotations;
-using NorthwestV2.Application.UseCases.GameActions.Queries.GetActions.ReturnValue;
 
 namespace ERP.Testing.Domain.Actions;
 

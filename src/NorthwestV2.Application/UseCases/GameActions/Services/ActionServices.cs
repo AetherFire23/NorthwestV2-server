@@ -6,8 +6,12 @@ using NorthwestV2.Application.UseCases.GameActions.Services.ActionBases.Bases;
 namespace NorthwestV2.Application.UseCases.GameActions.Services;
 
 /// <summary>
-/// Utility methods to retrieve all the actions of a given base type all at once.
-/// Treats all actions as a polymorphic mass 
+/// Provides utility methods for discovering and executing all game actions
+/// of a given base type.  
+/// 
+/// This service treats actions polymorphically: instead of resolving a single
+/// action type, it scans the assembly for all concrete implementations of
+/// action base classes and resolves them through dependency injection.
 /// </summary>
 public class ActionServices
 {

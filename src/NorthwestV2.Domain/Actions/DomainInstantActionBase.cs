@@ -5,7 +5,6 @@ namespace AetherFire23.ERP.Domain.Actions;
 //TODO: Test this class very important 
 public class GameActionsWithTargetsValidator
 {
-    // TODO: verify if I can move out the parameters and make it scoped instead 
     public void EnsureIsValidActionExecutionOrThrow(ActionWithTargetsAvailability actionWithTargetsAvailability,
         List<List<ActionTarget>> actionTargets)
     {

@@ -1,6 +1,5 @@
 ﻿using AetherFire23.ERP.Domain.Actions.AvailabilityStuff;
 using AetherFire23.ERP.Domain.Entity;
-using NorthwestV2.Application.UseCases.GameActions.Queries.GetActions.ReturnValue;
 
 namespace AetherFire23.ERP.Domain.Actions;
 

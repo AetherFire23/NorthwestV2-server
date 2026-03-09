@@ -3,11 +3,13 @@ using AetherFire23.Commons.Composition;
 using AetherFire23.Commons.Scenarios;
 using AetherFire23.Commons.Seeding;
 using AetherFire23.ERP.Domain;
+using AetherFire23.ERP.Domain.Actions.AvailabilityStuff;
 using Microsoft.EntityFrameworkCore;
 using NorthwestV2.Application.Installation;
 using NorthwestV2.Infrastructure.Contexts;
 using NorthwestV2.Practical;
 using NorthwestV2.Seed;
+using NortwestV2.Api.SchemaFilters;
 
 namespace NortwestV2.Api;
 
@@ -19,7 +21,7 @@ public partial class Program
     public static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-
+        
         // Add services to the container.
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();
@@ -42,6 +44,12 @@ public partial class Program
             // using System.Reflection;
             var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
             c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+            
+            // Must include all assemblies for which types exist
+            var domainDocumentation = $"{typeof(ActionWithTargetsAvailability).Assembly.GetName().Name}.xml";
+            c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, domainDocumentation));
+            
+            // c.SchemaFilter<RemoveNullableSchemaFilter>();
         });
         builder.Services.AddLogging();
         builder.Services.AddEndpointsApiExplorer();

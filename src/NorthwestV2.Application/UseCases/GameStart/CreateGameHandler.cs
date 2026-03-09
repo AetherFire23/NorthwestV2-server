@@ -20,6 +20,35 @@ public class CreateGameHandler : IRequestHandler<CreateGameRequest, Guid>
         _roomFactory = roomFactory;
     }
 
+    /// <summary>
+    /// Creates a new game, generates its rooms, loads the participating users,
+    /// creates fresh players for the game, and persists all related entities.
+    /// </summary>
+    /// <param name="request">
+    /// The request containing the list of user IDs that will participate in the game.
+    /// </param>
+    /// <param name="cancellationToken">
+    /// A token used to observe cancellation requests.
+    /// </param>
+    /// <returns>
+    /// The unique identifier of the newly created <see cref="Game"/>.
+    /// </returns>
+    /// <remarks>
+    /// This handler orchestrates the full setup of a new game instance:
+    /// <list type="bullet">
+    /// <item>Creates the <see cref="Game"/> entity.</item>
+    /// <item>Generates rooms and their adjacency graph using the room factory.</item>
+    /// <item>Loads all participating users.</item>
+    /// <item>Creates fresh <see cref="Player"/> entities for each user.</item>
+    /// <item>Persists all entities to the database.</item>
+    /// </list>
+    /// 
+    /// Domain logic (e.g., room generation, player initialization) is delegated to
+    /// factories and domain services. This method focuses solely on application-layer
+    /// orchestration and persistence.
+    /// 
+    /// Item creation and final game assembly are intentionally left as TODOs.
+    /// </remarks>
     public async ValueTask<Guid> Handle(CreateGameRequest request, CancellationToken cancellationToken)
     {
         // Rooms will be automatically filled by ef core on savechangesasnyc TODO: a test for this i usspoe 
@@ -48,11 +77,30 @@ public class CreateGameHandler : IRequestHandler<CreateGameRequest, Guid>
         return game.Id;
     }
 
-    // Do a repository for this !
-    // I just wanted to keep my domain clean. 
-    // So I detach-reattach the adjacentROoms before ef core saves them.
-    // It sucks, but keeps my domain perfect 
-    // TODO: Fun ? do an AddWithNestedProps extension
+    /// <summary>
+    /// Persists a collection of rooms and their adjacency relationships while avoiding
+    /// EF Core cyclic navigation issues. This method temporarily removes adjacency links,
+    /// saves the rooms, and then restores the adjacency graph.
+    /// </summary>
+    /// <param name="rooms">
+    /// The collection of rooms whose adjacency relationships must be saved.
+    /// </param>
+    /// <remarks>
+    /// EF Core cannot persist cyclic navigation graphs in a single operation without
+    /// attempting to insert nested entities recursively.  
+    /// 
+    /// To work around this:
+    /// <list type="number">
+    /// <item>All rooms are added to the context.</item>
+    /// <item>Their adjacency lists are temporarily cleared.</item>
+    /// <item>The rooms are saved so EF Core assigns IDs and tracks them.</item>
+    /// <item>The original adjacency relationships are restored.</item>
+    /// </list>
+    /// 
+    /// This ensures that the room graph (which may contain cycles) is persisted safely
+    /// without EF Core attempting to re‑insert already tracked entities.
+    /// </remarks>
+
     private async ValueTask SaveRoomAndAdjacents(IEnumerable<Room> rooms)
     {
         Dictionary<Room, List<Room>> roomsToAdjacents = new Dictionary<Room, List<Room>>();
@@ -76,18 +124,5 @@ public class CreateGameHandler : IRequestHandler<CreateGameRequest, Guid>
         {
             roomsToAdjacent.Key.AdjacentRooms.AddRange(roomsToAdjacent.Value);
         }
-    }
-
-    private async Task<IEnumerable<User>> GetUsers(List<Guid> userIds)
-    {
-        List<User> users = new List<User>();
-
-        foreach (Guid userId in userIds)
-        {
-            User user = await _northwestContext.Users.FindAsync(userId) ?? throw new Exception("Cannot find this user");
-            users.Add(user);
-        }
-
-        return users;
     }
 }

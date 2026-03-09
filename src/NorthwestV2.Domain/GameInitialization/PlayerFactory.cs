@@ -12,7 +12,8 @@ public class PlayerFactory
     private readonly IEnumerable<RoleInitializer> _roleInitializers;
     private readonly ILogger<PlayerFactory> _logger;
 
-    public PlayerFactory(IRandomProvider randomProvider, IEnumerable<RoleInitializer> roleInitializers, ILogger<PlayerFactory> logger)
+    public PlayerFactory(IRandomProvider randomProvider, IEnumerable<RoleInitializer> roleInitializers,
+        ILogger<PlayerFactory> logger)
     {
         _randomProvider = randomProvider;
         _roleInitializers = roleInitializers;
@@ -34,22 +35,61 @@ public class PlayerFactory
         return players;
     }
 
+    /// <summary>
+    /// Creates and initializes all <see cref="Player"/> instances for a game,
+    /// assigning each user a role and invoking the appropriate role initializer.
+    /// </summary>
+    /// <param name="users">
+    /// The list of users participating in the game. Each user will be mapped to a role
+    /// based on their index in the list.
+    /// </param>
+    /// <param name="game">
+    /// The game instance for which players are being created.
+    /// </param>
+    /// <param name="rooms">
+    /// The collection of rooms available in the game. These are passed to each role
+    /// initializer so roles can configure room‑specific state if needed.
+    /// </param>
+    /// <param name="allShuffledRoles">
+    /// A shuffled list of roles, one for each user. The index of each role corresponds
+    /// to the index of the user it will be assigned to.
+    /// </param>
+    /// <returns>
+    /// A fully initialized list of <see cref="Player"/> objects, one for each user,
+    /// created through the appropriate <see cref="RoleInitializer"/>.
+    /// </returns>
+    /// <remarks>
+    /// This method orchestrates player creation but delegates all role‑specific
+    /// initialization to the corresponding <see cref="RoleInitializer"/>.  
+    /// It assumes:
+    /// <list type="bullet">
+    /// <item>The number of users matches the number of roles.</item>
+    /// <item>Each role has a registered <see cref="RoleInitializer"/>.</item>
+    /// </list>
+    /// </remarks>
     private List<Player> CreateInitializedPlayers(List<User> users, Game game, IEnumerable<Room> rooms,
         List<Roles> allShuffledRoles)
     {
+        // Prepare the list that will hold all created Player instances.
         List<Player> players = new List<Player>();
 
-        // map each player to each role 
 
+        // Iterate through each user by index so we can map them to the role at the same index.
         for (var i = 0; i < users.ToList().Count; i++)
         {
             User user = users[i];
+
+            // Retrieve the role assigned to this user (roles are pre-shuffled).
             Roles role = allShuffledRoles[i];
-            
-            _logger.LogInformation($"Created : {role.ToString()}");
-            
+
+            /*
+             Find the RoleInitializer responsible for creating players of this role.
+             Assumes exactly one initializer exists for each role.
+             */
             RoleInitializer roleInitializer = _roleInitializers.First(x => x.Role == role);
 
+            // Build the context object that provides all necessary data
+            // for the role initializer to construct and configure the player.
             RoleInitializationContext roleInitializationContext = new RoleInitializationContext
             {
                 Game = game,
