@@ -6,20 +6,27 @@ using NorthwestV2.Practical;
 namespace NorthwestV2.Application.UseCases.GameActions.Services.ActionBases.Bases;
 
 /// <summary>
-/// On the application layer, there's really no goal to this other than wiring everything together so the end-goal is
-/// Just to return the Availabilityies. 
+/// Base class for actions that execute immediately and do not require target selection.
 /// </summary>
 public abstract class InstantActionBase : ActionBase
 {
     protected readonly NorthwestContext Context;
 
-
-    // IDEA: Put player as property because he is executing the action. 
+    /// <summary>
+    /// Initializes a new instant action with the given database context and action name.
+    /// </summary>
+    /// <param name="context">The database context used by the action.</param>
+    /// <param name="actionName">The unique name of the action.</param>
     protected InstantActionBase(NorthwestContext context, string actionName) : base(context, actionName)
     {
         Context = context;
     }
-
+    
+    /// <summary>
+    /// Computes whether the action is currently available to the requesting player,
+    /// returning any relevant metadata needed by the UI.
+    /// </summary>
+    /// <param name="request">The request containing player and game context.</param>
+    /// <returns>An availability result describing whether the action can be executed.</returns>
     public abstract Task<InstantActionAvailability> GetAvailabilityResult(GetActionsRequest request);
-
 }
