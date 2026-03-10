@@ -1,7 +1,9 @@
 ﻿using AetherFire23.ERP.Domain.Actions.AvailabilityStuff;
+using AetherFire23.ERP.Domain.Entity;
 using AetherFire23.ERP.Domain.Features.Actions.Core;
 using AetherFire23.ERP.Domain.Features.Actions.Core.Availability;
 using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.WithTargets;
+using Microsoft.EntityFrameworkCore;
 using NorthwestV2.Application.Features.Actions.Core.Bases;
 using NorthwestV2.Application.UseCases.GameActions.Command.ExecuteAction;
 using NorthwestV2.Application.UseCases.GameActions.Queries.GetActions;
@@ -17,6 +19,7 @@ public class CombatActionApp : ActionWithTargetsBase
 
     public override async Task<ActionWithTargetsAvailability> GetAvailabilityResult(GetActionsRequest request)
     {
+        DbSet<Player> players = Context.Players;
         return new ActionWithTargetsAvailability
         {
             ActionName = this.ActionName,
@@ -38,7 +41,7 @@ public class CombatActionApp : ActionWithTargetsBase
         };
     }
 
-    public override Task Execute(ExecuteActionRequest request)
+    public override async Task Execute(ExecuteActionRequest request)
     {
         throw new NotImplementedException();
     }

@@ -1,10 +1,4 @@
-﻿using AetherFire23.ERP.Domain.Actions;
-using AetherFire23.ERP.Domain.Actions.AvailabilityStuff;
-using AetherFire23.ERP.Domain.Actions.Feature.Availability.Instant;
-using AetherFire23.ERP.Domain.Entity;
-using AetherFire23.ERP.Domain.Features.Actions.Core;
-using AetherFire23.ERP.Domain.Features.Actions.Core.Availability;
-using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.WithTargets;
+﻿using AetherFire23.ERP.Domain.Actions.ByRoles.General.Combat;
 
 namespace AetherFire23.ERP.Domain.Features.Actions.General.Combat;
 
@@ -25,27 +19,9 @@ public class CombatAction
      *
      */
 
-    public ActionWithTargetsAvailability GetAvailability(Player caster, string displayName)
+
+    public List<AttackTypes> ProvideValidAttackTypes()
     {
-        ActionRequirement actionRequirement = new()
-        {
-            Description = "Heals for 2 points ",
-            IsFulfilled = caster.ActionPoints > 2,
-        };
-
-        InstantActionAvailability vs = new()
-        {
-            ActionName = ActionNames.InstantHeal,
-            ActionRequirements = [actionRequirement]
-        };
-        
-        // TODO: Not finished at all here. 
-
-        return new ActionWithTargetsAvailability()
-        {
-            ActionName = displayName,
-        };
+        return Enum.GetValues<AttackTypes>().ToList();
     }
-
-    // how to calcualte Strength 
 }

@@ -1,15 +1,9 @@
 ﻿using AetherFire23.ERP.Domain;
-using AetherFire23.ERP.Domain.Actions;
-using AetherFire23.ERP.Domain.Actions.AvailabilityStuff;
-using AetherFire23.ERP.Domain.Actions.ByRoles.General.Combat;
-using AetherFire23.ERP.Domain.Entity;
 using AetherFire23.ERP.Domain.Features.Actions.Core;
-using AetherFire23.ERP.Domain.Features.Actions.Core.Availability;
 using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.WithTargets;
 using JetBrains.Annotations;
 using NorthwestV2.Application.Features.Actions.General.Combat;
 using NorthwestV2.Application.UseCases.Authentication.Register;
-using NorthwestV2.Application.UseCases.GameActions.Command.ExecuteAction;
 using NorthwestV2.Application.UseCases.GameActions.Queries.GetActions;
 using NorthwestV2.Application.UseCases.GameStart;
 using Xunit.Abstractions;

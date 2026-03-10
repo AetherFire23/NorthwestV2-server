@@ -32,7 +32,6 @@ public class ChooseDefensiveCounterApp : ActionWithTargetsBase
             TargetSelectionPrompts = [targetSelectionPrompt]
         };
 
-        int i = 0;
         return stuff;
     }
 

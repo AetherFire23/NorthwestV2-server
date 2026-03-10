@@ -1,4 +1,4 @@
-﻿namespace AetherFire23.ERP.Domain.Actions.ByRoles.General.Combat;
+﻿namespace AetherFire23.ERP.Domain.Features.Actions.General.Combat;
 
 public enum DefensiveCounters
 {
