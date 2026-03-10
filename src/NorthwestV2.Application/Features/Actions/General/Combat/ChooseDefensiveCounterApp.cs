@@ -1,6 +1,10 @@
 ﻿using AetherFire23.ERP.Domain.Actions.AvailabilityStuff;
 using AetherFire23.ERP.Domain.Actions.ByRoles.General.Combat;
+using AetherFire23.ERP.Domain.Entity;
+using AetherFire23.ERP.Domain.Features.Actions.Core;
+using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.WithTargets;
 using AetherFire23.ERP.Domain.Features.Actions.General.Combat;
+using NorthwestV2.Application.EfCoreExtensions;
 using NorthwestV2.Application.Features.Actions.Core.Bases;
 using NorthwestV2.Application.UseCases.GameActions.Command.ExecuteAction;
 using NorthwestV2.Application.UseCases.GameActions.Queries.GetActions;
@@ -12,20 +16,50 @@ public class ChooseDefensiveCounterApp : ActionWithTargetsBase
 {
     private readonly ChooseDefensiveCounter _chooseDefensiveCounter;
 
-    public ChooseDefensiveCounterApp(NorthwestContext context, string actionName,
-        ChooseDefensiveCounter chooseDefensiveCounter) : base(context, actionName)
+    public ChooseDefensiveCounterApp(NorthwestContext context, ChooseDefensiveCounter chooseDefensiveCounter) : base(
+        context, ActionNames.PickDefensiveStance)
     {
         _chooseDefensiveCounter = chooseDefensiveCounter;
     }
 
-    public override Task<ActionWithTargetsAvailability> GetAvailabilityResult(GetActionsRequest request)
+    public override async Task<ActionWithTargetsAvailability> GetAvailabilityResult(GetActionsRequest request)
     {
-        throw new NotImplementedException();
+        return new()
+        {
+            ActionName = ActionName,
+            TargetSelectionPrompts = []
+        };
     }
 
-    public override Task Execute(ExecuteActionRequest request)
+    private TargetSelectionPrompt CreatePromptOfDefensiveCounters()
+    {
+        List<ActionTarget> actionTargets = Enum.GetValues<DefensiveCounters>()
+            .Select(x =>
+                new ActionTarget()
+                {
+                    Value = x.ToString(),
+                    Name = x.ToString(),
+                    TargetId = Guid.Empty
+                }).ToList();
+
+        return new TargetSelectionPrompt()
+        {
+            Description = "Choose a defensive target stance.",
+            ValidTargets = actionTargets
+        };
+    }
+
+    /*
+     * Execution part
+     */
+
+    public override async Task Execute(ExecuteActionRequest request)
     {
         DefensiveCounters defensiveCounter = ExtractDefensiveCounterFromActionTargets(request.ActionTargets);
+
+        Player player = await Context.Players.FindById(request.PlayerId);
+
+        _chooseDefensiveCounter.Execute(player, defensiveCounter);
 
         throw new NotImplementedException();
     }

@@ -1,5 +1,5 @@
 ﻿using AetherFire23.ERP.Domain.Actions.AvailabilityStuff;
-using AetherFire23.ERP.Domain.Actions.Feature.Availability.WithTargets;
+using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.WithTargets;
 
 namespace AetherFire23.ERP.Domain.Actions.Bases;
 

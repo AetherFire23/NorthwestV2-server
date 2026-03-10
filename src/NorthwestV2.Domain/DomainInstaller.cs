@@ -4,6 +4,7 @@ using AetherFire23.ERP.Domain.Actions.Bases;
 using AetherFire23.ERP.Domain.Actions.ByRoles.Debug;
 using AetherFire23.ERP.Domain.Entity;
 using AetherFire23.ERP.Domain.Features.Actions.ByRoles.Debug;
+using AetherFire23.ERP.Domain.Features.Actions.General.Combat;
 using AetherFire23.ERP.Domain.GameInitialization;
 using AetherFire23.ERP.Domain.GameInitialization.RoleInitializations;
 using AetherFire23.ERP.Domain.GameInitialization.RoleInitializations.PlayerInitializers;
@@ -32,6 +33,7 @@ public class DomainInstaller : IInstaller
     {
         serviceCollection.AddScoped<DebugInstantAction>();
         serviceCollection.AddScoped<DebugTargetAction>();
+        serviceCollection.AddScoped<ChooseDefensiveCounter>();
     }
 
     private void InstallRoleServices(IServiceCollection services)

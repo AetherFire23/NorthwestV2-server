@@ -4,6 +4,7 @@ using AetherFire23.Commons.Scenarios;
 using AetherFire23.Commons.Seeding;
 using AetherFire23.ERP.Domain;
 using AetherFire23.ERP.Domain.Actions.AvailabilityStuff;
+using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.WithTargets;
 using Microsoft.EntityFrameworkCore;
 using NorthwestV2.Application.Installation;
 using NorthwestV2.Infrastructure.Contexts;

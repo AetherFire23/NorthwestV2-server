@@ -1,4 +1,5 @@
 ﻿using AetherFire23.ERP.Domain.Actions.AvailabilityStuff;
+using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.WithTargets;
 using NorthwestV2.Application.UseCases.GameActions.Queries.GetActions;
 using NorthwestV2.Practical;
 

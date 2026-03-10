@@ -1,4 +1,6 @@
-﻿namespace AetherFire23.ERP.Domain.Actions.AvailabilityStuff;
+﻿using AetherFire23.ERP.Domain.Features.Actions.Core.Availability;
+
+namespace AetherFire23.ERP.Domain.Actions.AvailabilityStuff;
 
 /// <summary>
 /// Represents the availability state of a game action, including its name
@@ -18,10 +20,15 @@ public abstract class ActionAvailabilityBase
 {
     public required string ActionName { get; set; }
 
-    public List<ActionRequirement> ActionRequirements { get; set; } = [];
+    public List<ActionRequirement> ActionRequirements { get; set; } = ActionRequirement.None;
 
     public bool CanExecute
     {
         get { return this.ActionRequirements.All(a => a.IsFulfilled); }
+    }
+
+    public override string ToString()
+    {
+        return $"{this.ActionName}";
     }
 }

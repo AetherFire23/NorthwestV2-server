@@ -28,9 +28,8 @@
 /// </remarks>
 public class ActionTarget : IEquatable<ActionTarget>
 {
-
     public string Name { get; set; } = "Not specified";
-    
+
 
     /// <summary>
     /// The identifier of the target, if the target is represented by a GUID.
@@ -48,7 +47,7 @@ public class ActionTarget : IEquatable<ActionTarget>
     /// <see cref="TargetId"/> and <see cref="Value"/> are set simultaneously.
     /// </summary>
     public bool IsInvalidState => this.TargetId.HasValue && !string.IsNullOrEmpty(this.Value);
-    
+
     /// <summary>
     /// Determines whether this target is equal to another target.
     /// Throws if either target is in an invalid state.
@@ -77,5 +76,11 @@ public class ActionTarget : IEquatable<ActionTarget>
     public override int GetHashCode()
     {
         return HashCode.Combine(TargetId, Value);
+    }
+
+
+    public override string ToString()
+    {
+        return $"{this.Name} - {this.Value ?? ""} {this.TargetId}";
     }
 }
