@@ -19,6 +19,7 @@
 
     <ItemGroup>
       <Folder Include="Features\" />
+      <Folder Include="Features\Actions\ByRoles\" />
     </ItemGroup>
 
 </Project>

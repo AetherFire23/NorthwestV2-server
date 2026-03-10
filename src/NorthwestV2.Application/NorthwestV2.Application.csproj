@@ -23,6 +23,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="Features\Actions\ByRoles\" />
       <Folder Include="Features\GameStart\" />
       <Folder Include="UseCases\MainMenu\" />
     </ItemGroup>

@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NorthwestV2.Application.Features.Actions.ByRoles.Debug;
 using NorthwestV2.Application.Features.Actions.Core;
+using NorthwestV2.Application.Features.Actions.Debug;
 
 namespace NorthwestV2.Application.Installation;
 

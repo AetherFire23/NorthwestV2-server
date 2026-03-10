@@ -1,8 +1,9 @@
 ﻿using AetherFire23.ERP.Domain.Actions.AvailabilityStuff;
+using AetherFire23.ERP.Domain.Actions.ByRoles.General.Combat;
 using AetherFire23.ERP.Domain.Actions.Feature.Availability.WithTargets;
 using AetherFire23.ERP.Domain.Entity;
 
-namespace AetherFire23.ERP.Domain.Actions.ByRoles.General.Combat;
+namespace AetherFire23.ERP.Domain.Features.Actions.General.Combat;
 
 public class ChooseDefensiveCounter
 {
@@ -36,35 +37,11 @@ public class ChooseDefensiveCounter
         };
     }
 
-    // TODO: Write unit tests 
-    // TODO: Actually not domain logic here. Would be in the Application Layer of this service. 
     /// <summary>
     /// Sets defensive counter on the player 
     /// </summary>
-    public void Execute(Player player, List<List<ActionTarget>> actionTargets)
+    public void Execute(Player player, DefensiveCounters defensiveCounters)
     {
-        DefensiveCounters defensiveCounter = ExtractDefensiveCounterFromActionTargets(actionTargets);
-
-        player.DefensiveCounter = defensiveCounter;
-    }
-
-    private DefensiveCounters ExtractDefensiveCounterFromActionTargets(List<List<ActionTarget>> actionTargets)
-    {
-        if (actionTargets.Count > 0)
-        {
-            throw new Exception("Should not exceed 1 screen wth");
-        }
-
-        ActionTarget? target = actionTargets.FirstOrDefault()?.FirstOrDefault();
-
-        if (target?.Value is null)
-        {
-            throw new Exception("Is null exception. ");
-        }
-
-        // Expects an enum.ToString()
-        DefensiveCounters defensiveCounters = Enum.Parse<DefensiveCounters>(target.Value);
-
-        return defensiveCounters;
+        player.DefensiveCounter = defensiveCounters;
     }
 }
