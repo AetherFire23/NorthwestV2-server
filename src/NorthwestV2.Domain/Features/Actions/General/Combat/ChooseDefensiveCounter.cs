@@ -10,7 +10,6 @@ public class ChooseDefensiveCounter
         return Enum.GetValues<DefensiveCounters>().ToList();
     }
 
-
     /// <summary>
     /// Sets defensive counter on the player 
     /// </summary>

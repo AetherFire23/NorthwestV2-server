@@ -24,11 +24,16 @@ public class ChooseDefensiveCounterApp : ActionWithTargetsBase
 
     public override async Task<ActionWithTargetsAvailability> GetAvailabilityResult(GetActionsRequest request)
     {
-        return new()
+        TargetSelectionPrompt targetSelectionPrompt = CreatePromptOfDefensiveCounters();
+
+        ActionWithTargetsAvailability stuff = new ActionWithTargetsAvailability
         {
             ActionName = ActionName,
-            TargetSelectionPrompts = []
+            TargetSelectionPrompts = [targetSelectionPrompt]
         };
+
+        int i = 0;
+        return stuff;
     }
 
     private TargetSelectionPrompt CreatePromptOfDefensiveCounters()
@@ -61,7 +66,7 @@ public class ChooseDefensiveCounterApp : ActionWithTargetsBase
 
         _chooseDefensiveCounter.Execute(player, defensiveCounter);
 
-        throw new NotImplementedException();
+        await Context.SaveChangesAsync();
     }
 
     private DefensiveCounters ExtractDefensiveCounterFromActionTargets(List<List<ActionTarget>> actionTargets)

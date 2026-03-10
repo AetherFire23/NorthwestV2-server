@@ -5,6 +5,7 @@ using AetherFire23.ERP.Domain.Actions.ByRoles.General.Combat;
 using AetherFire23.ERP.Domain.Entity;
 using AetherFire23.ERP.Domain.Features.Actions.Core;
 using AetherFire23.ERP.Domain.Features.Actions.Core.Availability;
+using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.WithTargets;
 using JetBrains.Annotations;
 using NorthwestV2.Application.Features.Actions.General.Combat;
 using NorthwestV2.Application.UseCases.Authentication.Register;
@@ -35,16 +36,13 @@ public class ChooseDefensiveCounterAppTest : NorthwestIntegrationTestBase
 
         // Only 2 stances, won't do a complex algorithm to test that. 
 
-        List<ActionRequirement> availableStances = getActionsResult.ActionWithTargets
-            .First(x => x.ActionName == ActionNames.PickDefensiveStance)
-            .ActionRequirements;
-        Assert.Equal(2, availableStances.Count);
+        ActionWithTargetsAvailability availableStances = getActionsResult.ActionWithTargets
+            .First(x => x.ActionName == ActionNames.PickDefensiveStance);
+        Assert.Equal(2, availableStances.TargetSelectionPrompts.First().ValidTargets.Count);
     }
 
     private async Task<CreateGameSeedData> ArrangeUntilGameCreation()
     {
-        // Preconditions: 
-        // have 12 users
         List<Guid> ids = new List<Guid>();
 
         for (int i = 0; i < GameSettings.RequiredPlayerCountToStartGame; i++)
