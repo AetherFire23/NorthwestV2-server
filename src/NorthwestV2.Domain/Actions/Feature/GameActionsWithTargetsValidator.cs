@@ -1,6 +1,7 @@
 ﻿using AetherFire23.ERP.Domain.Actions.AvailabilityStuff;
+using AetherFire23.ERP.Domain.Actions.Feature.Availability.WithTargets;
 
-namespace AetherFire23.ERP.Domain.Actions;
+namespace AetherFire23.ERP.Domain.Actions.Bases;
 
 //TODO: Test this class very important 
 public class GameActionsWithTargetsValidator
@@ -24,7 +25,7 @@ public class GameActionsWithTargetsValidator
             throw new Exception("Cannot not be within min max bounds");
         }
 
-        EnsureAllTargetsSelectionAreWithinValidTargets(actionWithTargetsAvailability, actionTargets);
+        EnsureAllTargetsSelectionAreWithinValidProvidedTargets(actionWithTargetsAvailability, actionTargets);
         // TODO: Validate that all targets are valid
     }
 
@@ -50,17 +51,17 @@ public class GameActionsWithTargetsValidator
         return isRespectingMinMaxBounds;
     }
 
-    private void EnsureAllTargetsSelectionAreWithinValidTargets(
+    private void EnsureAllTargetsSelectionAreWithinValidProvidedTargets(
         ActionWithTargetsAvailability actionWithTargetsAvailability,
         List<List<ActionTarget>> actionTargets)
     {
-
-
+        // Iterating through the valid targets and the selected targets at the same time.
+        // Valid targets for screen at i -> selections for screen at i
         for (var i = 0; i < actionWithTargetsAvailability.TargetSelectionPrompts.Count; i++)
         {
-            var prompt = actionWithTargetsAvailability.TargetSelectionPrompts[i];
+            TargetSelectionPrompt prompt = actionWithTargetsAvailability.TargetSelectionPrompts[i];
 
-            var selectedTargets = actionTargets[i];
+            List<ActionTarget> selectedTargets = actionTargets[i];
 
             if (!selectedTargets.All(prompt.ValidTargets.Contains))
             {

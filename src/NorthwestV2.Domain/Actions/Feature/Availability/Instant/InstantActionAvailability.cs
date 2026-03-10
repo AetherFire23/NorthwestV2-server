@@ -1,4 +1,6 @@
-﻿namespace AetherFire23.ERP.Domain.Actions.AvailabilityStuff;
+﻿using AetherFire23.ERP.Domain.Actions.AvailabilityStuff;
+
+namespace AetherFire23.ERP.Domain.Actions.Feature.Availability.Instant;
 
 
 /// <summary>

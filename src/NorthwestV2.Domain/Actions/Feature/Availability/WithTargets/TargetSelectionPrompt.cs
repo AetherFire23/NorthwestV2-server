@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using AetherFire23.ERP.Domain.Actions.AvailabilityStuff;
 
-namespace AetherFire23.ERP.Domain.Actions.AvailabilityStuff;
+namespace AetherFire23.ERP.Domain.Actions.Feature.Availability.WithTargets;
 
 /// <summary>
 /// Represents a prompt instructing the user to select one or more valid action targets.

@@ -1,5 +1,7 @@
 ﻿using AetherFire23.Commons.Composition;
 using AetherFire23.ERP.Domain.Actions;
+using AetherFire23.ERP.Domain.Actions.Bases;
+using AetherFire23.ERP.Domain.Actions.ByRoles.Debug;
 using AetherFire23.ERP.Domain.Entity;
 using AetherFire23.ERP.Domain.GameInitialization;
 using AetherFire23.ERP.Domain.GameInitialization.RoleInitializations;
@@ -27,7 +29,7 @@ public class DomainInstaller : IInstaller
 
     private void InstallActionServices(IServiceCollection serviceCollection)
     {
-        serviceCollection.AddScoped<SelfHealInstantAction>();
+        serviceCollection.AddScoped<DebugInstantAction>();
         serviceCollection.AddScoped<DebugTargetAction>();
     }
 

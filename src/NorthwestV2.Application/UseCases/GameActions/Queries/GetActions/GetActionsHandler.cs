@@ -1,4 +1,5 @@
 ﻿using AetherFire23.ERP.Domain.Actions.AvailabilityStuff;
+using AetherFire23.ERP.Domain.Actions.Feature.Availability.Instant;
 using Mediator;
 using NorthwestV2.Application.UseCases.GameActions.Services;
 

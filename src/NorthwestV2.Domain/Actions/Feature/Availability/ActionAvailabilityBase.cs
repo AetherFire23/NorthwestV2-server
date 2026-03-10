@@ -16,7 +16,6 @@
 /// </remarks>
 public abstract class ActionAvailabilityBase
 {
-
     public required string ActionName { get; set; }
 
     public List<ActionRequirement> ActionRequirements { get; set; } = [];

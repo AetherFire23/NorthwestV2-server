@@ -1,21 +1,20 @@
 ﻿using AetherFire23.ERP.Domain.Actions.AvailabilityStuff;
+using AetherFire23.ERP.Domain.Actions.Feature.Availability.Instant;
 using AetherFire23.ERP.Domain.Entity;
 
-namespace AetherFire23.ERP.Domain.Actions;
+namespace AetherFire23.ERP.Domain.Actions.ByRoles.General;
 
-public class SelfHealInstantAction
+public class CombatAction
 {
-    // The goal here is to keep the parameters unit-tested.
-
     public InstantActionAvailability GetAvailability(Player caster)
     {
-        ActionRequirement actionRequirement = new ActionRequirement()
+        ActionRequirement actionRequirement = new()
         {
             Description = "Heals for 2 points ",
             IsFulfilled = caster.ActionPoints > 2,
         };
 
-        InstantActionAvailability vs = new InstantActionAvailability()
+        InstantActionAvailability vs = new()
         {
             ActionName = ActionNames.InstantHeal,
             ActionRequirements = [actionRequirement]
