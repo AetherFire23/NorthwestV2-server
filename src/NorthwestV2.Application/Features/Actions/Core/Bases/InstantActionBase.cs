@@ -1,10 +1,8 @@
-﻿using AetherFire23.ERP.Domain.Actions.AvailabilityStuff;
-using AetherFire23.ERP.Domain.Actions.Feature.Availability.Instant;
-using NorthwestV2.Application.UseCases.GameActions.Command.ExecuteAction;
+﻿using AetherFire23.ERP.Domain.Actions.Feature.Availability.Instant;
 using NorthwestV2.Application.UseCases.GameActions.Queries.GetActions;
 using NorthwestV2.Practical;
 
-namespace NorthwestV2.Application.UseCases.GameActions.Services.ActionBases.Bases;
+namespace NorthwestV2.Application.Features.Actions.Core.Bases;
 
 /// <summary>
 /// Base class for actions that execute immediately and do not require target selection.

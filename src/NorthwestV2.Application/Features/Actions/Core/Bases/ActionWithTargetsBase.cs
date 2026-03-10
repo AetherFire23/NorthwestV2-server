@@ -2,7 +2,7 @@
 using NorthwestV2.Application.UseCases.GameActions.Queries.GetActions;
 using NorthwestV2.Practical;
 
-namespace NorthwestV2.Application.UseCases.GameActions.Services.ActionBases.Bases;
+namespace NorthwestV2.Application.Features.Actions.Core.Bases;
 
 public abstract class ActionWithTargetsBase : ActionBase
 {

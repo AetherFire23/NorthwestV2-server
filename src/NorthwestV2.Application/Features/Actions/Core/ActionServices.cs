@@ -1,10 +1,10 @@
 ﻿using AetherFire23.ERP.Domain.Actions.AvailabilityStuff;
 using AetherFire23.ERP.Domain.Actions.Feature.Availability.Instant;
 using Microsoft.Extensions.DependencyInjection;
+using NorthwestV2.Application.Features.Actions.Core.Bases;
 using NorthwestV2.Application.UseCases.GameActions.Queries.GetActions;
-using NorthwestV2.Application.UseCases.GameActions.Services.ActionBases.Bases;
 
-namespace NorthwestV2.Application.UseCases.GameActions.Services;
+namespace NorthwestV2.Application.Features.Actions.Core;
 
 /// <summary>
 /// Provides utility methods for discovering and executing all game actions

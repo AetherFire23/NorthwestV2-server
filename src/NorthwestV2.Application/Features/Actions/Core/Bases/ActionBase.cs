@@ -1,7 +1,7 @@
 ﻿using NorthwestV2.Application.UseCases.GameActions.Command.ExecuteAction;
 using NorthwestV2.Practical;
 
-namespace NorthwestV2.Application.UseCases.GameActions.Services.ActionBases.Bases;
+namespace NorthwestV2.Application.Features.Actions.Core.Bases;
 
 /// <summary>
 /// Base class for all executable game actions. Provides shared infrastructure such as

@@ -3,9 +3,9 @@ using AetherFire23.ERP.Domain.Actions.AvailabilityStuff;
 using AetherFire23.ERP.Domain.Actions.Bases;
 using AetherFire23.ERP.Domain.Actions.Feature.Availability.Instant;
 using Mediator;
+using NorthwestV2.Application.Features.Actions.Core;
+using NorthwestV2.Application.Features.Actions.Core.Bases;
 using NorthwestV2.Application.UseCases.GameActions.Queries.GetActions;
-using NorthwestV2.Application.UseCases.GameActions.Services;
-using NorthwestV2.Application.UseCases.GameActions.Services.ActionBases.Bases;
 
 namespace NorthwestV2.Application.UseCases.GameActions.Command.ExecuteAction;
 
