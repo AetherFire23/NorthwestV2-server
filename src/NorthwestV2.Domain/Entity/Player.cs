@@ -25,6 +25,12 @@ public class Player : EntityBase
 
     public int Health { get; set; } = GameSettings.DefaultHealth;
 
+    /// <summary>
+    /// How much strength must be accumulated before health is lost.
+    /// Depends per-role.
+    /// </summary>
+    public required int Toughness { get; set; }
+
     public override string ToString()
     {
         return this.Role.ToString();

@@ -16,7 +16,8 @@ public class SapperRoleInitializer : RoleInitializer
             Game = context.Game,
             Role = this.Role,
             Room = context.Rooms.First(),
-            User = context.User
+            User = context.User,
+            Toughness = ToughnessInitializationConstants.TOUGH,
         };
     }
 }
