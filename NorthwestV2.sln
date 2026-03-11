@@ -50,6 +50,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NorthwestV2.Application", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NortwestV2.Api", "src\NortwestV2.Api\NortwestV2.Api.csproj", "{AEF18D2D-B5B2-4233-9DE5-58E1473BB764}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NorthwestV2.Compose", "NorthwestV2.Compose\NorthwestV2.Compose.csproj", "{998C4241-370A-4A00-8022-289A1365B8F2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -116,6 +118,10 @@ Global
 		{AEF18D2D-B5B2-4233-9DE5-58E1473BB764}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AEF18D2D-B5B2-4233-9DE5-58E1473BB764}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AEF18D2D-B5B2-4233-9DE5-58E1473BB764}.Release|Any CPU.Build.0 = Release|Any CPU
+		{998C4241-370A-4A00-8022-289A1365B8F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{998C4241-370A-4A00-8022-289A1365B8F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{998C4241-370A-4A00-8022-289A1365B8F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{998C4241-370A-4A00-8022-289A1365B8F2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
