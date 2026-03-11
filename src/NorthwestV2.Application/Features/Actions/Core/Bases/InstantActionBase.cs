@@ -1,6 +1,5 @@
 ﻿using AetherFire23.ERP.Domain.Actions.Feature.Availability.Instant;
 using NorthwestV2.Application.UseCases.GameActions.Queries.GetActions;
-using NorthwestV2.Practical;
 
 namespace NorthwestV2.Application.Features.Actions.Core.Bases;
 
@@ -9,16 +8,13 @@ namespace NorthwestV2.Application.Features.Actions.Core.Bases;
 /// </summary>
 public abstract class InstantActionBase : ActionBase
 {
-    protected readonly NorthwestContext Context;
-
     /// <summary>
     /// Initializes a new instant action with the given database context and action name.
     /// </summary>
     /// <param name="context">The database context used by the action.</param>
     /// <param name="actionName">The unique name of the action.</param>
-    protected InstantActionBase(NorthwestContext context, string actionName) : base(context, actionName)
+    protected InstantActionBase(string actionName) : base(actionName)
     {
-        Context = context;
     }
     
     /// <summary>

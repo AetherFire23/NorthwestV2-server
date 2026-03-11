@@ -1,0 +1,74 @@
+﻿using System.Linq.Expressions;
+using AetherFire23.ERP.Domain.Entity;
+using Microsoft.EntityFrameworkCore;
+using NorthwestV2.Application.EfCoreExtensions;
+using NorthwestV2.Application.Features.Actions.General.Combat;
+using NorthwestV2.Application.Repositories;
+using NorthwestV2.Practical;
+
+namespace NorthwestV2.Infrastructure.Repositories;
+
+public class PlayerRepository : IPlayerRepository
+{
+    private readonly NorthwestContext _northwestContext;
+
+    public PlayerRepository(NorthwestContext northwestContext)
+    {
+        _northwestContext = northwestContext;
+    }
+
+    private Expression<Func<Player, bool>> GameIdScoped(Player player)
+    {
+        return (other) => other.GameId == player.GameId;
+    }
+
+    public async Task<List<Player>> GetPlayersInSameRoom(Guid playerId)
+    {
+        Player player = await GetPlayer(playerId);
+
+        List<Player> playersInGame = _northwestContext.Players
+            .Where(GameIdScoped(player))
+            .Where(x => x.RoomId == player.RoomId)
+            .ToList();
+
+        return playersInGame;
+    }
+
+    public async Task<List<Player>> GetOtherPlayersInGame(Guid playerId)
+    {
+        Player player = await GetPlayer(playerId);
+        var otherPlayers = await _northwestContext.Players
+            .Where(GameIdScoped(player))
+            .Where(x => x.Id != player.Id)
+            .ToListAsync();
+
+        return otherPlayers;
+    }
+
+    public async Task<Player> GetPlayer(Guid playerid)
+    {
+        Player user = await _northwestContext.Players.FindById(playerid);
+        return user;
+    }
+
+    public async Task<List<Player>> GetPlayersInSameGame(Guid playerId)
+    {
+        Player player = await _northwestContext.Players.FindById(playerId);
+
+        List<Player> players = await _northwestContext.Players
+            .Where(GameIdScoped(player))
+            .ToListAsync();
+
+        return players;
+    }
+
+    public void Add(Player player)
+    {
+        _northwestContext.Players.Add(player);
+    }
+
+    public void AddRange(IEnumerable<Player> player)
+    {
+        _northwestContext.Players.AddRange(player);
+    }
+}

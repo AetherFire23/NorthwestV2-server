@@ -1,14 +1,12 @@
 ﻿using AetherFire23.ERP.Domain.Actions.AvailabilityStuff;
-using AetherFire23.ERP.Domain.Actions.ByRoles.General.Combat;
 using AetherFire23.ERP.Domain.Entity;
 using AetherFire23.ERP.Domain.Features.Actions.Core;
 using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.WithTargets;
 using AetherFire23.ERP.Domain.Features.Actions.General.Combat;
-using NorthwestV2.Application.EfCoreExtensions;
 using NorthwestV2.Application.Features.Actions.Core.Bases;
+using NorthwestV2.Application.Repositories;
 using NorthwestV2.Application.UseCases.GameActions.Command.ExecuteAction;
 using NorthwestV2.Application.UseCases.GameActions.Queries.GetActions;
-using NorthwestV2.Practical;
 
 namespace NorthwestV2.Application.Features.Actions.General.Combat;
 
@@ -16,10 +14,17 @@ public class ChooseDefensiveCounterApp : ActionWithTargetsBase
 {
     private readonly ChooseDefensiveCounter _chooseDefensiveCounter;
 
-    public ChooseDefensiveCounterApp(NorthwestContext context, ChooseDefensiveCounter chooseDefensiveCounter) : base(
-        context, ActionNames.PickDefensiveStance)
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IPlayerRepository _playerRepository;
+
+    public ChooseDefensiveCounterApp(ChooseDefensiveCounter chooseDefensiveCounter, IUnitOfWork unitOfWork,
+        IPlayerRepository playerRepository) : base(
+        ActionNames
+            .PickDefensiveStance)
     {
         _chooseDefensiveCounter = chooseDefensiveCounter;
+        _unitOfWork = unitOfWork;
+        _playerRepository = playerRepository;
     }
 
     public override async Task<ActionWithTargetsAvailability> GetAvailabilityResult(GetActionsRequest request)
@@ -61,11 +66,11 @@ public class ChooseDefensiveCounterApp : ActionWithTargetsBase
     {
         DefensiveCounters defensiveCounter = ExtractDefensiveCounterFromActionTargets(request.ActionTargets);
 
-        Player player = await Context.Players.FindById(request.PlayerId);
+        Player player = await _playerRepository.GetPlayer(request.PlayerId);
 
         _chooseDefensiveCounter.Execute(player, defensiveCounter);
 
-        await Context.SaveChangesAsync();
+        await _unitOfWork.SaveChangesAsync();
     }
 
     private DefensiveCounters ExtractDefensiveCounterFromActionTargets(List<List<ActionTarget>> actionTargets)

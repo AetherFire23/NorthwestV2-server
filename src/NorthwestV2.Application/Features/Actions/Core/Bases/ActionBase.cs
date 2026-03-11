@@ -1,5 +1,4 @@
 ﻿using NorthwestV2.Application.UseCases.GameActions.Command.ExecuteAction;
-using NorthwestV2.Practical;
 
 namespace NorthwestV2.Application.Features.Actions.Core.Bases;
 
@@ -14,16 +13,15 @@ public abstract class ActionBase
     /// The unique name of the action. Used for identification, and UI display.
     /// </summary>
     public string ActionName { get; private set; }
-    protected readonly NorthwestContext Context;
+
     
     /// <summary>
     /// Initializes a new action with the given database context and action name.
     /// </summary>
     /// <param name="context">The database context used by the action.</param>
     /// <param name="actionName">The unique name of the action.</param>
-    protected ActionBase(NorthwestContext context, string actionName)
+    protected ActionBase(string actionName)
     {
-        Context = context;
         ActionName = actionName;
     }
     

@@ -5,21 +5,24 @@ using AetherFire23.ERP.Domain.Features.Actions.Core.Availability;
 using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.WithTargets;
 using Microsoft.EntityFrameworkCore;
 using NorthwestV2.Application.Features.Actions.Core.Bases;
+using NorthwestV2.Application.Repositories;
 using NorthwestV2.Application.UseCases.GameActions.Command.ExecuteAction;
 using NorthwestV2.Application.UseCases.GameActions.Queries.GetActions;
-using NorthwestV2.Practical;
 
 namespace NorthwestV2.Application.Features.Actions.General.Combat;
 
 public class CombatActionApp : ActionWithTargetsBase
 {
-    public CombatActionApp(NorthwestContext context) : base(context, ActionNames.CombatAction)
+    private readonly IPlayerRepository _playerRepository;
+
+    public CombatActionApp(IPlayerRepository playerRepository) : base(ActionNames.CombatAction)
     {
+        _playerRepository = playerRepository;
     }
 
     public override async Task<ActionWithTargetsAvailability> GetAvailabilityResult(GetActionsRequest request)
     {
-        DbSet<Player> players = Context.Players;
+        var players = await _playerRepository.GetPlayersInSameGame(request.PlayerId);
         return new ActionWithTargetsAvailability
         {
             ActionName = this.ActionName,

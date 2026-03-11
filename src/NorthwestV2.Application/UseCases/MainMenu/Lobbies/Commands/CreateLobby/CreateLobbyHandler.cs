@@ -1,35 +1,39 @@
 ﻿using AetherFire23.ERP.Domain.Entity;
 using Mediator;
+using NorthwestV2.Application.Repositories;
 using NorthwestV2.Application.UseCases.MainMenu.Lobbies.Commands.JoinLobby;
-using NorthwestV2.Practical;
 
 namespace NorthwestV2.Application.UseCases.MainMenu.Lobbies.Commands.CreateLobby;
 
 public class CreateLobbyHandler : IRequestHandler<CreateLobbyRequest, Guid>
 {
-    private readonly NorthwestContext _northwestContext;
-
+    private readonly IUserRepository _userRepository;
+    private readonly ILobbyRepository _lobbyRepository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly IMediator _mediator;
 
-    public CreateLobbyHandler(NorthwestContext northwestContext, IMediator mediator)
+    public CreateLobbyHandler(IMediator mediator, IUnitOfWork unitOfWork, IUserRepository userRepository,
+        ILobbyRepository lobbyRepository)
     {
-        _northwestContext = northwestContext;
         _mediator = mediator;
+        _unitOfWork = unitOfWork;
+        _userRepository = userRepository;
+        _lobbyRepository = lobbyRepository;
     }
 
     public async ValueTask<Guid> Handle(CreateLobbyRequest request, CancellationToken cancellationToken)
     {
-        User user = await _northwestContext.Users.FindAsync(request.UserId, cancellationToken);
+        User user = await _userRepository.GetById(request.UserId);
 
         Lobby newLobby = Lobby.Create(user);
 
-        _northwestContext.Lobbies.Add(newLobby);
+        _lobbyRepository.Add(newLobby);
 
         // Make user Join his own Lobby.
         // TODO: Use joinLobby use case 
 
 
-        await _northwestContext.SaveChangesAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync();
 
         await _mediator.Send(new JoinLobbyRequest()
         {

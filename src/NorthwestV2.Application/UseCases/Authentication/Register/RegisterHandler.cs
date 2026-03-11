@@ -1,16 +1,18 @@
 ﻿using AetherFire23.ERP.Domain.Entity;
 using Mediator;
-using NorthwestV2.Practical;
+using NorthwestV2.Application.Repositories;
 
 namespace NorthwestV2.Application.UseCases.Authentication.Register;
 
 public class RegisterHandler : IRequestHandler<RegisterRequest, Guid>
 {
-    private readonly NorthwestContext _northwestContext;
+    private readonly IUserRepository _userRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public RegisterHandler(NorthwestContext northwestContext)
+    public RegisterHandler(IUnitOfWork unitOfWork, IUserRepository userRepository)
     {
-        _northwestContext = northwestContext;
+        _unitOfWork = unitOfWork;
+        _userRepository = userRepository;
     }
 
     /// <summary>
@@ -28,10 +30,10 @@ public class RegisterHandler : IRequestHandler<RegisterRequest, Guid>
             Username = username,
             HashedPassword = password // TODO: Has lol 
         };
+        
+        _userRepository.Add(user);
 
-        _northwestContext.Users.Add(user);
-
-        await _northwestContext.SaveChangesAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
         return user.Id;
     }
 }

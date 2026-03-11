@@ -9,7 +9,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\commons\AetherFire23.Commons.Composition\AetherFire23.Commons.Composition.csproj" />
-      <ProjectReference Include="..\NorthwestV2.Practical\NorthwestV2.Practical.csproj" />
+      <ProjectReference Include="..\NorthwestV2.Domain\NorthwestV2.Domain.csproj" />
     </ItemGroup>
 
     <ItemGroup>
