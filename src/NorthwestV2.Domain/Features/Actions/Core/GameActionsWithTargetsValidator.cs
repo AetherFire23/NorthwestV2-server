@@ -1,7 +1,7 @@
 ﻿using AetherFire23.ERP.Domain.Actions.AvailabilityStuff;
 using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.WithTargets;
 
-namespace AetherFire23.ERP.Domain.Actions.Bases;
+namespace AetherFire23.ERP.Domain.Features.Actions.Core;
 
 //TODO: Test this class very important 
 public class GameActionsWithTargetsValidator

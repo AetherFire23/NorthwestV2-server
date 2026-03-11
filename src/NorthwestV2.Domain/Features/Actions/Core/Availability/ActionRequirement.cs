@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Runtime.InteropServices;
 
 namespace AetherFire23.ERP.Domain.Features.Actions.Core.Availability;
 
@@ -26,6 +27,17 @@ public class ActionRequirement
     public bool IsFulfilled { get; set; }
 
     public static List<ActionRequirement> None = [NoCondition];
+
+    public ActionRequirement()
+    {
+    }
+
+    public ActionRequirement(string description, bool isFulfilled)
+    {
+        Description = description;
+        IsFulfilled = isFulfilled;
+    }
+
 
     private static ActionRequirement NoCondition = new ActionRequirement()
     {

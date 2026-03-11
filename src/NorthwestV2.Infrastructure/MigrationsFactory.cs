@@ -1,8 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-using NorthwestV2.Infrastructure;
 
-namespace NorthwestV2.Practical;
+namespace NorthwestV2.Infrastructure;
 
 // TODO: check if Commons can handle a generic implementation 
 public class MigrationsFactory : IDesignTimeDbContextFactory<NorthwestContext>

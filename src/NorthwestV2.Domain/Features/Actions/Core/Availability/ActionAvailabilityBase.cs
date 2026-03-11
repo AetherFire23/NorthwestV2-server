@@ -24,7 +24,10 @@ public abstract class ActionAvailabilityBase
 
     public bool CanExecute
     {
-        get { return this.ActionRequirements.All(a => a.IsFulfilled); }
+        get
+        {
+            return this.ActionRequirements.All(a => a.IsFulfilled);
+        }
     }
 
     public override string ToString()

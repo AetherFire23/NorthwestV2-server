@@ -3,8 +3,8 @@ using AetherFire23.ERP.Domain.Entity;
 using AetherFire23.ERP.Domain.Features.Actions.Core;
 using AetherFire23.ERP.Domain.Features.Actions.Core.Availability;
 using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.WithTargets;
-using Microsoft.EntityFrameworkCore;
 using NorthwestV2.Application.Features.Actions.Core.Bases;
+using NorthwestV2.Application.Features.Actions.Core.TargetMapping;
 using NorthwestV2.Application.Repositories;
 using NorthwestV2.Application.UseCases.GameActions.Command.ExecuteAction;
 using NorthwestV2.Application.UseCases.GameActions.Queries.GetActions;
@@ -14,34 +14,39 @@ namespace NorthwestV2.Application.Features.Actions.General.Combat;
 public class CombatActionApp : ActionWithTargetsBase
 {
     private readonly IPlayerRepository _playerRepository;
+    private readonly PlayerTargets _playerToTargets;
 
-    public CombatActionApp(IPlayerRepository playerRepository) : base(ActionNames.CombatAction)
+    public CombatActionApp(IPlayerRepository playerRepository, PlayerTargets playerToTargets) : base(ActionNames
+        .CombatAction)
     {
         _playerRepository = playerRepository;
+        _playerToTargets = playerToTargets;
     }
 
     public override async Task<ActionWithTargetsAvailability> GetAvailabilityResult(GetActionsRequest request)
     {
-        var players = await _playerRepository.GetPlayersInSameGame(request.PlayerId);
-        return new ActionWithTargetsAvailability
+        // TargetSelectionPrompt prompt = new TargetSelectionPrompt();
+        TargetSelectionPrompt promptOfPlayersAsTargets = await BuildPlayersAsTargetsPrompt(request.PlayerId);
+
+        return ActionWithTargetsAvailability.Create(
+            this.ActionName,
+            ActionRequirement.None,
+            promptOfPlayersAsTargets
+        );
+    }
+
+    private async Task<TargetSelectionPrompt> BuildPlayersAsTargetsPrompt(Guid playerId)
+    {
+        List<Player> players = await _playerRepository.GetPlayersInSameRoom(playerId);
+        List<ActionTarget> playersAsTargets = _playerToTargets.Convert(players);
+
+        var prompt = new TargetSelectionPrompt()
         {
-            ActionName = this.ActionName,
-            ActionRequirements = ActionRequirement.None,
-            TargetSelectionPrompts =
-            [
-                new TargetSelectionPrompt
-                {
-                    Description = "Picka a player Target",
-                    ValidTargets =
-                    [
-                        new ActionTarget
-                        {
-                            Name = "Convert all player to targets here"
-                        }
-                    ],
-                }
-            ]
+            Description = "Pick a player",
+            ValidTargets = playersAsTargets,
         };
+
+        return prompt;
     }
 
     public override async Task Execute(ExecuteActionRequest request)

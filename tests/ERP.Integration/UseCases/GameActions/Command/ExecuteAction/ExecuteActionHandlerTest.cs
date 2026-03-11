@@ -55,7 +55,7 @@ public class ExecuteActionHandlerTest : NorthwestIntegrationTestBase
                 [
                     new ActionTarget
                     {
-                        Value = "1",
+                        Value = "2",
                     }
                 ],
             ]

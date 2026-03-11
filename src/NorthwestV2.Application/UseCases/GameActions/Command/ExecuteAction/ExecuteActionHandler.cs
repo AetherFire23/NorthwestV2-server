@@ -1,7 +1,7 @@
 ﻿using AetherFire23.ERP.Domain.Actions;
 using AetherFire23.ERP.Domain.Actions.AvailabilityStuff;
-using AetherFire23.ERP.Domain.Actions.Bases;
 using AetherFire23.ERP.Domain.Actions.Feature.Availability.Instant;
+using AetherFire23.ERP.Domain.Features.Actions.Core;
 using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.WithTargets;
 using Mediator;
 using NorthwestV2.Application.Features.Actions.Core;
