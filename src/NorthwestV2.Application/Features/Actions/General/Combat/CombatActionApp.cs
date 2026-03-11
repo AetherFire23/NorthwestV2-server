@@ -25,9 +25,9 @@ public class CombatActionApp : ActionWithTargetsBase
 
     public override async Task<ActionWithTargetsAvailability> GetAvailabilityResult(GetActionsRequest request)
     {
-        // TargetSelectionPrompt prompt = new TargetSelectionPrompt();
         TargetSelectionPrompt promptOfPlayersAsTargets = await BuildPlayersAsTargetsPrompt(request.PlayerId);
 
+        // TODO: COnsider to send NO targets if action requirements don't pass. (Should be enforced in base class)
         return ActionWithTargetsAvailability.Create(
             this.ActionName,
             ActionRequirement.None,
