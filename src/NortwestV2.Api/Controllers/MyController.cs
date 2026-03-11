@@ -6,6 +6,7 @@ using NorthwestV2.Application.UseCases.Authentication.Login;
 using NorthwestV2.Application.UseCases.Authentication.Register;
 using NorthwestV2.Application.UseCases.GameActions.Command.ExecuteAction;
 using NorthwestV2.Application.UseCases.GameActions.Queries.GetActions;
+using NorthwestV2.Infrastructure;
 using NorthwestV2.Practical;
 
 namespace NortwestV2.Api.Controllers;

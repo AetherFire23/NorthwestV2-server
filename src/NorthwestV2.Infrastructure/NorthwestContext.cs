@@ -1,9 +1,10 @@
 ﻿using AetherFire23.ERP.Domain.Entity;
 using Microsoft.EntityFrameworkCore;
+using NorthwestV2.Application;
 
-namespace NorthwestV2.Practical;
+namespace NorthwestV2.Infrastructure;
 
-public class NorthwestContext : DbContext
+public class NorthwestContext : DbContext, IUnitOfWork
 {
     public DbSet<User> Users { get; set; }
     public DbSet<Lobby> Lobbies { get; set; }
@@ -19,5 +20,12 @@ public class NorthwestContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+    }
+
+    public async Task SaveChangesAsync(CancellationToken ct = default)
+    {
+        var changes = await base.SaveChangesAsync(ct);
+
+        int i = 0;
     }
 }

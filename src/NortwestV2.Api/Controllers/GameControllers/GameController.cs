@@ -1,6 +1,7 @@
 ﻿using Mediator;
 using Microsoft.AspNetCore.Mvc;
 using NorthwestV2.Application.UseCases.GameActions.Queries.GetActions;
+using NorthwestV2.Infrastructure;
 using NorthwestV2.Practical;
 
 namespace NortwestV2.Api.Controllers.GameControllers;

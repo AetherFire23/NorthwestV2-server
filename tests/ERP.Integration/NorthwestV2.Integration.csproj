@@ -10,7 +10,9 @@
     <ItemGroup>
         <PackageReference Include="coverlet.collector" Version="6.0.4" />
         <PackageReference Include="JetBrains.Annotations" Version="2025.2.4" />
+        <PackageReference Include="Microsoft.Extensions.Configuration" Version="10.0.0" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+        <PackageReference Include="Testcontainers.PostgreSql" Version="4.10.0" />
         <PackageReference Include="xunit" Version="2.9.3" />
         <PackageReference Include="xunit.runner.visualstudio" Version="3.1.4" />
     </ItemGroup>
@@ -26,7 +28,9 @@
 <!--      <ProjectReference Include="..\ERP.Infrastructure\ERP.Infrastructure.csproj" />-->
         
     
-      <ProjectReference Include="..\..\src\commons\AetherFire23.Commons.Testing\AetherFire23.Commons.Testing.csproj" />
+      <ProjectReference Include="..\..\NorthwestV2.Compose\NorthwestV2.Compose.csproj" />
+        
+    
       <ProjectReference Include="..\..\src\NorthwestV2.Application\NorthwestV2.Application.csproj" />
       <ProjectReference Include="..\..\src\NorthwestV2.Domain\NorthwestV2.Domain.csproj" />
       <ProjectReference Include="..\..\src\NorthwestV2.Infrastructure\NorthwestV2.Infrastructure.csproj" />

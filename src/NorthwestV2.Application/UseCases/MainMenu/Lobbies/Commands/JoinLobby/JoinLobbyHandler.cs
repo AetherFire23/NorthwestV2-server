@@ -14,9 +14,11 @@ public class JoinLobbyHandler : IRequestHandler<JoinLobbyRequest, Guid>
     private readonly IUserRepository _userRepository;
     private readonly ILobbyRepository _lobbyRepository;
 
-    public JoinLobbyHandler(IUnitOfWork unitOfWork)
+    public JoinLobbyHandler(IUnitOfWork unitOfWork, ILobbyRepository lobbyRepository, IUserRepository userRepository)
     {
         _unitOfWork = unitOfWork;
+        _lobbyRepository = lobbyRepository;
+        _userRepository = userRepository;
     }
 
     public async ValueTask<Guid> Handle(JoinLobbyRequest request, CancellationToken cancellationToken)

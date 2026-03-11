@@ -1,5 +1,7 @@
 ﻿using JetBrains.Annotations;
+using Microsoft.Extensions.DependencyInjection;
 using NorthwestV2.Application.UseCases.Authentication.Register;
+using NorthwestV2.Infrastructure;
 using Xunit.Abstractions;
 
 namespace NorthwestV2.Integration.UseCases.Authentication.Register;
@@ -21,7 +23,10 @@ public class RegisterHandlerTest : NorthwestIntegrationTestBase
         };
 
         await Mediator.Send(registerRequest);
+        
+        base._scope.Dispose();
 
-        Assert.NotEmpty(Context.Users);
+        var users = base._serviceProvider.CreateScope().ServiceProvider.GetRequiredService<NorthwestContext>();
+        Assert.NotEmpty(users.Users);
     }
 }

@@ -1,7 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.Reflection.Metadata;
-using AetherFire23.Commons.Domain.Entities;
-using AetherFire23.ERP.Domain.Actions.ByRoles.General.Combat;
 using AetherFire23.ERP.Domain.Features.Actions.General.Combat;
 using AetherFire23.ERP.Domain.Role;
 

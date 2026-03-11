@@ -1,8 +1,5 @@
-﻿using AetherFire23.Commons.Composition;
-using AetherFire23.ERP.Domain.Actions;
-using AetherFire23.ERP.Domain.Actions.Bases;
+﻿using AetherFire23.ERP.Domain.Actions.Bases;
 using AetherFire23.ERP.Domain.Actions.ByRoles.Debug;
-using AetherFire23.ERP.Domain.Entity;
 using AetherFire23.ERP.Domain.Features.Actions.ByRoles.Debug;
 using AetherFire23.ERP.Domain.Features.Actions.General.Combat;
 using AetherFire23.ERP.Domain.GameInitialization;
@@ -15,9 +12,9 @@ using Microsoft.Extensions.Logging;
 
 namespace AetherFire23.ERP.Domain;
 
-public class DomainInstaller : IInstaller
+public static class DomainInstaller
 {
-    public void Install(IServiceCollection serviceCollection, IConfiguration configuration)
+    public static void Install(this IServiceCollection serviceCollection, IConfiguration configuration)
     {
         serviceCollection.AddScoped<NorthwestDomainService>();
         serviceCollection.AddScoped<RoomFactory>();
@@ -29,14 +26,14 @@ public class DomainInstaller : IInstaller
         InstallRoleServices(serviceCollection);
     }
 
-    private void InstallActionServices(IServiceCollection serviceCollection)
+    private static void InstallActionServices(IServiceCollection serviceCollection)
     {
         serviceCollection.AddScoped<DebugInstantAction>();
         serviceCollection.AddScoped<DebugTargetAction>();
         serviceCollection.AddScoped<ChooseDefensiveCounter>();
     }
 
-    private void InstallRoleServices(IServiceCollection services)
+    private static void InstallRoleServices(IServiceCollection services)
     {
         services.AddScoped<CaptainRoleInitializer>();
         services.AddScoped<BruteRoleInitializer>();
@@ -58,7 +55,7 @@ public class DomainInstaller : IInstaller
     /// Also im not doing reflection here because you just do it once and it simply avoid reflection. 
     /// </summary>
     /// <param name="serviceCollection"></param>
-    private void RegisterPlayerFactory(IServiceCollection serviceCollection)
+    private static void RegisterPlayerFactory(IServiceCollection serviceCollection)
     {
         serviceCollection.AddScoped<PlayerFactory>(s =>
         {

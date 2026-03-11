@@ -45,14 +45,14 @@ public class UserRepository : IUserRepository
 
     public void Add(User user)
     {
-        _northwestContext.Add(user);
+        _northwestContext.Users.Add(user);
     }
 
     public void AddRange(IEnumerable<User> user)
     {
         foreach (User user1 in user)
         {
-            _northwestContext.Add(user);
+            _northwestContext.Users.Add(user1);
         }
     }
 }

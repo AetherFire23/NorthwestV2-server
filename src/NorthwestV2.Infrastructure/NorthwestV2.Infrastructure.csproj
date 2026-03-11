@@ -7,8 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\commons\AetherFire23.Commons.Domain\AetherFire23.Commons.Domain.csproj" />
-      <ProjectReference Include="..\commons\AetherFire23.Commons.EntityFramework\AetherFire23.Commons.EntityFramework.csproj" />
       <ProjectReference Include="..\NorthwestV2.Application\NorthwestV2.Application.csproj" />
     </ItemGroup>
 

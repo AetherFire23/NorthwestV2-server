@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using NorthwestV2.Application.UseCases.Authentication.Login;
 using NorthwestV2.Application.UseCases.Authentication.Register;
+using NorthwestV2.Infrastructure;
 using NorthwestV2.Practical;
 
 namespace NortwestV2.Api.Controllers;
