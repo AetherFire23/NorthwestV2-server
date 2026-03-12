@@ -28,7 +28,7 @@ public class PlayerRepository : IPlayerRepository
 
         List<Player> playersInGame = _northwestContext.Players
             .Where(GameIdScoped(player))
-            .Where(x => x.RoomId == player.RoomId)
+            .Where(x => x.RoomId == player.RoomId && x.Id != playerId)
             .ToList();
 
         return playersInGame;

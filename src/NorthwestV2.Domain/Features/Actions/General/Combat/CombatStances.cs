@@ -1,4 +1,4 @@
-﻿namespace AetherFire23.ERP.Domain.Actions.ByRoles.General.Combat;
+﻿namespace AetherFire23.ERP.Domain.Features.Actions.General.Combat;
 
 /// <summary>
 /// I Remember I had an issue with the naming of this once. It's more an AttackStance or AttackOutcome

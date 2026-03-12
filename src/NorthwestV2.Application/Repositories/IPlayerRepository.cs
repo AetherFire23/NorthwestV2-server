@@ -4,6 +4,7 @@ namespace NorthwestV2.Application.Repositories;
 
 public interface IPlayerRepository
 {
+    
     public Task<List<Player>> GetPlayersInSameRoom(Guid playerId);
     public Task<List<Player>> GetOtherPlayersInGame(Guid playerId);
     public Task<Player> GetPlayer(Guid playerid);

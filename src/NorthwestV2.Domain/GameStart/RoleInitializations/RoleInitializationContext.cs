@@ -1,6 +1,6 @@
 ﻿using AetherFire23.ERP.Domain.Entity;
 
-namespace AetherFire23.ERP.Domain.GameInitialization.RoleInitializations;
+namespace AetherFire23.ERP.Domain.GameStart.RoleInitializations;
 
 public class RoleInitializationContext
 {

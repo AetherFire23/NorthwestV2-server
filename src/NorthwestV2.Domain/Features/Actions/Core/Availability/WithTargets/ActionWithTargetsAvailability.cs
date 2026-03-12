@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Runtime.CompilerServices;
-using AetherFire23.ERP.Domain.Actions.AvailabilityStuff;
 
 namespace AetherFire23.ERP.Domain.Features.Actions.Core.Availability.WithTargets;
 

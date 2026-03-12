@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Runtime.InteropServices;
+using AetherFire23.ERP.Domain.Entity;
 
 namespace AetherFire23.ERP.Domain.Features.Actions.Core.Availability;
 
@@ -48,5 +49,21 @@ public class ActionRequirement
     public override string ToString()
     {
         return $"{this.Description} : {this.IsFulfilled}";
+    }
+    
+    public static ActionRequirement CreatePlayerExistsInRoomRequirement(Player caster, List<Player> otherPlayersInSameRoom)
+    {
+        if (otherPlayersInSameRoom.Contains(caster))
+        {
+            throw new Exception("The other players in the same room should not contain the caster.");
+        }
+
+        ActionRequirement actionRequirement = new ActionRequirement()
+        {
+            Description = "Another player exists in the same room.",
+            IsFulfilled = otherPlayersInSameRoom.Count != 0
+        };
+
+        return actionRequirement;
     }
 }

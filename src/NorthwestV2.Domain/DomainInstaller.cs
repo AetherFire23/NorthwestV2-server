@@ -1,10 +1,9 @@
-﻿using AetherFire23.ERP.Domain.Features.Actions.ByRoles.Debug;
-using AetherFire23.ERP.Domain.Features.Actions.Core;
+﻿using AetherFire23.ERP.Domain.Features.Actions.Core;
 using AetherFire23.ERP.Domain.Features.Actions.Debug;
 using AetherFire23.ERP.Domain.Features.Actions.General.Combat;
-using AetherFire23.ERP.Domain.GameInitialization;
-using AetherFire23.ERP.Domain.GameInitialization.RoleInitializations;
-using AetherFire23.ERP.Domain.GameInitialization.RoleInitializations.PlayerInitializers;
+using AetherFire23.ERP.Domain.GameStart;
+using AetherFire23.ERP.Domain.GameStart.RoleInitializations;
+using AetherFire23.ERP.Domain.GameStart.RoleInitializations.PlayerInitializers;
 using AetherFire23.ERP.Domain.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,6 +18,7 @@ public static class DomainInstaller
         serviceCollection.AddScoped<NorthwestDomainService>();
         serviceCollection.AddScoped<RoomFactory>();
         serviceCollection.AddScoped<GameActionsWithTargetsValidator>();
+        serviceCollection.AddScoped<CombatAction>();
 
         serviceCollection.AddScoped<IRandomProvider, RealRandom>();
         InstallActionServices(serviceCollection);

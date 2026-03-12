@@ -1,5 +1,7 @@
-﻿using JetBrains.Annotations;
+﻿using AetherFire23.ERP.Domain.Features.Actions.Core;
+using JetBrains.Annotations;
 using NorthwestV2.Application.Features.Actions.General.Combat;
+using NorthwestV2.Application.UseCases.GameActions.Queries.GetActions;
 using Xunit.Abstractions;
 
 namespace NorthwestV2.Integration.Features.Actions.General.Combat;
@@ -12,8 +14,24 @@ public class CombatActionAppTest : NorthwestIntegrationTestBase
     }
 
     [Fact]
-    public void GivenPlayerInRoom_WhenGettingAvailability_ThenOnlyPlayersInSameRoomAreVisible()
+    public async Task GivenPlayerInRoom_WhenGettingAvailability_ThenSomePlayersAreVisible()
     {
-        
+        // This test might break if I change spawn rooms locations. 
+        GameDataSeed gameDataSeed = await ShareSeeds.ArrangeUntilGameCreation(Mediator, Context);
+
+        GetActionsResult act = await Mediator.Send(new GetActionsRequest()
+        {
+            PlayerId = gameDataSeed.PlayerIds[0]
+        });
+
+
+        int i = 0;
+        // TODO; write assert
+
+        bool hasTarget = act.ActionWithTargets.First(x => x.ActionName == ActionNames.CombatAction)
+            .TargetSelectionPrompts.First()
+            .ValidTargets.Any();
+
+        Assert.True(hasTarget);
     }
 }

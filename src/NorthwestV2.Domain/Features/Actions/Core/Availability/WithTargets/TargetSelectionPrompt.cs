@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Security.AccessControl;
-using AetherFire23.ERP.Domain.Actions.AvailabilityStuff;
+using AetherFire23.ERP.Domain.Entity;
 
 namespace AetherFire23.ERP.Domain.Features.Actions.Core.Availability.WithTargets;
 
@@ -43,5 +43,14 @@ public class TargetSelectionPrompt
     public override string ToString()
     {
         return this.Description;
+    }
+
+    public static TargetSelectionPrompt FromPlayers(List<Player> players)
+    {
+        return new TargetSelectionPrompt()
+        {
+            Description = "Choose another player.",
+            ValidTargets = players.Select(x => x.ToTarget()).ToList()
+        };
     }
 }

@@ -1,5 +1,4 @@
-﻿using AetherFire23.ERP.Domain.Actions.AvailabilityStuff;
-using AetherFire23.ERP.Domain.Entity;
+﻿using AetherFire23.ERP.Domain.Entity;
 using AetherFire23.ERP.Domain.Features.Actions.Core;
 using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.WithTargets;
 using AetherFire23.ERP.Domain.Features.Actions.General.Combat;

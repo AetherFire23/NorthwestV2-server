@@ -1,6 +1,6 @@
 ﻿using AetherFire23.ERP.Domain.Entity;
 
-namespace AetherFire23.ERP.Domain.GameInitialization;
+namespace AetherFire23.ERP.Domain.GameStart;
 
 public class RoomFactory
 {

@@ -1,4 +1,4 @@
-﻿namespace AetherFire23.ERP.Domain.Actions.AvailabilityStuff;
+﻿namespace AetherFire23.ERP.Domain.Features.Actions.Core.Availability.WithTargets;
 
 /// <summary>
 /// Represents a target for an action, which may be identified either by a

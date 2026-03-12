@@ -1,6 +1,4 @@
-﻿using AetherFire23.ERP.Domain.Features.Actions.Core.Availability;
-
-namespace AetherFire23.ERP.Domain.Actions.AvailabilityStuff;
+﻿namespace AetherFire23.ERP.Domain.Features.Actions.Core.Availability;
 
 /// <summary>
 /// Represents the availability state of a game action, including its name

@@ -1,9 +1,9 @@
 ﻿using AetherFire23.ERP.Domain.Entity;
-using AetherFire23.ERP.Domain.GameInitialization.RoleInitializations;
+using AetherFire23.ERP.Domain.GameStart.RoleInitializations;
 using AetherFire23.ERP.Domain.Role;
 using Microsoft.Extensions.Logging;
 
-namespace AetherFire23.ERP.Domain.GameInitialization;
+namespace AetherFire23.ERP.Domain.GameStart;
 
 //TODO: Maybe rename to InitialzePlayersForgameService
 public class PlayerFactory

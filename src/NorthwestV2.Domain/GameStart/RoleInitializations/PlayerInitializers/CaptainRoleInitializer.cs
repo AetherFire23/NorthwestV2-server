@@ -1,7 +1,7 @@
 ﻿using AetherFire23.ERP.Domain.Entity;
 using AetherFire23.ERP.Domain.Role;
 
-namespace AetherFire23.ERP.Domain.GameInitialization.RoleInitializations.PlayerInitializers;
+namespace AetherFire23.ERP.Domain.GameStart.RoleInitializations.PlayerInitializers;
 
 public class CaptainRoleInitializer : RoleInitializer
 {
@@ -17,7 +17,7 @@ public class CaptainRoleInitializer : RoleInitializer
             User = context.User,
             Room = context.Rooms.First(),
             Role = Roles.Captain,
-            Toughness = ToughnessInitializationConstants.NORMAL
+            BaseToughness = ToughnessInitializationConstants.NORMAL,
         };
 
         return player;

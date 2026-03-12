@@ -1,7 +1,7 @@
 ﻿using AetherFire23.ERP.Domain.Entity;
 using AetherFire23.ERP.Domain.Role;
 
-namespace AetherFire23.ERP.Domain.GameInitialization.RoleInitializations.PlayerInitializers;
+namespace AetherFire23.ERP.Domain.GameStart.RoleInitializations.PlayerInitializers;
 
 public class DoctorRoleInitializer : RoleInitializer
 {
@@ -17,7 +17,7 @@ public class DoctorRoleInitializer : RoleInitializer
             Role = this.Role,
             Room = context.Rooms.First(),
             User = context.User,
-            Toughness = ToughnessInitializationConstants.WEAK,
+            BaseToughness = ToughnessInitializationConstants.WEAK,
         };
     }
 }

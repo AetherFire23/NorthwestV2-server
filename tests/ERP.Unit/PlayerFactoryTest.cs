@@ -1,7 +1,7 @@
 ﻿using AetherFire23.ERP.Domain;
 using AetherFire23.ERP.Domain.Entity;
-using AetherFire23.ERP.Domain.GameInitialization;
-using AetherFire23.ERP.Domain.GameInitialization.RoleInitializations;
+using AetherFire23.ERP.Domain.GameStart;
+using AetherFire23.ERP.Domain.GameStart.RoleInitializations;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 using NorthwestV2.Integration;

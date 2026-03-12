@@ -1,4 +1,4 @@
-﻿namespace AetherFire23.ERP.Domain.GameInitialization.RoleInitializations;
+﻿namespace AetherFire23.ERP.Domain.GameStart.RoleInitializations;
 
 public class ToughnessInitializationConstants
 {

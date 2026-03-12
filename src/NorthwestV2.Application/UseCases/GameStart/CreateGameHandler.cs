@@ -1,5 +1,5 @@
 ﻿using AetherFire23.ERP.Domain.Entity;
-using AetherFire23.ERP.Domain.GameInitialization;
+using AetherFire23.ERP.Domain.GameStart;
 using Mediator;
 using NorthwestV2.Application.Repositories;
 

@@ -1,6 +1,4 @@
-﻿using AetherFire23.ERP.Domain.Actions;
-using AetherFire23.ERP.Domain.Actions.AvailabilityStuff;
-using AetherFire23.ERP.Domain.Features.Actions.Core;
+﻿using AetherFire23.ERP.Domain.Features.Actions.Core;
 using AetherFire23.ERP.Domain.Features.Actions.Core.Availability;
 using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.WithTargets;
 using JetBrains.Annotations;
@@ -208,7 +206,7 @@ public class GameActionsWithTargetsValidatorTest
         var prompt = new TargetSelectionPrompt()
         {
             Description = "MIN2 MAX 2 TARGET SELECTION PROMPT",
-            ValidTargets = [ANY_TARGET_WITH_ID_1,ANY_TARGET_WITH_ID_2],
+            ValidTargets = [ANY_TARGET_WITH_ID_1, ANY_TARGET_WITH_ID_2],
             Min = 2,
             Max = 2
         };
@@ -220,9 +218,8 @@ public class GameActionsWithTargetsValidatorTest
         };
         List<List<ActionTarget>> actionsTargets = [[ANY_TARGET_WITH_ID_1, ANY_TARGET_WITH_ID_2]];
 
-    
-            gameActionsWithTargetsValidator.EnsureIsValidActionExecutionOrThrow(availability, actionsTargets);
 
+        gameActionsWithTargetsValidator.EnsureIsValidActionExecutionOrThrow(availability, actionsTargets);
     }
 
 
