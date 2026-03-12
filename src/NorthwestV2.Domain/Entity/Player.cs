@@ -61,7 +61,7 @@ public class Player : EntityBase
             strength = Math.Max(1, strength - 1); // -1 replace by constant for sanity decrease
         }
 
-        if (this.AttackerStance == AttackerStances.ToTheEnd)
+        if (this.AttackerStance == AttackerStances.ToTheEnd && isAttacker)
         {
             strength += 1;
         }

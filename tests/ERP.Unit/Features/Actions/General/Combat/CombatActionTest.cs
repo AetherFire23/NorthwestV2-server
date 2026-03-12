@@ -20,7 +20,7 @@ public class CombatActionTest
     }
 
     [Fact]
-    public void GivenPlayer_WhenGettingAvailability_ThenCanAttackOtherPlayer()
+    public void GivenPlayerAndOtherPlayerInSameRoom_WhenGettingAvailability_ThenCanSeeOtherPlayer()
     {
         Game game = new Game();
         Room room = TestPlayers.CreateTestRoom(RoomEnum.Armory, game);
@@ -45,6 +45,7 @@ public class CombatActionTest
             TestPlayers.CreateTestPlayer(ToughnessInitializationConstants.NORMAL, Roles.QuarterMaster, room, game);
         // Setting base toughness to 1 so it's always losing 
         caster.BaseToughness = 1;
+        caster.AttackerStance = AttackerStances.ToTheEnd;
 
         FightResult action = _combatAction.MakeTwoPlayerFightTogether(caster, target);
 
@@ -88,6 +89,28 @@ public class CombatActionTest
         FightResult action = _combatAction.MakeTwoPlayerFightTogether(caster, target);
 
         // TODO: the real assertion 
-        Assert.True(action.FightLoopStates == FightLoopStates.EarlyExittedBecauseOfHitAndRun);
+        Assert.True(action.FightExitType == FightExitType.EarlyExittedBecauseOfHitAndRun);
     }
+
+    [Fact]
+    public void
+        GivenAttackerWithPushHardStanceAndStrongerDefender_WhenAttacking_ThenFleesCombat()
+    {
+        Game game = new Game();
+        Room room = TestPlayers.CreateTestRoom(RoomEnum.Armory, game);
+        Player caster =
+            TestPlayers.CreateTestPlayer(ToughnessInitializationConstants.NORMAL, Roles.Engineer, room, game);
+        Player target =
+            TestPlayers.CreateTestPlayer(ToughnessInitializationConstants.NORMAL, Roles.QuarterMaster, room, game);
+        caster.BaseToughness = 3;
+        caster.AttackerStance = AttackerStances.PushHard;
+        
+        FightResult action = _combatAction.MakeTwoPlayerFightTogether(caster, target);
+        
+        Assert.Equal(FightExitType.ExittedBecauseOfPushHard, action.FightExitType);
+    }
+    
+    // TODO:
+    // Cend conditions
+    
 }
