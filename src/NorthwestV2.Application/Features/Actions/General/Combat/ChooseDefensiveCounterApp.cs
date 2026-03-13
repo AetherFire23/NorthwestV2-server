@@ -15,20 +15,25 @@ public class ChooseDefensiveCounterApp : ActionWithTargetsBase
 
     private readonly IUnitOfWork _unitOfWork;
     private readonly IPlayerRepository _playerRepository;
+    private readonly ChooseDefensiveCounter chooseDefensiveCounter1;
 
     public ChooseDefensiveCounterApp(ChooseDefensiveCounter chooseDefensiveCounter, IUnitOfWork unitOfWork,
-        IPlayerRepository playerRepository) : base(
+        IPlayerRepository playerRepository, ChooseDefensiveCounter chooseDefensiveCounter1) : base(
         ActionNames
             .PickDefensiveStance)
     {
         _chooseDefensiveCounter = chooseDefensiveCounter;
         _unitOfWork = unitOfWork;
         _playerRepository = playerRepository;
+        this.chooseDefensiveCounter1 = chooseDefensiveCounter1;
     }
 
     public override async Task<ActionWithTargetsAvailability> GetAvailabilityResult(GetActionsRequest request)
     {
-        TargetSelectionPrompt targetSelectionPrompt = CreatePromptOfDefensiveCounters();
+        Player player = await _playerRepository.GetPlayer(request.PlayerId);
+
+        // Always only the defensive counters enum transformed into a target. 
+        TargetSelectionPrompt targetSelectionPrompt = _chooseDefensiveCounter.CreatePromptOfDefensiveCounters();
 
         ActionWithTargetsAvailability stuff = new ActionWithTargetsAvailability
         {
@@ -39,23 +44,6 @@ public class ChooseDefensiveCounterApp : ActionWithTargetsBase
         return stuff;
     }
 
-    private TargetSelectionPrompt CreatePromptOfDefensiveCounters()
-    {
-        List<ActionTarget> actionTargets = Enum.GetValues<DefensiveCounters>()
-            .Select(x =>
-                new ActionTarget()
-                {
-                    Value = x.ToString(),
-                    Name = x.ToString(),
-                    TargetId = Guid.Empty
-                }).ToList();
-
-        return new TargetSelectionPrompt()
-        {
-            Description = "Choose a defensive target stance.",
-            ValidTargets = actionTargets
-        };
-    }
 
     /*
      * Execution part

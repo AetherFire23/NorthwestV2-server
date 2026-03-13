@@ -15,13 +15,17 @@ public class CombatActionApp : ActionWithTargetsBase
     private readonly CombatAction _combatAction;
 
     public CombatActionApp(IPlayerRepository playerRepository, CombatAction combatAction) :
-        base(ActionNames
-            .CombatAction)
+        base(ActionNames.CombatAction)
     {
         _playerRepository = playerRepository;
         _combatAction = combatAction;
     }
 
+    /// <summary>
+    /// When a player is in the same room. 
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns></returns>
     public override async Task<ActionWithTargetsAvailability> GetAvailabilityResult(GetActionsRequest request)
     {
         Player caster = await _playerRepository.GetPlayer(request.PlayerId);
