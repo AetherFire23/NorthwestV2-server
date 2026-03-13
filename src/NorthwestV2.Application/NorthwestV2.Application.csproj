@@ -8,8 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\commons\AetherFire23.Commons.Composition\AetherFire23.Commons.Composition.csproj" />
-      <ProjectReference Include="..\NorthwestV2.Practical\NorthwestV2.Practical.csproj" />
+      <ProjectReference Include="..\NorthwestV2.Domain\NorthwestV2.Domain.csproj" />
     </ItemGroup>
 
     <ItemGroup>
@@ -19,10 +18,13 @@
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.2" />
+      <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="10.0.2" />
       <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.16.0" />
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="Features\Actions\ByRoles\" />
+      <Folder Include="Features\GameStart\" />
       <Folder Include="UseCases\MainMenu\" />
     </ItemGroup>
 

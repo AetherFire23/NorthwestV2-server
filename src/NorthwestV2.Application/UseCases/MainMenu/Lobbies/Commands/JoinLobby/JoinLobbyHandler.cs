@@ -1,6 +1,6 @@
 ﻿using AetherFire23.ERP.Domain.Entity;
 using Mediator;
-using NorthwestV2.Practical;
+using NorthwestV2.Application.Repositories;
 
 namespace NorthwestV2.Application.UseCases.MainMenu.Lobbies.Commands.JoinLobby;
 
@@ -10,24 +10,27 @@ namespace NorthwestV2.Application.UseCases.MainMenu.Lobbies.Commands.JoinLobby;
 /// </summary>
 public class JoinLobbyHandler : IRequestHandler<JoinLobbyRequest, Guid>
 {
-    private readonly NorthwestContext _northwestContext;
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IUserRepository _userRepository;
+    private readonly ILobbyRepository _lobbyRepository;
 
-    public JoinLobbyHandler(NorthwestContext northwestContext)
+    public JoinLobbyHandler(IUnitOfWork unitOfWork, ILobbyRepository lobbyRepository, IUserRepository userRepository)
     {
-        _northwestContext = northwestContext;
+        _unitOfWork = unitOfWork;
+        _lobbyRepository = lobbyRepository;
+        _userRepository = userRepository;
     }
 
     public async ValueTask<Guid> Handle(JoinLobbyRequest request, CancellationToken cancellationToken)
     {
-        User user = await _northwestContext.Users.FindAsync(request.UserId)
-                    ?? throw new Exception("User not found");
+        User user = await _userRepository.GetById(request.UserId);
 
-        Lobby lobby = await _northwestContext.Lobbies.FindAsync(request.LobbyId)
-                      ?? throw new Exception("Lobby not found");
+
+        Lobby lobby = await _lobbyRepository.GetById(request.LobbyId);
 
         user.Lobby = lobby;
 
-        await _northwestContext.SaveChangesAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync();
 
         return lobby.Id;
     }

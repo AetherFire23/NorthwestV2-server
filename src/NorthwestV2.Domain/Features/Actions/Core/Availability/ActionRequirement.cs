@@ -1,0 +1,69 @@
+﻿using System.ComponentModel.DataAnnotations;
+using System.Runtime.InteropServices;
+using AetherFire23.ERP.Domain.Entity;
+
+namespace AetherFire23.ERP.Domain.Features.Actions.Core.Availability;
+
+/// <summary>
+/// Represents a single requirement that must be satisfied for an action
+/// to be considered executable.
+/// </summary>
+/// <remarks>
+/// Requirements are intentionally simple: each has a human-readable
+/// <see cref="Description"/> and a boolean <see cref="IsFulfilled"/> flag.
+/// More complex logic should be handled by higher-level evaluators.
+/// </remarks>
+public class ActionRequirement
+{
+    /// <summary>
+    /// A human-readable explanation of what this requirement represents.
+    /// Useful for UI feedback or debugging.
+    /// </summary>
+    [Required]
+    public required string Description { get; set; }
+
+    /// <summary>
+    /// Indicates whether this requirement is currently satisfied.
+    /// </summary>
+    public bool IsFulfilled { get; set; }
+
+    public static List<ActionRequirement> None = [NoCondition];
+
+    public ActionRequirement()
+    {
+    }
+
+    public ActionRequirement(string description, bool isFulfilled)
+    {
+        Description = description;
+        IsFulfilled = isFulfilled;
+    }
+
+
+    private static ActionRequirement NoCondition = new ActionRequirement()
+    {
+        Description = "There are no preconditions to this action.",
+        IsFulfilled = true,
+    };
+
+    public override string ToString()
+    {
+        return $"{this.Description} : {this.IsFulfilled}";
+    }
+    
+    public static ActionRequirement CreatePlayerExistsInRoomRequirement(Player caster, List<Player> otherPlayersInSameRoom)
+    {
+        if (otherPlayersInSameRoom.Contains(caster))
+        {
+            throw new Exception("The other players in the same room should not contain the caster.");
+        }
+
+        ActionRequirement actionRequirement = new ActionRequirement()
+        {
+            Description = "Another player exists in the same room.",
+            IsFulfilled = otherPlayersInSameRoom.Count != 0
+        };
+
+        return actionRequirement;
+    }
+}

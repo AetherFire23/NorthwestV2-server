@@ -1,23 +1,31 @@
-﻿using AetherFire23.ERP.Domain;
-using AetherFire23.ERP.Domain.Entity;
-using AetherFire23.ERP.Domain.GameInitialization;
+﻿using AetherFire23.ERP.Domain.Entity;
+using AetherFire23.ERP.Domain.GameStart;
 using Mediator;
-using NorthwestV2.Practical;
-using NorthwestV2.Application.EfCoreExtensions;
+using NorthwestV2.Application.Repositories;
 
 namespace NorthwestV2.Application.UseCases.GameStart;
 
 public class CreateGameHandler : IRequestHandler<CreateGameRequest, Guid>
 {
-    private readonly NorthwestContext _northwestContext;
+    private readonly IGameRepository _gameRepository;
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IUserRepository _userRepository;
     private readonly PlayerFactory _playerFactory;
+    private readonly IPlayerRepository _playerRepository;
     private readonly RoomFactory _roomFactory;
+    private readonly IRoomRepository _roomRepository;
 
-    public CreateGameHandler(NorthwestContext northwestContext, PlayerFactory playerFactory, RoomFactory roomFactory)
+    public CreateGameHandler(PlayerFactory playerFactory, RoomFactory roomFactory, IUserRepository userRepository,
+        IUnitOfWork unitOfWork, IGameRepository gameRepository, IPlayerRepository playerRepository,
+        IRoomRepository roomRepository)
     {
-        _northwestContext = northwestContext;
         _playerFactory = playerFactory;
         _roomFactory = roomFactory;
+        _userRepository = userRepository;
+        _unitOfWork = unitOfWork;
+        _gameRepository = gameRepository;
+        _playerRepository = playerRepository;
+        _roomRepository = roomRepository;
     }
 
     /// <summary>
@@ -53,76 +61,28 @@ public class CreateGameHandler : IRequestHandler<CreateGameRequest, Guid>
     {
         // Rooms will be automatically filled by ef core on savechangesasnyc TODO: a test for this i usspoe 
         Game game = new Game();
-        _northwestContext.Games.Add(game);
+
+        _gameRepository.Add(game);
 
         // Using a trick to get to save the entities & the nested properties without ef core crying. 
         IEnumerable<Room> rooms = _roomFactory.CreateRoomsForGame(game);
-        await SaveRoomAndAdjacents(rooms);
 
-        IEnumerable<User> users = await _northwestContext.Set<User>().FindAllById(request.UserIds);
 
-        IEnumerable<Player> players = _playerFactory.CreateFreshPlayersForGame(users.ToList(), game, rooms);
+        await _roomRepository.SaveRoomAndAdjacents(rooms);
 
-        _northwestContext.Players.AddRange(players);
+        IEnumerable<User> usersInGame = await _userRepository.GetAllById(request.UserIds.ToList());
 
-        await _northwestContext.SaveChangesAsync(cancellationToken);
+        IEnumerable<Player> players = _playerFactory.CreateFreshPlayersForGame(usersInGame.ToList(), game, rooms);
+
+        _playerRepository.AddRange(players);
+
+        await _unitOfWork.SaveChangesAsync();
 
         // TODO: Create Items 
 
 
-        await _northwestContext.SaveChangesAsync(cancellationToken);
-
         // TODO: Create game and add Players, users, and items, and rooms 
 
         return game.Id;
-    }
-
-    /// <summary>
-    /// Persists a collection of rooms and their adjacency relationships while avoiding
-    /// EF Core cyclic navigation issues. This method temporarily removes adjacency links,
-    /// saves the rooms, and then restores the adjacency graph.
-    /// </summary>
-    /// <param name="rooms">
-    /// The collection of rooms whose adjacency relationships must be saved.
-    /// </param>
-    /// <remarks>
-    /// EF Core cannot persist cyclic navigation graphs in a single operation without
-    /// attempting to insert nested entities recursively.  
-    /// 
-    /// To work around this:
-    /// <list type="number">
-    /// <item>All rooms are added to the context.</item>
-    /// <item>Their adjacency lists are temporarily cleared.</item>
-    /// <item>The rooms are saved so EF Core assigns IDs and tracks them.</item>
-    /// <item>The original adjacency relationships are restored.</item>
-    /// </list>
-    /// 
-    /// This ensures that the room graph (which may contain cycles) is persisted safely
-    /// without EF Core attempting to re‑insert already tracked entities.
-    /// </remarks>
-
-    private async ValueTask SaveRoomAndAdjacents(IEnumerable<Room> rooms)
-    {
-        Dictionary<Room, List<Room>> roomsToAdjacents = new Dictionary<Room, List<Room>>();
-        foreach (Room room in rooms)
-        {
-            roomsToAdjacents.Add(room, new(room.AdjacentRooms));
-
-            _northwestContext.Rooms.Add(room);
-        }
-
-        foreach (Room room in rooms)
-        {
-            room.AdjacentRooms.Clear();
-        }
-
-        // Saving first so that ef core can know about the existing rooms before trying to add cyclically 
-        // nested entities. 
-        await _northwestContext.SaveChangesAsync();
-
-        foreach (var roomsToAdjacent in roomsToAdjacents)
-        {
-            roomsToAdjacent.Key.AdjacentRooms.AddRange(roomsToAdjacent.Value);
-        }
     }
 }

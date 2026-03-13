@@ -1,12 +1,11 @@
-﻿using AetherFire23.Commons.Composition;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace NorthwestV2.Application.Installation;
 
-public class MediatorInstaller : IInstaller
+public static class MediatorInstaller
 {
-    public void Install(IServiceCollection serviceCollection, IConfiguration configuration)
+    public static void Install(IServiceCollection serviceCollection)
     {
         serviceCollection.AddMediator(o =>
         {

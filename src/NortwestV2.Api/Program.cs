@@ -1,15 +1,14 @@
 using System.Reflection;
-using AetherFire23.Commons.Composition;
 using AetherFire23.Commons.Scenarios;
 using AetherFire23.Commons.Seeding;
 using AetherFire23.ERP.Domain;
-using AetherFire23.ERP.Domain.Actions.AvailabilityStuff;
+using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.WithTargets;
 using Microsoft.EntityFrameworkCore;
 using NorthwestV2.Application.Installation;
+using NorthwestV2.Compose;
+using NorthwestV2.Infrastructure;
 using NorthwestV2.Infrastructure.Contexts;
-using NorthwestV2.Practical;
 using NorthwestV2.Seed;
-using NortwestV2.Api.SchemaFilters;
 
 namespace NortwestV2.Api;
 
@@ -21,11 +20,11 @@ public partial class Program
     public static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-        
+
         // Add services to the container.
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();
-        
+
         builder.Services.AddCors(options =>
         {
             options.AddPolicy("AllowAll", policy =>
@@ -44,11 +43,11 @@ public partial class Program
             // using System.Reflection;
             var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
             c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
-            
+
             // Must include all assemblies for which types exist
             var domainDocumentation = $"{typeof(ActionWithTargetsAvailability).Assembly.GetName().Name}.xml";
             c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, domainDocumentation));
-            
+
             // c.SchemaFilter<RemoveNullableSchemaFilter>();
         });
         builder.Services.AddLogging();
@@ -56,13 +55,7 @@ public partial class Program
 
         builder.Services.AddDistributedMemoryCache();
         builder.Services.AddSession();
-
-        Composer composer = new Composer();
-
-        composer.InstallServices(builder.Services, builder.Configuration,
-            typeof(ApplicationInstaller).Assembly,
-            typeof(DomainInstaller).Assembly,
-            typeof(NorthwestContextInstaller).Assembly);
+        AppComposer.ComposeApplication(builder.Services, builder.Configuration);
 
         builder.Services.AddControllers();
 
@@ -71,11 +64,12 @@ public partial class Program
         builder.Services.AddSeedServices(typeof(SeededCompany).Assembly);
         builder.Services.InstallScenarioLauncher();
 
-        var app = builder.Build();
+        WebApplication app = builder.Build();
 
         app.UseCors("AllowAll");
         app.UseSession();
-        composer.InitializeServices(app.Services);
+
+        AppComposer.Initialize(app.Services);
 
         app.MapControllers();
         app.MapSwagger();
@@ -103,7 +97,7 @@ public partial class Program
 
             if (args.Contains("--seed") && args.Contains("--scenario"))
             {
-                app.Services.ExecuteSeedFromSeedName(args.ElementAt(args.IndexOf("--seed") + 1));
+                // app.Services.ExecuteSeedFromSeedName(args.ElementAt(args.IndexOf("--seed") + 1));
                 // Leave as fire-and-forget async call. 
                 // app.Services.LaunchScenarioBrowser(args[args.IndexOf("--scenario") + 1]);
             }

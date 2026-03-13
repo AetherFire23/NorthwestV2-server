@@ -1,10 +1,7 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using AetherFire23.ERP.Domain.Entity;
+﻿using AetherFire23.ERP.Domain.Entity;
 using Mediator;
-using Microsoft.EntityFrameworkCore;
-using NorthwestV2.Application.UseCases.Authentication.Login.Tokens;
-using NorthwestV2.Application.UseCases.Authentication.Register;
-using NorthwestV2.Practical;
+using NorthwestV2.Application.Features.Actions.General.Combat;
+using NorthwestV2.Application.Repositories;
 
 namespace NorthwestV2.Application.UseCases.Authentication.Login;
 
@@ -19,16 +16,16 @@ namespace NorthwestV2.Application.UseCases.Authentication.Login;
 /// </remarks>
 public class LoginHandler : IRequestHandler<LoginRequest, LoginResult>
 {
-    private readonly NorthwestContext _northwestContext;
+    private readonly IUserRepository _userRepository;
 
-    public LoginHandler(NorthwestContext northwestContext)
+    public LoginHandler(IUserRepository userRepository)
     {
-        _northwestContext = northwestContext;
+        _userRepository = userRepository;
     }
 
     public async ValueTask<LoginResult> Handle(LoginRequest request, CancellationToken cancellationToken)
     {
-        User user = await _northwestContext.Users.FirstAsync(u => u.Username == request.Username);
+        User user = await _userRepository.GetByUserName(request.Username);
 
         // TODO: Hash and check passwords for real.
 

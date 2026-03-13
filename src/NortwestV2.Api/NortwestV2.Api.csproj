@@ -16,11 +16,10 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\commons\AetherFire23.Commons.Composition\AetherFire23.Commons.Composition.csproj"/>
+        <ProjectReference Include="..\..\NorthwestV2.Compose\NorthwestV2.Compose.csproj" />
         <ProjectReference Include="..\NorthwestV2.Application\NorthwestV2.Application.csproj" />
         <ProjectReference Include="..\NorthwestV2.Domain\NorthwestV2.Domain.csproj" />
         <ProjectReference Include="..\NorthwestV2.Infrastructure\NorthwestV2.Infrastructure.csproj" />
-        <ProjectReference Include="..\NorthwestV2.Practical\NorthwestV2.Practical.csproj" />
         <ProjectReference Include="..\NorthwestV2.Scenarios\NorthwestV2.Scenarios.csproj"/>
         <ProjectReference Include="..\NorthwestV2.Seed\NorthwestV2.Seed.csproj"/>
     </ItemGroup>

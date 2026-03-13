@@ -3,4 +3,4 @@
 #  dotnet tool install --global dotnet-ef
 
 $pathWithProjectContainingEfCoreContext = "../src/NorthwestV2.Practical";
-dotnet ef migrations add "initial $([Guid]::NewGuid().ToString() )" --project "../src/NorthwestV2.Practical";
+dotnet ef migrations add "initial $([Guid]::NewGuid().ToString() )" --project "../src/NorthwestV2.Infrastructure";

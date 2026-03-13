@@ -1,4 +1,4 @@
-﻿using AetherFire23.Commons.Domain.Entities;
+﻿using AetherFire23.ERP.Domain.Entity;
 using Microsoft.EntityFrameworkCore;
 
 namespace NorthwestV2.Application.EfCoreExtensions;

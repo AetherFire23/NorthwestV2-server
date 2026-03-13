@@ -1,4 +1,4 @@
-﻿using AetherFire23.ERP.Domain.Actions.AvailabilityStuff;
+﻿using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.WithTargets;
 using Mediator;
 
 namespace NorthwestV2.Application.UseCases.GameActions.Command.ExecuteAction;
