@@ -31,8 +31,8 @@ public class SelfHealInstantApp : InstantActionBase
     public override async Task Execute(ExecuteActionRequest request)
     {
         Player player = await Context.Players.FindById(request.PlayerId);
-
-        player.Health += 2;
+        
+        _selfHealInstantAction.Execute(player);
 
         await Context.SaveChangesAsync();
     }

@@ -23,4 +23,9 @@ public class SelfHealInstantAction
 
         return vs;
     }
+
+    public void Execute(Player player)
+    {
+        player.Health += 2;
+    }
 }

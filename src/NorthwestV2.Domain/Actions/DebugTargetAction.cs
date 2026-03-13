@@ -7,6 +7,7 @@ public class DebugTargetAction
 {
     public ActionWithTargetsAvailability GetAvailability(Player caster, List<Player> players)
     {
+        // call bd icitte
         ActionRequirement actionRequirement = new ActionRequirement()
         {
             Description = "Action points requirement.",

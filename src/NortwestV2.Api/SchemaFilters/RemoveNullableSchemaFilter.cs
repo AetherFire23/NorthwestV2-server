@@ -13,7 +13,9 @@ public class RemoveNullableSchemaFilter : ISchemaFilter
         foreach (var property in schema.Properties.Values)
         {
             if (property is not OpenApiSchema concreteProperty)
+            {
                 continue;
+            }
 
             if (concreteProperty.AnyOf?.Count > 0)
             {
