@@ -97,7 +97,7 @@ public partial class Program
 
             if (args.Contains("--seed") && args.Contains("--scenario"))
             {
-                // app.Services.ExecuteSeedFromSeedName(args.ElementAt(args.IndexOf("--seed") + 1));
+                app.Services.ExecuteSeedFromSeedName(args.ElementAt(args.IndexOf("--seed") + 1));
                 // Leave as fire-and-forget async call. 
                 // app.Services.LaunchScenarioBrowser(args[args.IndexOf("--scenario") + 1]);
             }
