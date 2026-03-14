@@ -56,7 +56,7 @@ public class
     public async ValueTask<Unit> Handle(ExecuteActionRequest request, CancellationToken cancellationToken)
     {
         ActionBase action = await _actionServices.GetActionFromName(request.ActionName);
-
+        
         switch (action)
         {
             case ActionWithTargetsBase actionWithTargets:
