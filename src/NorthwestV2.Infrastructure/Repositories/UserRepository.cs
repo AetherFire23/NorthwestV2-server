@@ -24,7 +24,12 @@ public class UserRepository : IUserRepository
     public async Task<User> GetByUserName(string username)
     {
         User user = await _northwestContext.Users
-            .FirstAsync(x => x.Username == username);
+            .FirstOrDefaultAsync(x => x.Username == username);
+
+        if (user is null)
+        {
+            throw new Exception($"User was not found{username}");
+        }
 
         return user;
     }
