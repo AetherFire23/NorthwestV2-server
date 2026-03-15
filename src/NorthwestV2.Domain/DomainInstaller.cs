@@ -1,4 +1,5 @@
 ﻿using AetherFire23.ERP.Domain.Features.Actions.Core;
+using AetherFire23.ERP.Domain.Features.Actions.Debug;
 using AetherFire23.ERP.Domain.Features.Actions.General.Combat;
 using AetherFire23.ERP.Domain.GameStart;
 using AetherFire23.ERP.Domain.GameStart.RoleInitializations;
@@ -18,6 +19,9 @@ public static class DomainInstaller
         serviceCollection.AddScoped<RoomFactory>();
         serviceCollection.AddScoped<GameActionsWithTargetsValidator>();
         serviceCollection.AddScoped<CombatAction>();
+        serviceCollection.AddScoped<DebugTargetAction>();
+        serviceCollection.AddScoped<DebugInstantAction>();
+ 
 
         serviceCollection.AddScoped<IRandomProvider, RealRandom>();
         InstallActionServices(serviceCollection);

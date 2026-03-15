@@ -60,6 +60,10 @@ public partial class Program
             options.IdleTimeout = TimeSpan.FromMinutes(20);
             options.Cookie.HttpOnly = true;
             options.Cookie.IsEssential = true; // Important!
+            
+            // Minimal dev setup
+            options.Cookie.SameSite = SameSiteMode.None; // needed for cross-origin
+            options.Cookie.SecurePolicy = CookieSecurePolicy.None; // allow HTTP
         });
         AppComposer.ComposeApplication(builder.Services, builder.Configuration);
 
@@ -77,18 +81,19 @@ public partial class Program
 
         app.UseCors(x =>
         {
-            x.AllowAnyOrigin();
+            x.WithOrigins(["http://localhost:5173"]);
             x.AllowAnyMethod();
             x.AllowAnyHeader();
+            x.AllowCredentials(); // cookies allowed
         });
         app.UseRouting();
         app.UseSession();
-        
+
         app.MapControllers();
         AppComposer.Initialize(app.Services);
 
         app.MapSwagger();
-        
+
 
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
