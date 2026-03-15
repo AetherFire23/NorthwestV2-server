@@ -31,7 +31,7 @@ public class GameController : ControllerBase
 
         if (!userData.PlayerId.HasValue)
         {
-            throw new Exception("This data is required");
+            throw new Exception("A player id needs to be set first before calling this endpoint. ");
         }
 
         GetActionsResult result = await _mediator.Send(new GetActionsRequest()

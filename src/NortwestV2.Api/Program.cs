@@ -25,16 +25,17 @@ public partial class Program
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();
 
-        builder.Services.AddCors(options =>
-        {
-            options.AddPolicy("AllowAll", policy =>
-            {
-                policy
-                    .AllowAnyOrigin()
-                    .AllowAnyHeader()
-                    .AllowAnyMethod(); // <-- allows PUT, POST, DELETE, etc.
-            });
-        });
+        // builder.Services.AddCors(options =>
+        // {
+        //     options.AddPolicy("AllowAll", policy =>
+        //     {
+        //         policy
+        //             .AllowAnyOrigin() // Cannot use AllowCredentials() with.WithOrigins 
+        //             .AllowAnyHeader()
+        //             .AllowAnyMethod(); // <-- allows PUT, POST, DELETE, etc.
+        //         // .AllowCredentials();     // need this for cookies authentication 
+        //     });
+        // });
 
         builder.Services.AddSwaggerGen(c =>
         {
@@ -54,7 +55,12 @@ public partial class Program
         builder.Services.AddEndpointsApiExplorer();
 
         builder.Services.AddDistributedMemoryCache();
-        builder.Services.AddSession();
+        builder.Services.AddSession(options =>
+        {
+            options.IdleTimeout = TimeSpan.FromMinutes(20);
+            options.Cookie.HttpOnly = true;
+            options.Cookie.IsEssential = true; // Important!
+        });
         AppComposer.ComposeApplication(builder.Services, builder.Configuration);
 
         builder.Services.AddControllers();
@@ -66,13 +72,23 @@ public partial class Program
 
         WebApplication app = builder.Build();
 
-        app.UseCors("AllowAll");
-        app.UseSession();
+        // app.UseCors("AllowAll"); // if the policy is not ran it won't ever work/.
 
+
+        app.UseCors(x =>
+        {
+            x.AllowAnyOrigin();
+            x.AllowAnyMethod();
+            x.AllowAnyHeader();
+        });
+        app.UseRouting();
+        app.UseSession();
+        
+        app.MapControllers();
         AppComposer.Initialize(app.Services);
 
-        app.MapControllers();
         app.MapSwagger();
+        
 
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
@@ -108,11 +124,6 @@ public partial class Program
             }
         }
 
-        app.UseCors(x =>
-        {
-            x.AllowAnyOrigin();
-            x.AllowAnyHeader();
-        });
 
         app.UseHttpsRedirection();
 

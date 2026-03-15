@@ -20,11 +20,13 @@ public abstract class ActionAvailabilityBase
 
     public List<ActionRequirement> ActionRequirements { get; set; } = ActionRequirement.None;
 
+
     public bool CanExecute
     {
         get
         {
-            return this.ActionRequirements.All(a => a.IsFulfilled);
+            bool res = this.ActionRequirements.All(a => a.IsFulfilled);
+            return res;
         }
     }
 

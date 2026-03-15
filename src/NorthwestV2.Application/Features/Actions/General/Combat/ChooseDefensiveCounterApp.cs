@@ -1,5 +1,6 @@
 ﻿using AetherFire23.ERP.Domain.Entity;
 using AetherFire23.ERP.Domain.Features.Actions.Core;
+using AetherFire23.ERP.Domain.Features.Actions.Core.Availability;
 using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.WithTargets;
 using AetherFire23.ERP.Domain.Features.Actions.General.Combat;
 using NorthwestV2.Application.Features.Actions.Core.Bases;
@@ -38,7 +39,12 @@ public class ChooseDefensiveCounterApp : ActionWithTargetsBase
         ActionWithTargetsAvailability stuff = new ActionWithTargetsAvailability
         {
             ActionName = ActionName,
-            TargetSelectionPrompts = [targetSelectionPrompt]
+            TargetSelectionPrompts = [targetSelectionPrompt],
+            ActionRequirements = [new ActionRequirement()
+            {
+                Description = "Allo",
+                IsFulfilled = true
+            }]
         };
 
         return stuff;

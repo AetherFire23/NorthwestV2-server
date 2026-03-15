@@ -14,8 +14,6 @@ public class ActionWithTargetsAvailability : ActionAvailabilityBase
     [Required]
     public List<TargetSelectionPrompt> TargetSelectionPrompts { get; set; } = [];
 
-    
-    
 
     public ActionWithTargetsAvailability WithScreen(TargetSelectionPrompt nextPrompt)
     {

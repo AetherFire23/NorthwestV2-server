@@ -1,4 +1,5 @@
-﻿using Mediator;
+﻿using AetherFire23.ERP.Domain.Entity;
+using Mediator;
 using Microsoft.AspNetCore.Mvc;
 using NorthwestV2.Application.UseCases.Authentication.Login;
 using NorthwestV2.Application.UseCases.Authentication.Register;
@@ -45,11 +46,13 @@ public class AuthController : ControllerBase
     {
         LoginResult lg = await _mediator.Send(request, cancellationToken);
 
-        await Task.Delay(1000, cancellationToken);
-        ;
+        // IF IS DEVELOPMENT only
+        Player playerId = this._context.Players.First(x => x.UserId == lg.UserId);
         this.HttpContext.Session.SetUserData(new UserData
         {
-            UserId = lg.UserId
+            UserId = lg.UserId,
+            PlayerId = playerId.Id,
+            GameId = playerId.GameId
         });
 
         return Ok(lg);
