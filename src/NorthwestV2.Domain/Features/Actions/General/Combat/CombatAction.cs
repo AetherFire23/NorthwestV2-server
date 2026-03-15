@@ -111,7 +111,7 @@ public class CombatAction
         // In this scenario, the attacker always loses.
         if (fightExitType == FightExitType.ExittedBecauseOfPushHard)
         {
-            return new FightResult()
+            return new FightResult
             {
                 Winner = defenderPlayer,
                 Loser = attackerPlayer,

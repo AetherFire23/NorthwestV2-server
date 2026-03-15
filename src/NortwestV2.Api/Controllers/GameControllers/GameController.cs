@@ -23,7 +23,7 @@ public class GameController : ControllerBase
         _mediator = mediator;
         _context = context;
     }
-    
+
     [HttpGet("actions/availabilities")]
     public async Task<ActionResult<GetActionsResult>> GetActionsAvailabilities()
     {

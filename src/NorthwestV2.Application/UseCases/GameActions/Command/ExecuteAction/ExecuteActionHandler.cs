@@ -39,7 +39,8 @@ namespace NorthwestV2.Application.UseCases.GameActions.Command.ExecuteAction;
 /// an exception is thrown and execution is aborted.
 /// </para>
 /// /// </summary>
-public class ExecuteActionHandler : IRequestHandler<ExecuteActionRequest>
+public class 
+    ExecuteActionHandler : IRequestHandler<ExecuteActionRequest>
 {
     private readonly ActionServices _actionServices;
 
@@ -55,7 +56,7 @@ public class ExecuteActionHandler : IRequestHandler<ExecuteActionRequest>
     public async ValueTask<Unit> Handle(ExecuteActionRequest request, CancellationToken cancellationToken)
     {
         ActionBase action = await _actionServices.GetActionFromName(request.ActionName);
-
+        
         switch (action)
         {
             case ActionWithTargetsBase actionWithTargets:

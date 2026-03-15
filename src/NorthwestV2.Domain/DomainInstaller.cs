@@ -1,5 +1,4 @@
 ﻿using AetherFire23.ERP.Domain.Features.Actions.Core;
-using AetherFire23.ERP.Domain.Features.Actions.Debug;
 using AetherFire23.ERP.Domain.Features.Actions.General.Combat;
 using AetherFire23.ERP.Domain.GameStart;
 using AetherFire23.ERP.Domain.GameStart.RoleInitializations;
@@ -28,8 +27,6 @@ public static class DomainInstaller
 
     private static void InstallActionServices(IServiceCollection serviceCollection)
     {
-        serviceCollection.AddScoped<DebugInstantAction>();
-        serviceCollection.AddScoped<DebugTargetAction>();
         serviceCollection.AddScoped<ChooseDefensiveCounter>();
     }
 
