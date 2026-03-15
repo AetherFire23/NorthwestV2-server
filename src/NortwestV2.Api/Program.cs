@@ -62,8 +62,9 @@ public partial class Program
             options.Cookie.IsEssential = true; // Important!
             
             // Minimal dev setup
-            options.Cookie.SameSite = SameSiteMode.None; // needed for cross-origin
-            options.Cookie.SecurePolicy = CookieSecurePolicy.None; // allow HTTP
+            // options.Cookie.SameSite = SameSiteMode.None; // needed for cross-origin
+            // options.Cookie.SecurePolicy = CookieSecurePolicy.None; // allow HTTP
+            options.Cookie.MaxAge = TimeSpan.FromHours(1); // IT WAS EXPIRING INSTANLY ! 
         });
         AppComposer.ComposeApplication(builder.Services, builder.Configuration);
 
