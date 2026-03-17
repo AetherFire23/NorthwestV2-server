@@ -15,7 +15,6 @@ public class ChangeRoomAction
 
         List<ActionRequirement> actionRequirements = CreateRequirements(adjacentRooms);
 
-
         TargetSelectionPrompt adjacentRoomSelectionPrompt = TargetSelectionPrompt.FromRooms(adjacentRooms);
 
         ActionWithTargetsAvailability actionWithTargetsAvailability = new ActionWithTargetsAvailability()

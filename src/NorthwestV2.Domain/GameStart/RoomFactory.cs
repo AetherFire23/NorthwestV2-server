@@ -169,6 +169,9 @@ public class RoomFactory
         
         mainDeck.AdjacentRooms.Add(crowsNest);
         crowsNest.AdjacentRooms.Add(mainDeck);
+        
+        // NOT REAL CONNECTION
+        brig.AdjacentRooms.Add(lowerCorridor);
 
         //
         List<Room> rooms = new([

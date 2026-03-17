@@ -28,8 +28,8 @@ public class CombatActionAppTest : NorthwestIntegrationTestBase
         int i = 0;
         // TODO; write assert
 
-        bool hasTarget = act.ActionWithTargets.First(x => x.ActionName == ActionNames.CombatAction)
-            .TargetSelectionPrompts.First()
+        bool hasTarget = act.Actions.First(x => x.Name == ActionNames.CombatAction)
+            .Prompts.First()
             .ValidTargets.Any();
 
         Assert.True(hasTarget);

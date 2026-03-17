@@ -1,38 +1,37 @@
 ﻿using AetherFire23.ERP.Domain;
 using AetherFire23.ERP.Domain.Features.Actions.Core;
-using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.WithTargets;
 using JetBrains.Annotations;
-using NorthwestV2.Application.Features.Actions.General.Combat;
+using NorthwestV2.Application.Features.Actions.General.Movement;
 using NorthwestV2.Application.UseCases.Authentication.Register;
 using NorthwestV2.Application.UseCases.GameActions.Queries.GetActions;
 using NorthwestV2.Application.UseCases.GameStart;
 using Xunit.Abstractions;
 
-namespace NorthwestV2.Integration.Features.Actions.General.Combat;
+namespace NorthwestV2.Integration.Features.Actions.General.Movement;
 
-[TestSubject(typeof(ChooseDefensiveCounterApp))]
-public class ChooseDefensiveCounterAppTest : NorthwestIntegrationTestBase
+[TestSubject(typeof(ChangeRoomApp))]
+public class ChangeRoomAppTest : NorthwestIntegrationTestBase
 {
-    public ChooseDefensiveCounterAppTest(ITestOutputHelper output) : base(output)
+    public ChangeRoomAppTest(ITestOutputHelper output) : base(output)
     {
     }
 
-    // TODO: All enum values are correctly Converted into targets for roles. 
     [Fact]
-    public async Task GivenDefensiveStances_WhenGetAvailability_ThenAreAllRolesConvertedToTargets()
+    public async Task Given_When_Then()
     {
-        CreateGameSeedData data = await ArrangeUntilGameCreation();
-
-        GetActionsResult getActionsResult = await Mediator.Send(new GetActionsRequest()
+        CreateGameSeedData gameData = await ArrangeUntilGameCreation();
+        Guid playerId = gameData.PlayerIds.First();
+        var roms = await Mediator.Send(new GetActionsRequest()
         {
-            PlayerId = data.PlayerIds.First(),
+            PlayerId = playerId,
         });
-
-        // Only 2 stances, won't do a complex algorithm to test that. 
-
-        var availableStances = getActionsResult.Actions
-            .First(x => x.Name == ActionNames.PickDefensiveStance);
-        Assert.Equal(2, availableStances.Prompts.First().ValidTargets.Count);
+        // await Mediator.Send(new ExecuteActionRequest()
+        // {
+        //     ActionName = ActionNames.ChangeRoom,
+        //     PlayerId = playerId
+        // });
+        
+        Assert.NotEmpty(roms.Actions.First(x=> x.Name == ActionNames.ChangeRoom).Prompts.First().ValidTargets);
     }
 
     private async Task<CreateGameSeedData> ArrangeUntilGameCreation()

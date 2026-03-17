@@ -26,7 +26,7 @@ public class GetActionsHandlerTest : NorthwestIntegrationTestBase
             PlayerId = anyPlayer.Id,
         });
 
-        Assert.NotEmpty(response.InstantActions);
+        Assert.NotEmpty(response.Actions);
     }
     
     [Fact]
@@ -40,7 +40,7 @@ public class GetActionsHandlerTest : NorthwestIntegrationTestBase
             PlayerId = anyPlayer.Id,
         });
 
-        Assert.NotEmpty(response.ActionWithTargets);
+        Assert.NotEmpty(response.Actions);
     }
 
     /// <summary>
