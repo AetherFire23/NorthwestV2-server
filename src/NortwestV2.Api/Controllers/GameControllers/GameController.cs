@@ -4,6 +4,7 @@ using Mediator;
 using Microsoft.AspNetCore.Mvc;
 using NorthwestV2.Application.UseCases.GameActions.Command.ExecuteAction;
 using NorthwestV2.Application.UseCases.GameActions.Queries.GetActions;
+using NorthwestV2.Application.UseCases.OtherPlayers.Queries;
 using NorthwestV2.Infrastructure;
 using NorthwestV2.Practical;
 
@@ -59,6 +60,25 @@ public class GameController : ControllerBase
 
         return Ok("executed successfully");
     }
+
+
+    // TODO: Change response type to something real. 
+    [HttpGet("othersInRoom")]
+    public async Task<ActionResult<GetOtherPlayersResponse>> GetPlayersInRoom()
+    {
+        UserData userData = this.HttpContext.Session.GetUserData();
+
+        var res = await _mediator.Send(new GetOtherPlayersRequest()
+        {
+            PlayerId = userData.PlayerId.Value
+        });
+
+        return Ok(res);
+    }
+
+    // TODO: endpoit to swap items to current room. 
+
+    // TODO: Endpoint for Logs 
 }
 
 public class ExecuteActionApiRequest

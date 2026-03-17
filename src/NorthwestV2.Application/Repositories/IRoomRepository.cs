@@ -28,4 +28,6 @@ public interface IRoomRepository
     /// without EF Core attempting to re‑insert already tracked entities.
     /// </remarks>
     public ValueTask SaveRoomAndAdjacents(IEnumerable<Room> rooms);
+
+    public Task<List<Room>> GetAdjacentRoomsOfPlayer(Guid playerId);
 }

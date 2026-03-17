@@ -1,4 +1,6 @@
 ﻿using AetherFire23.ERP.Domain.Entity;
+using Microsoft.EntityFrameworkCore;
+using NorthwestV2.Application.EfCoreExtensions;
 using NorthwestV2.Application.Repositories;
 
 namespace NorthwestV2.Infrastructure.Repositories;
@@ -58,5 +60,17 @@ public class RoomRepository : IRoomRepository
         {
             roomsToAdjacent.Key.AdjacentRooms.AddRange(roomsToAdjacent.Value);
         }
+    }
+
+    public async Task<List<Room>> GetAdjacentRoomsOfPlayer(Guid playerId)
+    {
+        Player player = await this._northwestContext.Players
+            .Include(x => x.Room)
+            .ThenInclude(x => x.AdjacentRooms)
+            .FirstAsync(x => x.Id == playerId);
+
+        List<Room> adjacents = player.Room.AdjacentRooms;
+
+        return adjacents;
     }
 }

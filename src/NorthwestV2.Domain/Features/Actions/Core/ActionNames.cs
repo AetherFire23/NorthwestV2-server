@@ -12,4 +12,5 @@ public static class ActionNames
     public const string DebugWithTargets = "Debug action with targets";
     public const string PickDefensiveStance = "Choose defensive stance";
     public const string CombatAction = "Combat";
+    public const string ChangeRoom = "Change Room";
 }

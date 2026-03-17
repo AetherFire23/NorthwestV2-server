@@ -35,10 +35,12 @@ public class DebugTargetAction
         ActionTarget oneDamage = new ActionTarget
         {
             Value = "1",
+            Name = "One"
         };
         ActionTarget twoDamage = new ActionTarget
         {
             Value = "2",
+            Name = "Two"
         };
         List<ActionTarget> targets = new List<ActionTarget>([oneDamage, twoDamage]);
 
@@ -54,11 +56,13 @@ public class DebugTargetAction
     {
         ActionTarget oneDamage = new ActionTarget
         {
-            TargetId = players[0].Id
+            TargetId = players[0].Id,
+            Name = players.First().Role.ToString()
         };
         ActionTarget twoDamage = new ActionTarget
         {
             TargetId = players[1].Id,
+            Name = players[1].Role.ToString()
         };
 
         List<ActionTarget> targets = new([oneDamage, twoDamage]);

@@ -53,4 +53,17 @@ public class TargetSelectionPrompt
             ValidTargets = players.Select(x => x.ToTarget()).ToList()
         };
     }
+
+    public static TargetSelectionPrompt FromRooms(List<Room> rooms)
+    {
+        List<ActionTarget> targets = rooms.Select(x => x.ToTarget()).ToList();
+
+        var prompt = new TargetSelectionPrompt
+        {
+            Description = "Choose required room(s)",
+            ValidTargets = targets
+        };
+
+        return prompt;
+    }
 }
