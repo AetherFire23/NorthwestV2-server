@@ -29,6 +29,7 @@ public class ChooseDefensiveCounterApp : ActionWithTargetsBase
         this.chooseDefensiveCounter1 = chooseDefensiveCounter1;
     }
 
+    // TODO: Doing too much; move to domain layer plz 
     public override async Task<ActionWithTargetsAvailability> GetAvailabilityResult(GetActionsRequest request)
     {
         Player player = await _playerRepository.GetPlayer(request.PlayerId);
@@ -68,7 +69,7 @@ public class ChooseDefensiveCounterApp : ActionWithTargetsBase
 
     private DefensiveCounters ExtractDefensiveCounterFromActionTargets(List<List<ActionTarget>> actionTargets)
     {
-        if (actionTargets.Count > 0)
+        if (actionTargets.Count > 1)
         {
             throw new Exception("Should not exceed 1 screen wth");
         }

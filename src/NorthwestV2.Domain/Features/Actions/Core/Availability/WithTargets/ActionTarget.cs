@@ -46,7 +46,7 @@ public class ActionTarget : IEquatable<ActionTarget>
     /// Indicates whether the target is in an invalid state, meaning both
     /// <see cref="TargetId"/> and <see cref="Value"/> are set simultaneously.
     /// </summary>
-    public bool IsInvalidState => this.TargetId.HasValue && !string.IsNullOrEmpty(this.Value);
+    public bool IsInvalidState => (this.TargetId.HasValue && this.TargetId != Guid.Empty) && !string.IsNullOrEmpty(this.Value);
 
     /// <summary>
     /// Determines whether this target is equal to another target.

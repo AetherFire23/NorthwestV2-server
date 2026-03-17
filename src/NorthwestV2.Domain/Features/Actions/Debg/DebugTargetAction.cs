@@ -3,7 +3,7 @@ using AetherFire23.ERP.Domain.Features.Actions.Core;
 using AetherFire23.ERP.Domain.Features.Actions.Core.Availability;
 using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.WithTargets;
 
-namespace AetherFire23.ERP.Domain.Features.Actions.Debug;
+namespace AetherFire23.ERP.Domain.Features.Actions.Debg;
 
 public class DebugTargetAction
 {
