@@ -8,13 +8,14 @@ namespace NorthwestV2.Application.Features.Actions.Core.Bases;
 /// /// </summary>
 public abstract class ActionBase
 {
-    
     /// <summary>
     /// The unique name of the action. Used for identification, and UI display.
     /// </summary>
     public string ActionName { get; private set; }
 
-    
+
+
+
     /// <summary>
     /// Initializes a new action with the given database context and action name.
     /// </summary>
@@ -24,7 +25,7 @@ public abstract class ActionBase
     {
         ActionName = actionName;
     }
-    
+
     /// <summary>
     /// Executes the action using the provided request data.
     /// Implementations modify game state and persist changes as needed.

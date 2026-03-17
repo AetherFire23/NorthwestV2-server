@@ -17,14 +17,24 @@ public class GetActionsHandler : IRequestHandler<GetActionsRequest, GetActionsRe
 
     public async ValueTask<GetActionsResult> Handle(GetActionsRequest request, CancellationToken cancellationToken)
     {
-        List<InstantActionAvailability> instantActionAvailabilities = await _actionServices.GetInstantActionAvailabilityResults(request);
-        
-        List<ActionWithTargetsAvailability> actionWithTargetsAvailabilities = await _actionServices.GetActionWithTargetsAvailabilityResults(request);
+        List<InstantActionAvailability> instantActionAvailabilities =
+            await _actionServices.GetInstantActionAvailabilityResults(request);
 
-        return new GetActionsResult
+        List<ActionWithTargetsAvailability> actionWithTargetsAvailabilities =
+            await _actionServices.GetActionWithTargetsAvailabilityResults(request);
+
+        IEnumerable<ActionDto> instantActionsAsDto = instantActionAvailabilities
+            .Select(ActionDto.FromInstant);
+
+        IEnumerable<ActionDto> actionWithTargetsDto = actionWithTargetsAvailabilities
+            .Select(ActionDto.FromTarget);
+
+
+        GetActionsResult getActionsResult = new GetActionsResult()
         {
-            ActionWithTargets = actionWithTargetsAvailabilities,
-            InstantActions = instantActionAvailabilities,
+            Actions = instantActionsAsDto.Union(actionWithTargetsDto).ToList(),
         };
+
+        return getActionsResult;
     }
 }

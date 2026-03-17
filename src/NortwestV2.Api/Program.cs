@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.Text.Json.Serialization;
 using AetherFire23.Commons.Scenarios;
 using AetherFire23.Commons.Seeding;
 using AetherFire23.ERP.Domain;
@@ -68,7 +69,11 @@ public partial class Program
         });
         AppComposer.ComposeApplication(builder.Services, builder.Configuration);
 
-        builder.Services.AddControllers();
+        builder.Services.AddControllers().AddJsonOptions(o =>
+        {
+            // Allows frontend to generate union types 
+            o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        });
 
         // Seed & scenario
 

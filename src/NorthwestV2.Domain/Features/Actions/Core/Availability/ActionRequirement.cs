@@ -60,7 +60,7 @@ public class ActionRequirement
 
         ActionRequirement actionRequirement = new ActionRequirement()
         {
-            Description = "Another player exists in the same room.",
+            Description = "Another player exists in the same room. bla bla bla ",
             IsFulfilled = otherPlayersInSameRoom.Count != 0
         };
 

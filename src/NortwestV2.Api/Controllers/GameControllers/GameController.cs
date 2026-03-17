@@ -1,5 +1,8 @@
-﻿using Mediator;
+﻿using System.ComponentModel.DataAnnotations;
+using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.WithTargets;
+using Mediator;
 using Microsoft.AspNetCore.Mvc;
+using NorthwestV2.Application.UseCases.GameActions.Command.ExecuteAction;
 using NorthwestV2.Application.UseCases.GameActions.Queries.GetActions;
 using NorthwestV2.Infrastructure;
 using NorthwestV2.Practical;
@@ -42,17 +45,24 @@ public class GameController : ControllerBase
         return Ok(result);
     }
 
-    [HttpPost("actions/execute")]
-    public async Task<ActionResult> Execute()
+    [HttpPost("execute")]
+    public async Task<ActionResult<string>> Execute(ExecuteActionApiRequest apiRequest)
     {
         UserData userData = this.HttpContext.Session.GetUserData();
-        //
-        // await _mediator.Send(new ExecuteActionRequest()
-        // {
-        //     PlayerId = userData.PlayerId,
-        //     ActionName = actionName,
-        //     ActionTargets = 
-        // })
-        return Ok();
+
+        await _mediator.Send(new ExecuteActionRequest()
+        {
+            ActionName = apiRequest.ActionName,
+            PlayerId = userData.PlayerId.Value,
+            ActionTargets = apiRequest.Targets,
+        });
+
+        return Ok("executed successfully");
     }
+}
+
+public class ExecuteActionApiRequest
+{
+    public string ActionName { get; set; }
+    public List<List<ActionTarget>> Targets { get; set; }
 }

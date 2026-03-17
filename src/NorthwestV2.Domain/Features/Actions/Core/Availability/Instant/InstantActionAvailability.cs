@@ -11,5 +11,4 @@
 /// </summary>
 public class InstantActionAvailability : ActionAvailabilityBase
 {
-
 }
