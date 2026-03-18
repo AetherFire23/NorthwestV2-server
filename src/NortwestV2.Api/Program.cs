@@ -37,7 +37,10 @@ public partial class Program
         //         // .AllowCredentials();     // need this for cookies authentication 
         //     });
         // });
-
+        builder.WebHost.ConfigureKestrel(options =>
+        {
+            options.ListenAnyIP(5272); // listens on 0.0.0.0
+        });
         builder.Services.AddSwaggerGen(c =>
         {
             // https://learn.microsoft.com/en-us/aspnet/core/fundamentals/openapi/openapi-comments?view=aspnetcore-10.0
@@ -61,7 +64,7 @@ public partial class Program
             options.IdleTimeout = TimeSpan.FromMinutes(20);
             options.Cookie.HttpOnly = true;
             options.Cookie.IsEssential = true; // Important!
-            
+
             // Minimal dev setup
             // options.Cookie.SameSite = SameSiteMode.None; // needed for cross-origin
             // options.Cookie.SecurePolicy = CookieSecurePolicy.None; // allow HTTP
@@ -122,19 +125,19 @@ public partial class Program
                 s.Database.Migrate();
             }
 
-            if (args.Contains("--seed") && args.Contains("--scenario"))
-            {
-                app.Services.ExecuteSeedFromSeedName(args.ElementAt(args.IndexOf("--seed") + 1));
-                // Leave as fire-and-forget async call. 
-                // app.Services.LaunchScenarioBrowser(args[args.IndexOf("--scenario") + 1]);
-            }
-            else
-            {
-                app.Services.GetRequiredService<ILogger<Program>>()
-                    .LogInformation("Launching with seeds requires scenarios");
-            }
-        }
 
+        }
+        if (args.Contains("--seed") && args.Contains("--scenario"))
+        {
+            app.Services.ExecuteSeedFromSeedName(args.ElementAt(args.IndexOf("--seed") + 1));
+            // Leave as fire-and-forget async call. 
+            // app.Services.LaunchScenarioBrowser(args[args.IndexOf("--scenario") + 1]);
+        }
+        else
+        {
+            app.Services.GetRequiredService<ILogger<Program>>()
+                .LogInformation("Launching with seeds requires scenarios");
+        }
 
         app.UseHttpsRedirection();
 
