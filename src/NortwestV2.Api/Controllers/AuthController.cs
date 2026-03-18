@@ -45,8 +45,16 @@ public class AuthController : ControllerBase
         CancellationToken cancellationToken)
     {
         LoginResult lg = await _mediator.Send(request, cancellationToken);
-
-        // IF IS DEVELOPMENT only
+        
+        // TODO: set the default player I g
+        this.Response.Cookies.Append("nw_token", lg.Token, new CookieOptions()
+        {
+            HttpOnly = true,
+            Secure = true,
+            SameSite = SameSiteMode.None,
+            Expires = DateTime.UtcNow.AddMinutes(420)
+        });
+        
         Player playerId = this._context.Players.First(x => x.UserId == lg.UserId);
         this.HttpContext.Session.SetUserData(new UserData
         {
@@ -54,6 +62,7 @@ public class AuthController : ControllerBase
             PlayerId = playerId.Id,
             GameId = playerId.GameId
         });
+
 
         return Ok(lg);
     }

@@ -58,18 +58,7 @@ public partial class Program
         builder.Services.AddLogging();
         builder.Services.AddEndpointsApiExplorer();
 
-        builder.Services.AddDistributedMemoryCache();
-        builder.Services.AddSession(options =>
-        {
-            options.IdleTimeout = TimeSpan.FromMinutes(20);
-            options.Cookie.HttpOnly = true;
-            options.Cookie.IsEssential = true; // Important!
 
-            // Minimal dev setup
-            // options.Cookie.SameSite = SameSiteMode.None; // needed for cross-origin
-            // options.Cookie.SecurePolicy = CookieSecurePolicy.None; // allow HTTP
-            options.Cookie.MaxAge = TimeSpan.FromHours(1); // IT WAS EXPIRING INSTANLY ! 
-        });
         AppComposer.ComposeApplication(builder.Services, builder.Configuration);
 
         builder.Services.AddControllers().AddJsonOptions(o =>
@@ -82,27 +71,29 @@ public partial class Program
 
         builder.Services.AddSeedServices(typeof(SeededCompany).Assembly);
         builder.Services.InstallScenarioLauncher();
+        builder.Services.AddSession();
+        builder.Services.AddDistributedMemoryCache();
 
         WebApplication app = builder.Build();
 
         // app.UseCors("AllowAll"); // if the policy is not ran it won't ever work/.
 
 
+
+        app.UseRouting();
         app.UseCors(x =>
         {
-            x.WithOrigins(["http://localhost:5173"]);
+            x.WithOrigins(["http://localhost:5173", "http://192.168.2.100:5173"]);
             x.AllowAnyMethod();
             x.AllowAnyHeader();
             x.AllowCredentials(); // cookies allowed
         });
-        app.UseRouting();
-        app.UseSession();
-
         app.MapControllers();
         AppComposer.Initialize(app.Services);
 
         app.MapSwagger();
 
+        app.UseSession();
 
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
@@ -139,7 +130,7 @@ public partial class Program
                 .LogInformation("Launching with seeds requires scenarios");
         }
 
-        app.UseHttpsRedirection();
+        // app.UseHttpsRedirection();
 
         app.Run();
     }

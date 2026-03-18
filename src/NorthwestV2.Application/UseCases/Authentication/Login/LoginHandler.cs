@@ -2,6 +2,7 @@
 using Mediator;
 using NorthwestV2.Application.Features.Actions.General.Combat;
 using NorthwestV2.Application.Repositories;
+using NorthwestV2.Application.UseCases.Authentication.Login.Tokens;
 
 namespace NorthwestV2.Application.UseCases.Authentication.Login;
 
@@ -17,10 +18,12 @@ namespace NorthwestV2.Application.UseCases.Authentication.Login;
 public class LoginHandler : IRequestHandler<LoginRequest, LoginResult>
 {
     private readonly IUserRepository _userRepository;
+    private readonly JwtTokenService _tokenService;
 
-    public LoginHandler(IUserRepository userRepository)
+    public LoginHandler(IUserRepository userRepository, JwtTokenService tokenService)
     {
         _userRepository = userRepository;
+        _tokenService = tokenService;
     }
 
     public async ValueTask<LoginResult> Handle(LoginRequest request, CancellationToken cancellationToken)
@@ -37,6 +40,7 @@ public class LoginHandler : IRequestHandler<LoginRequest, LoginResult>
         return new LoginResult
         {
             UserId = user.Id,
+            Token = _tokenService.GenerateToken(user.Id)
         };
     }
 }

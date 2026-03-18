@@ -4,6 +4,7 @@ using NorthwestV2.Application.Features.Actions.Core;
 using NorthwestV2.Application.Features.Actions.Debug;
 using NorthwestV2.Application.Features.Actions.General.Combat;
 using NorthwestV2.Application.Features.Actions.General.Movement;
+using NorthwestV2.Application.UseCases.Authentication.Login.Tokens;
 
 namespace NorthwestV2.Application.Installation;
 
@@ -17,5 +18,6 @@ public class ApplicationInstaller
         serviceCollection.AddScoped<DebugInstantActionApp>();
         serviceCollection.AddScoped<DebugTargetsActionApp>();
         serviceCollection.AddScoped<ChangeRoomApp>();
+        serviceCollection.AddScoped<JwtTokenService>();
     }
 }
