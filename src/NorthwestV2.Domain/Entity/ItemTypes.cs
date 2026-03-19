@@ -3,5 +3,9 @@
 public enum ItemTypes
 {
     Sword,
-    BrittleSword
+    BrittleSword,
+    AssemblyOfCasingAndLenses,
+    Spyglass,
+    UnfinishedSpyglass,
+    Scrap
 }

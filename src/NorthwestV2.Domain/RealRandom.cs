@@ -4,7 +4,7 @@ public class RealRandom : IRandomProvider
 {
     public int Next(int min, int max)
     {
-        return Random.Shared.Next(0, 10);
+        return Random.Shared.Next(min, max);
     }
 
     public IEnumerable<T> Shuffle<T>(IEnumerable<T> enumerable)

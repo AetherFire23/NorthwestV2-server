@@ -12,10 +12,11 @@ public class RoomFactory
             RoomEnum = RoomEnum.BoilerRoom,
             Game = game,
         };
-        
-        boilerRoom.Inventory.Items.Add(new Item()
+
+        boilerRoom.Inventory.Items.Add(new Item(ItemTypes.Spyglass, 2)
         {
-            ItemType = ItemTypes.BrittleSword
+            ItemType = ItemTypes.BrittleSword,
+            CarryValue = 1,
         });
 
         Room brig = new Room
@@ -102,7 +103,6 @@ public class RoomFactory
             Game = game,
         };
 
-
         Room officersQuarters = new Room
         {
             RoomEnum = RoomEnum.OfficersQuarters,
@@ -166,10 +166,10 @@ public class RoomFactory
             Game = game,
         };
 
-        
+
         mainDeck.AdjacentRooms.Add(crowsNest);
         crowsNest.AdjacentRooms.Add(mainDeck);
-        
+
         // NOT REAL CONNECTION
         brig.AdjacentRooms.Add(lowerCorridor);
 

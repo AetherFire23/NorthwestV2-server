@@ -13,4 +13,5 @@ public static class ActionNames
     public const string PickDefensiveStance = "Choose defensive stance";
     public const string CombatAction = "Combat";
     public const string ChangeRoom = "Change Room";
+    public static string SpyglassProduction = "Spyglass Production";
 }

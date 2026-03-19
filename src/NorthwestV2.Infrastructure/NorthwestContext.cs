@@ -20,7 +20,14 @@ public class NorthwestContext : DbContext, IUnitOfWork
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        // modelBuilder.Entity<Item>()
+        //     .HasDiscriminator(i => i.ItemType)
+        //     .HasValue<Item>(ItemTypes.);
     }
+    //
+    // var productionItems = await _db.Items
+    //     .OfType<ProductionItem>()
+    //     .ToListAsync();
 
     public async Task SaveChangesAsync(CancellationToken ct = default)
     {
