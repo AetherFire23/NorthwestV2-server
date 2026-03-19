@@ -45,7 +45,21 @@ public class PlayerRepository : IPlayerRepository
 
     public async Task<Player> GetPlayer(Guid playerid)
     {
-        Player user = await _northwestContext.Players.FindById(playerid);
+        Player user = await _northwestContext.Players
+            .FindById(playerid);
+        return user;
+    }
+
+    public async Task<Player> GetPlayerWithRoomAndInventory(Guid playerId)
+    {
+        Player user = await _northwestContext.Players
+            .Include(x => x.Room)
+            .ThenInclude(x => x.Inventory)
+            .ThenInclude(x => x.Items)
+            .Include(x => x.Inventory)
+            .ThenInclude(x => x.Items)
+            .FirstAsync(x => x.Id == playerId);
+
         return user;
     }
 

@@ -35,6 +35,7 @@ public class CombatAction
         ActionWithTargetsAvailability availability = new ActionWithTargetsAvailability()
         {
             ActionName = ActionNames.CombatAction,
+            DisplayName = ActionNames.CombatAction,
             TargetSelectionPrompts = promptWithSingleScreenOfJustPlayers,
             ActionRequirements = requiresAnyPlayerInTheSameRoom,
         };
@@ -45,7 +46,7 @@ public class CombatAction
     private List<ActionRequirement> DetermineRequirements(Player caster, List<Player> otherPlayersInSameRoom)
     {
         ActionRequirement playersInSameRoomRequirement =
-            ActionRequirement.CreatePlayerExistsInRoomRequirement(caster, otherPlayersInSameRoom);
+            ActionRequirement.CreateAnyOtherPlayerExistsInRoomRequirement(caster, otherPlayersInSameRoom);
 
 
         return [playersInSameRoomRequirement];

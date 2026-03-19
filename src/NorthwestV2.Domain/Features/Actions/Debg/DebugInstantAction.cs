@@ -23,7 +23,8 @@ public class DebugInstantAction
         InstantActionAvailability vs = new InstantActionAvailability()
         {
             ActionName = ActionNames.InstantHeal,
-            ActionRequirements = [actionRequirement]
+            ActionRequirements = [actionRequirement],
+            DisplayName = ActionNames.InstantHeal
         };
 
         return vs;

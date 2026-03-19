@@ -9,6 +9,6 @@
 /// introduce additional behavior. 
 /// </para>
 /// </summary>
-public class InstantActionAvailability : ActionAvailabilityBase
+public class  InstantActionAvailability : ActionAvailabilityBase
 {
 }

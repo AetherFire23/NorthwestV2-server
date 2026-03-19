@@ -41,11 +41,15 @@ public class ChooseDefensiveCounterApp : ActionWithTargetsBase
         {
             ActionName = ActionName,
             TargetSelectionPrompts = [targetSelectionPrompt],
-            ActionRequirements = [new ActionRequirement()
-            {
-                Description = "Allo",
-                IsFulfilled = true
-            }]
+            ActionRequirements =
+            [
+                new ActionRequirement()
+                {
+                    Description = "Allo",
+                    IsFulfilled = true
+                }
+            ],
+            DisplayName = this.ActionName
         };
 
         return stuff;

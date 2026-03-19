@@ -19,7 +19,8 @@ public class DebugTargetAction
         {
             ActionName = ActionNames.DebugWithTargets,
             TargetSelectionPrompts = GetValidTargets(players),
-            ActionRequirements = [actionRequirement]
+            ActionRequirements = [actionRequirement],
+            DisplayName = ActionNames.DebugWithTargets
         };
 
         return debugTargetAvailability;

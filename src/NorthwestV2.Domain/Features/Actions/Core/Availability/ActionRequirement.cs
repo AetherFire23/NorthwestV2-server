@@ -51,7 +51,7 @@ public class ActionRequirement
         return $"{this.Description} : {this.IsFulfilled}";
     }
     
-    public static ActionRequirement CreatePlayerExistsInRoomRequirement(Player caster, List<Player> otherPlayersInSameRoom)
+    public static ActionRequirement CreateAnyOtherPlayerExistsInRoomRequirement(Player caster, List<Player> otherPlayersInSameRoom)
     {
         if (otherPlayersInSameRoom.Contains(caster))
         {

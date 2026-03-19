@@ -1,4 +1,6 @@
 ﻿using AetherFire23.ERP.Domain.Entity;
+using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.Instant;
+using AetherFire23.ERP.Domain.Features.Actions.Productions.Core.Entities;
 using AetherFire23.ERP.Domain.Role;
 
 namespace AetherFire23.ERP.Domain.Features.Actions.Productions;
@@ -17,4 +19,8 @@ public abstract class Stage
         RequiredRoom = requiredRoom;
         RequiredItems = requiredItems;
     }
+
+
+    // TODO: Check if room and items required stay the same 
+    public abstract InstantActionAvailability CalculateAvailability(Player player, Production production);
 }

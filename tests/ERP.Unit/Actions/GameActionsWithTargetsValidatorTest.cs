@@ -26,6 +26,7 @@ public class GameActionsWithTargetsValidatorTest
         new ActionWithTargetsAvailability
         {
             ActionName = "blabla",
+            DisplayName = "blabla",
             ActionRequirements = [new ActionRequirement() { Description = "wrks", IsFulfilled = true }],
             TargetSelectionPrompts = [VALUE_PROMPT]
         };
@@ -71,7 +72,8 @@ public class GameActionsWithTargetsValidatorTest
     private static ActionWithTargetsAvailability EMPTY_TARGETS_FAILING_REQUIREMENTS = new ActionWithTargetsAvailability
     {
         ActionName = "blabla",
-        ActionRequirements = [UNFULFILLED_ACTION_REQUIREMENT]
+        ActionRequirements = [UNFULFILLED_ACTION_REQUIREMENT],
+        DisplayName = ""
     };
 
     private static TargetSelectionPrompt MIN1_MAX_1_TWO_TARGETS_PROMPT_1 = new TargetSelectionPrompt()
@@ -107,14 +109,16 @@ public class GameActionsWithTargetsValidatorTest
         {
             ActionName = "blabla",
             ActionRequirements = [FULFILLED_ACTION_REQUIREMENT],
-            TargetSelectionPrompts = [MIN1_MAX_1_TWO_TARGETS_PROMPT_1]
+            TargetSelectionPrompts = [MIN1_MAX_1_TWO_TARGETS_PROMPT_1],
+            DisplayName = ""
         };
 
     private static ActionWithTargetsAvailability TWO_PROMPTS_MIN_1_MAX_1_ = new ActionWithTargetsAvailability
     {
         ActionName = "blabla",
         ActionRequirements = [FULFILLED_ACTION_REQUIREMENT],
-        TargetSelectionPrompts = [MIN1_MAX_1_TWO_TARGETS_PROMPT_1, MIN1_MAX_1_PROMPT__2]
+        TargetSelectionPrompts = [MIN1_MAX_1_TWO_TARGETS_PROMPT_1, MIN1_MAX_1_PROMPT__2],
+        DisplayName = ""
     };
 
 
@@ -203,7 +207,7 @@ public class GameActionsWithTargetsValidatorTest
     public void GivenPromptWithLargeMinMaxBounds_WhenValidated_ThenDoesNotThrow()
     {
         GameActionsWithTargetsValidator gameActionsWithTargetsValidator = new GameActionsWithTargetsValidator();
-        var prompt = new TargetSelectionPrompt()
+        TargetSelectionPrompt prompt = new TargetSelectionPrompt()
         {
             Description = "MIN2 MAX 2 TARGET SELECTION PROMPT",
             ValidTargets = [ANY_TARGET_WITH_ID_1, ANY_TARGET_WITH_ID_2],
@@ -214,7 +218,8 @@ public class GameActionsWithTargetsValidatorTest
         {
             ActionName = "blabla",
             ActionRequirements = [FULFILLED_ACTION_REQUIREMENT],
-            TargetSelectionPrompts = [prompt]
+            TargetSelectionPrompts = [prompt],
+            DisplayName = "aaa"
         };
         List<List<ActionTarget>> actionsTargets = [[ANY_TARGET_WITH_ID_1, ANY_TARGET_WITH_ID_2]];
 

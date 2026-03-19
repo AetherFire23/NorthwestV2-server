@@ -10,7 +10,6 @@ public class Room : EntityBase
 
     public List<Room> AdjacentRooms { get; set; } = [];
 
-    public Guid InventoryId { get; set; }
     public Inventory Inventory { get; set; } = new Inventory();
 
 

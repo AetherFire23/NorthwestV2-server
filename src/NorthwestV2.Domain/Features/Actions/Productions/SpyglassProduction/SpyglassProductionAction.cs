@@ -1,6 +1,4 @@
 ﻿using AetherFire23.ERP.Domain.Entity;
-using AetherFire23.ERP.Domain.Features.Actions.Core;
-using AetherFire23.ERP.Domain.Features.Actions.Core.Availability;
 using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.Instant;
 using AetherFire23.ERP.Domain.Features.Actions.Productions.Core.Entities;
 using AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.Items;
@@ -14,25 +12,21 @@ public class SpyglassProductionAction
 {
     public List<Stage> Stages = [new SpyglassFirstStage()];
 
-    public InstantActionAvailability DetermineAvailability()
+    /// <summary>
+    /// Will send differfent information depending on the current availability.
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    public InstantActionAvailability DetermineAvailability(Player player, Production production)
     {
-        var requirements = GetActionRequirements();
+        Stage currentStage = this.Stages.ElementAt(production.CurrentStageIndex);
 
-        InstantActionAvailability instantActionAvailability = new InstantActionAvailability()
-        {
-            ActionName = ActionNames.SpyglassProduction,
-            ActionRequirements = requirements,
-        };
+        InstantActionAvailability availability = currentStage.CalculateAvailability(player, production);
 
-        return instantActionAvailability;
+        return availability;
     }
-
-    private List<ActionRequirement> GetActionRequirements()
-    {
-        return [];
-    }
-
-    // Actions 
+    
+    // TODO: Check how many other productions have the same shape. 
 
     public void InitiateProduction(Production production, Item scrapItem, Room room)
     {
@@ -46,7 +40,7 @@ public class SpyglassProductionAction
         scrapItem.IsLocked = true;
         scrapItem.Production = production;
 
-        room.Inventory.Items.Add(new UnfinishedSpyglass());
+        // room.Inventory.Items.Add(new UnfinishedSpyglass());
 
         // Lock old item 
     }

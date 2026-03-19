@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Runtime.CompilerServices;
 using AetherFire23.ERP.Domain.Features.Actions.Core;
 using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.WithTargets;
 using AetherFire23.ERP.Domain.Features.Actions.General.Combat;
@@ -23,8 +24,7 @@ public class Player : EntityBase
     public Guid RoomId { get; set; }
     public required Room Room { get; set; }
 
-    public Guid InventoryId { get; set; }
-    public Inventory Inventory { get; set; } = new Inventory(); // Empty inventory by default 
+    public Inventory Inventory { get; set; } = new Inventory();// Empty inventory by default 
 
     public int ActionPoints { get; set; } = 8; // default 8
 
@@ -42,6 +42,8 @@ public class Player : EntityBase
     public AttackTypes AttackTypes { get; set; } = AttackTypes.Kill;
 
     public AttackerStances AttackerStance { get; set; } = AttackerStances.HitAndRun;
+
+
 
     /// <summary>
     /// Strength = Toughness + Weapon + Various Modifiers

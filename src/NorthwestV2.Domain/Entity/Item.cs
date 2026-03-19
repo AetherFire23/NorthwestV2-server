@@ -5,7 +5,9 @@ namespace AetherFire23.ERP.Domain.Entity;
 public class Item : EntityBase
 {
     // May not have a production at all times 
-
+    public Guid? InventoryId { get; set; }
+    public Inventory? Inventory { get; set; }
+    
     public Guid? ProductionId { get; set; }
     public Production? Production { get; set; }
     public ItemTypes ItemType { get; set; }
@@ -14,6 +16,10 @@ public class Item : EntityBase
     // TODO: Maybe move 
     public int TimePointsContributions { get; set; } = 0;
     public bool IsLocked { get; set; } = false;
+
+    public Item()
+    {
+    }
 
     public Item(ItemTypes itemType, int carryValue)
     {

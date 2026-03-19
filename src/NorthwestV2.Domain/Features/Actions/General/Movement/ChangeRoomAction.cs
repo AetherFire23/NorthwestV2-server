@@ -20,6 +20,7 @@ public class ChangeRoomAction
         ActionWithTargetsAvailability actionWithTargetsAvailability = new ActionWithTargetsAvailability()
         {
             ActionName = ActionNames.ChangeRoom,
+            DisplayName = ActionNames.ChangeRoom,
             ActionRequirements = actionRequirements,
             TargetSelectionPrompts = [adjacentRoomSelectionPrompt]
         };

@@ -34,4 +34,6 @@ public class CombatActionAppTest : NorthwestIntegrationTestBase
 
         Assert.True(hasTarget);
     }
+
+    // TODO: Doesn't really have tests for real combat haha
 }

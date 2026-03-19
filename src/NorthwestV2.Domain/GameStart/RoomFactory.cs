@@ -13,11 +13,11 @@ public class RoomFactory
             Game = game,
         };
 
-        boilerRoom.Inventory.Items.Add(new Item(ItemTypes.Spyglass, 2)
-        {
-            ItemType = ItemTypes.BrittleSword,
-            CarryValue = 1,
-        });
+        // boilerRoom.Inventory.Items.Add(new Item(ItemTypes.Spyglass, 2)
+        // {
+        //     ItemType = ItemTypes.BrittleSword,
+        //     CarryValue = 1,
+        // });
 
         Room brig = new Room
         {

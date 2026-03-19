@@ -28,6 +28,7 @@ public class ActionWithTargetsAvailability : ActionAvailabilityBase
         ActionWithTargetsAvailability action = new ActionWithTargetsAvailability()
         {
             ActionName = name,
+            DisplayName = name
         };
 
         action.ActionRequirements.AddRange(req);

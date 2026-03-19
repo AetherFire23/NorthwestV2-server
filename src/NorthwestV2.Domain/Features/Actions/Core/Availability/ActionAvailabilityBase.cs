@@ -20,6 +20,8 @@ public abstract class ActionAvailabilityBase
 
     public List<ActionRequirement> ActionRequirements { get; set; } = ActionRequirement.None;
 
+    public required string DisplayName { get; set; }
+
 
     public bool CanExecute
     {
