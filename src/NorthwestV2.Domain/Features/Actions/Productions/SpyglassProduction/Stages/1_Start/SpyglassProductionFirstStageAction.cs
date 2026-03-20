@@ -9,12 +9,17 @@ namespace AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProductio
 
 public class SpyglassProductionFirstStageAction
 {
+    public const RoomEnum REQUIRED_ROOM_SPYGLASS_START = RoomEnum.Armory;
+    public const ItemTypes REQUIRED_ITEM_TYPE_SPYGLASS_START = ItemTypes.Scrap;
+
     public InstantActionAvailability DetermineAvailability(Player player)
     {
-        PlayerInRoomRequirement isInArmory = new PlayerInRoomRequirement(player, RoomEnum.Armory);
+        PlayerInRoomRequirement isInArmory = new PlayerInRoomRequirement(player, REQUIRED_ROOM_SPYGLASS_START);
 
-        PlayerHasItemsRequirement isHoldingScrap = new PlayerHasItemsRequirement(player, ItemTypes.Scrap);
+        PlayerHasItemsRequirement isHoldingScrap =
+            new PlayerHasItemsRequirement(player, REQUIRED_ITEM_TYPE_SPYGLASS_START);
 
+        // TODO: TimePoints requirements 
         InstantActionAvailability availability = new InstantActionAvailability()
         {
             ActionName = ActionNames.SpyglassProductionStart,
@@ -30,12 +35,12 @@ public class SpyglassProductionFirstStageAction
     {
         Production production = new();
 
-        Item scrapItem = player.Inventory.GetFirst(ItemTypes.Scrap);
+        Item scrapItem = player.Inventory.GetFirst(REQUIRED_ITEM_TYPE_SPYGLASS_START);
         // Locked required Items 
 
         scrapItem.LockForProduction(production);
 
-        player.Inventory.Add(new UnfinishedSpyglass());
+        player.Room.Inventory.Add(new UnfinishedSpyglass());
     }
 
     public void Cancel()

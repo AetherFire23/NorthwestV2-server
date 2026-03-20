@@ -16,7 +16,7 @@ public class ActionDto
 
     public static ActionDto FromInstant(InstantActionAvailability availability)
     {
-        ActionDto acti = new ActionDto()
+        ActionDto acti = new()
         {
             Requirements = availability.ActionRequirements,
             Description = "Not set yet",
@@ -30,7 +30,7 @@ public class ActionDto
 
     public static ActionDto FromTarget(ActionWithTargetsAvailability availability)
     {
-        ActionDto acti = new ActionDto()
+        ActionDto acti = new()
         {
             Requirements = availability.ActionRequirements,
             Description = "Not set yet",

@@ -1,11 +1,15 @@
 ﻿using AetherFire23.ERP.Domain.Entity;
 using AetherFire23.ERP.Domain.Features.Actions.Core;
 using AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.Items;
+using AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.Stages._1_Start;
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using NorthwestV2.Application.EfCoreExtensions;
 using NorthwestV2.Application.Features.Actions.Productions.SpyglassProduction;
+using NorthwestV2.Application.Features.Actions.Productions.SpyglassProduction.Stages._1_Start;
 using NorthwestV2.Application.Repositories;
+using NorthwestV2.Application.UseCases.GameActions.Command.ExecuteAction;
 using NorthwestV2.Application.UseCases.GameActions.Queries.GetActions;
 using Xunit.Abstractions;
 
@@ -27,21 +31,10 @@ public class SpyglassStartProductionAppTest : NorthwestIntegrationTestBase
      */
 
     [Fact]
-    public async Task GivenPlayerWithScrapInInventory_WhenGetProductionAvailability_ThenIsScrapInRoom()
+    public async Task GivenPlayerWithScrapInInventory_WhenGetProductionAvailability_ThenCanExecuteAction()
     {
-        GameDataSeed gameDataSeed = await ShareSeeds.ArrangeUntilGameCreation(this.Mediator, this.Context);
-        Guid playerId = gameDataSeed.PlayerIds.First();
-        Player player = await _scope.ServiceProvider.GetRequiredService<IPlayerRepository>()
-            .GetPlayerAndRoomAndInventoryAndGame(playerId);
-        player.Inventory.Items.Add(new Scrap());
-        // TODO: Teleport player to the required room. 
-        var room = await Context.Rooms.Where(x => x.GameId == player.GameId)
-            .FirstAsync(x => x.RoomEnum == RoomEnum.Armory);
-        player.Room = room;
-        await Context.SaveChangesAsync();
-        _scope = this.RootServiceProvider.CreateScope();
-        player = await _scope.ServiceProvider.GetRequiredService<IPlayerRepository>()
-            .GetPlayerAndRoomAndInventoryAndGame(playerId);
+        Guid playerId = await SetupForSpyglassStartAction();
+
         GetActionsResult actions = await Mediator.Send(new GetActionsRequest
         {
             PlayerId = playerId,
@@ -49,12 +42,48 @@ public class SpyglassStartProductionAppTest : NorthwestIntegrationTestBase
 
         Assert.True(actions.Actions.First(x => x.Name == ActionNames.SpyglassProductionStart).Requirements
             .All(x => x.IsFulfilled));
-        
-        int i = 0;
     }
 
-    private async Task PlaceScrapInRoom()
+    [Fact]
+    public async Task GivenPlayerWithScrapInInventory_WhenActionExecuted_ThenIsUnfinishedSpyglassCreated()
     {
+        Guid playerId = await SetupForSpyglassStartAction();
+        var actions = await Mediator.Send(new ExecuteActionRequest()
+        {
+            ActionName = ActionNames.SpyglassProductionStart,
+            PlayerId = playerId,
+        });
+
+        this._scope = this.RootServiceProvider.CreateScope();
+        Player player = Context.Players.First(x => x.Id == playerId);
+        Room room = Context.Rooms
+            .Include(x => x.Inventory)
+            .ThenInclude(x => x.Items)
+            .First(x => x.Id == player.RoomId);
+
+        Assert.True(room.Inventory.Items.Any(x => x.ItemType == ItemTypes.UnfinishedSpyglass));
+    }
+
+    private async Task<Guid> SetupForSpyglassStartAction()
+    {
+        GameDataSeed gameDataSeed = await ShareSeeds.ArrangeUntilGameCreation(this.Mediator, this.Context);
+        Guid playerId = await TeleportPlayerTo(gameDataSeed,
+            SpyglassProductionFirstStageAction.REQUIRED_ROOM_SPYGLASS_START);
+        return playerId;
+    }
+
+    private async Task<Guid> TeleportPlayerTo(GameDataSeed gameDataSeed, RoomEnum roomenum)
+    {
+        Guid playerId = gameDataSeed.PlayerIds.First();
+        Player player = await _scope.ServiceProvider.GetRequiredService<IPlayerRepository>()
+            .GetPlayerAndRoomAndInventoryAndGame(playerId);
+        player.Inventory.Items.Add(new Scrap());
+        //  Teleport player to the required room. 
+        var room = await Context.Rooms.Where(x => x.GameId == player.GameId)
+            .FirstAsync(x => x.RoomEnum == roomenum);
+        player.Room = room;
+        await Context.SaveChangesAsync();
+        return playerId;
     }
 
     // todo: Test that we can execute the first stage
