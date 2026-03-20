@@ -1,5 +1,8 @@
-﻿using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.Instant;
+﻿using AetherFire23.ERP.Domain.Entity;
+using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.Instant;
+using AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.Stages._2_Second;
 using NorthwestV2.Application.Features.Actions.Core.Bases;
+using NorthwestV2.Application.Repositories;
 using NorthwestV2.Application.UseCases.GameActions.Command.ExecuteAction;
 using NorthwestV2.Application.UseCases.GameActions.Queries.GetActions;
 
@@ -7,31 +10,30 @@ namespace NorthwestV2.Application.Features.Actions.Productions.SpyglassProductio
 
 public class SpyglassSecondStageApp : InstantActionBase
 {
-    public SpyglassSecondStageApp(string actionName) : base(actionName)
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IPlayerRepository _playerRepository;
+    private readonly SpyglassProductionSecondStageAction _spyglassProductionSecondStageAction;
+
+    public SpyglassSecondStageApp(string actionName, IUnitOfWork unitOfWork,
+        SpyglassProductionSecondStageAction spyglassProductionSecondStageAction, IPlayerRepository playerRepository) :
+        base(actionName)
     {
+        _unitOfWork = unitOfWork;
+        _spyglassProductionSecondStageAction = spyglassProductionSecondStageAction;
+        _playerRepository = playerRepository;
     }
 
-    public override Task<InstantActionAvailability> GetAvailabilityResult(GetActionsRequest request)
+    public override async Task<InstantActionAvailability> GetAvailabilityResult(GetActionsRequest request)
     {
-        // Is available when :
-        /*
-         * 2. is in forecastle
-         * 3. Is in workshop
-         *  3. has time points to contribute.
-         */
+        Player player = await _playerRepository.GetPlayer(request.PlayerId);
 
+        InstantActionAvailability secondStageAvailability =
+            _spyglassProductionSecondStageAction.DetermineAvailability(player);
 
-        throw new NotImplementedException();
+        return secondStageAvailability;
     }
 
-    public override Task Execute(ExecuteActionRequest request)
+    public override async Task Execute(ExecuteActionRequest request)
     {
-        /*
-         * Stage.
-         * Contribute 1 point
-         * if Points == Threshold
-         * Advantage to the next stage.
-         */
-        throw new NotImplementedException();
     }
 }

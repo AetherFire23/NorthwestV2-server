@@ -5,6 +5,12 @@ using NorthwestV2.Application;
 
 namespace NorthwestV2.Infrastructure;
 
+/*
+ * I did the whole UOW patteern initially for mocking; separartion. It's not necessary.
+ * However I like having my queries elsewhere. 
+ * https://learn.microsoft.com/en-us/ef/ef6/fundamentals/testing/mocking?redirectedfrom=MSDN
+ * 
+ */
 public class NorthwestContext : DbContext, IUnitOfWork
 {
     public DbSet<User> Users { get; set; }

@@ -12,7 +12,7 @@ public class Inventory : EntityBase
     // public Room? Room { get; set; }
     public List<Item> Items { get; set; } = [];
 
-    public Item GetFirst(ItemTypes itemType)
+    public Item Find(ItemTypes itemType)
     {
         var item = this.Items.First(x => x.ItemType == itemType);
 

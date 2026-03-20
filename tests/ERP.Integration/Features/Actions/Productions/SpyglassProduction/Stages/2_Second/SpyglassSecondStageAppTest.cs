@@ -9,7 +9,6 @@ public class SpyglassSecondStageAppTest
     [Fact]
     public void GivenUnfinishedSpyglassAndPlayerInCorrectRoom_WhenGetActions_ThenCanStartSecondStage()
     {
-        // actions.Secondstage.CanExecute = true 
-        Assert.True(false);
+        // actions.Secondstage.CanExecute = true Assert.True(false);
     }
 }

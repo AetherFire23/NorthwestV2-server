@@ -35,7 +35,7 @@ public class SpyglassProductionFirstStageAction
     {
         Production production = new();
 
-        Item scrapItem = player.Inventory.GetFirst(REQUIRED_ITEM_TYPE_SPYGLASS_START);
+        Item scrapItem = player.Inventory.Find(REQUIRED_ITEM_TYPE_SPYGLASS_START);
         // Locked required Items 
 
         scrapItem.LockForProduction(production);
