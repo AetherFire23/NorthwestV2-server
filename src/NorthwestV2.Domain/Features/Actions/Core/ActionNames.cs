@@ -14,6 +14,7 @@ public static class ActionNames
     public const string CombatAction = "Combat";
     public const string ChangeRoom = "Change Room";
     public const string SpyglassProductionStart = "Start Spyglass Production";
+    public const string SpyglassProductionSecond = "Secon dstage production";
     // public const string SpyglassProduction = "Spyglass Production";
  
 }

@@ -11,4 +11,16 @@ public class Inventory : EntityBase
     // public Guid? RoomId { get; set; }
     // public Room? Room { get; set; }
     public List<Item> Items { get; set; } = [];
+
+    public Item GetFirst(ItemTypes itemType)
+    {
+        var item = this.Items.First(x => x.ItemType == itemType);
+
+        return item;
+    }
+
+    public void Add(Item item)
+    {
+        this.Items.Add(item);
+    }
 }

@@ -1,11 +1,12 @@
 ﻿using AetherFire23.ERP.Domain.Entity;
+using AetherFire23.ERP.Domain.Features.Actions.Core;
 using AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.Items;
-using AetherFire23.ERP.Domain.Role;
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using NorthwestV2.Application.Features.Actions.Productions.SpyglassProduction;
+using NorthwestV2.Application.Repositories;
 using NorthwestV2.Application.UseCases.GameActions.Queries.GetActions;
-using NorthwestV2.Infrastructure;
 using Xunit.Abstractions;
 
 namespace NorthwestV2.Integration.Features.Actions.Productions.SpyglassProduction;
@@ -29,40 +30,26 @@ public class SpyglassStartProductionAppTest : NorthwestIntegrationTestBase
     public async Task GivenPlayerWithScrapInInventory_WhenGetProductionAvailability_ThenIsScrapInRoom()
     {
         GameDataSeed gameDataSeed = await ShareSeeds.ArrangeUntilGameCreation(this.Mediator, this.Context);
-        var playerId = gameDataSeed.PlayerIds.First();
-
-
-        // Context.Blogs.Add(new Blog());
-        //
-        // await Context.SaveChangesAsync();
-        //
-        // var blog = this.Context.Blogs.First();
-        //
-        // blog.Posts.Add(new Post());
-        // await Context.SaveChangesAsync();
-        var player = Context.Players
-            .Include(x => x.Inventory)
-            .ThenInclude(x => x.Items)
-            .First(x => x.Id == playerId);
-        var item = new Item(ItemTypes.Scrap, 1)
-        {
-            ItemType = ItemTypes.Scrap,
-            CarryValue = 1,
-            IsLocked = false,
-            TimePointsContributions = 1,
-            Inventory = player.Inventory,
-            InventoryId = player.Inventory.Id
-        };
-        player.Inventory.Items.Add(item);
+        Guid playerId = gameDataSeed.PlayerIds.First();
+        Player player = await _scope.ServiceProvider.GetRequiredService<IPlayerRepository>()
+            .GetPlayerAndRoomAndInventoryAndGame(playerId);
+        player.Inventory.Items.Add(new Scrap());
+        // TODO: Teleport player to the required room. 
+        var room = await Context.Rooms.Where(x => x.GameId == player.GameId)
+            .FirstAsync(x => x.RoomEnum == RoomEnum.Armory);
+        player.Room = room;
         await Context.SaveChangesAsync();
-
+        _scope = this.RootServiceProvider.CreateScope();
+        player = await _scope.ServiceProvider.GetRequiredService<IPlayerRepository>()
+            .GetPlayerAndRoomAndInventoryAndGame(playerId);
         GetActionsResult actions = await Mediator.Send(new GetActionsRequest
         {
             PlayerId = playerId,
-            
         });
 
-
+        Assert.True(actions.Actions.First(x => x.Name == ActionNames.SpyglassProductionStart).Requirements
+            .All(x => x.IsFulfilled));
+        
         int i = 0;
     }
 

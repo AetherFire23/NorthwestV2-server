@@ -52,9 +52,7 @@ public class NorthwestContext : DbContext, IUnitOfWork
     public override async Task<int> SaveChangesAsync(CancellationToken ct = default)
     {
         // calls himself recursively if you dont do base. 
-        var changes = await base.SaveChangesAsync(ct);
-
-        int i = 0;
+        var changes = await base.SaveChangesAsync();
 
         return changes;
     }

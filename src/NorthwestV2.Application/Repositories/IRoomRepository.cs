@@ -30,4 +30,7 @@ public interface IRoomRepository
     public ValueTask SaveRoomAndAdjacents(IEnumerable<Room> rooms);
 
     public Task<List<Room>> GetAdjacentRoomsOfPlayer(Guid playerId);
+
+    public Task<Room> GetRoomInPlayersGame(Player player, RoomEnum roomEnum);
+    public Task<Room> GetRoomInGame(Game game, RoomEnum room);
 }

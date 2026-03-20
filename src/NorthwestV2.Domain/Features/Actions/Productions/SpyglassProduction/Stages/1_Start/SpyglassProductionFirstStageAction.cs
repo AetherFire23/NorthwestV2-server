@@ -7,18 +7,8 @@ using AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.It
 
 namespace AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.Stages._1_Start;
 
-// Actions are determined by their base application classes ( reflection ) 
-// TODO: Problem How to split into sub-actions 
 public class SpyglassProductionFirstStageAction
 {
-    public List<Stage> Stages = [new SpyglassFirstStage()];
-
-    /// <summary>
-    /// Will send differfent information depending on the current availability.
-    /// 
-    /// </summary>
-    /// 
-    /// <returns></returns>
     public InstantActionAvailability DetermineAvailability(Player player)
     {
         PlayerInRoomRequirement isInArmory = new PlayerInRoomRequirement(player, RoomEnum.Armory);
@@ -35,22 +25,17 @@ public class SpyglassProductionFirstStageAction
         return availability;
     }
 
-    // TODO: Check how many other productions have the same shape. 
-    public void InitiateProduction(Production production, Item scrapItem, Room room)
+    // TODO: TEST IF ALL THE ADDINGS OF ALL THE ENTITIES ACTUALLY WORK ! 
+    public void InitiateProduction(Player player)
     {
-        if (scrapItem.ItemType != ItemTypes.Scrap)
-        {
-            throw new Exception("Item type not of required type. ");
-        }
+        Production production = new();
 
+        Item scrapItem = player.Inventory.GetFirst(ItemTypes.Scrap);
         // Locked required Items 
 
-        scrapItem.IsLocked = true;
-        scrapItem.Production = production;
+        scrapItem.LockForProduction(production);
 
-        // room.Inventory.Items.Add(new UnfinishedSpyglass());
-
-        // Lock old item 
+        player.Inventory.Add(new UnfinishedSpyglass());
     }
 
     public void Cancel()
@@ -58,12 +43,5 @@ public class SpyglassProductionFirstStageAction
         // Destroy the unfinished item
 
         // Release the locked items back into the room's inventory
-    }
-
-    public Item Completion()
-    {
-        Spyglass item = new Spyglass();
-
-        return item;
     }
 }

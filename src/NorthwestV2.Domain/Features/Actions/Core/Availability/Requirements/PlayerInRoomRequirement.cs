@@ -4,16 +4,10 @@ namespace AetherFire23.ERP.Domain.Features.Actions.Core.Availability.Requirement
 
 public class PlayerInRoomRequirement : ActionRequirement
 {
-    private readonly Player _player;
-    private readonly RoomEnum _requiredRoom;
 
     public PlayerInRoomRequirement(Player player, RoomEnum requiredRoom)
     {
-        _player = player;
-        _requiredRoom = requiredRoom;
+        this.IsFulfilled = player.Room.RoomEnum == requiredRoom;
+        this.Description = $"Player must be in given room {requiredRoom}";
     }
-
-
-    public override bool IsFulfilled => this._player.Room.RoomEnum == _requiredRoom;
-    public override string Description => $"Player must be in given room {_requiredRoom}";
 }

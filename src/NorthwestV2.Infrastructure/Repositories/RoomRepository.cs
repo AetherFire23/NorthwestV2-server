@@ -55,7 +55,7 @@ public class RoomRepository : IRoomRepository
         // nested entities. 
         await _northwestContext.SaveChangesAsync();
 
-        foreach (var roomsToAdjacent in roomsToAdjacents)
+        foreach (KeyValuePair<Room, List<Room>> roomsToAdjacent in roomsToAdjacents)
         {
             roomsToAdjacent.Key.AdjacentRooms.AddRange(roomsToAdjacent.Value);
         }
@@ -71,5 +71,31 @@ public class RoomRepository : IRoomRepository
         List<Room> adjacents = player.Room.AdjacentRooms;
 
         return adjacents;
+    }
+
+    /// <summary>
+    /// Gets a room but scoped to a specific game ID.
+    /// Either from the player's game ID or the Room's game ID. 
+    /// </summary>
+    /// <param name="player"></param>
+    /// <param name="room"></param>
+    /// <returns></returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public async Task<Room> GetRoomInPlayersGame(Player player, RoomEnum roomEnum)
+    {
+        Room room = await _northwestContext.Rooms
+            .Where(x => x.GameId == player.GameId)
+            .FirstAsync(x => x.RoomEnum == roomEnum);
+
+        return room;
+    }
+
+    public async Task<Room> GetRoomInGame(Game game, RoomEnum roomEnmum)
+    {
+        Room room = await _northwestContext.Rooms
+            .Where(x => x.GameId == game.Id)
+            .FirstAsync(x => x.RoomEnum == roomEnmum);
+
+        return room;
     }
 }

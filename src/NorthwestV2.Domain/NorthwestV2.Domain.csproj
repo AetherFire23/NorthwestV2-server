@@ -18,7 +18,6 @@
 
     <ItemGroup>
       <Folder Include="Features\Actions\ByRoles\" />
-      <Folder Include="Features\Actions\Productions\SpyglassProduction\Stages\2_Second\" />
       <Folder Include="Features\Actions\Productions\SpyglassProduction\Stages\3_Third\" />
       <Folder Include="Features\Items\" />
     </ItemGroup>

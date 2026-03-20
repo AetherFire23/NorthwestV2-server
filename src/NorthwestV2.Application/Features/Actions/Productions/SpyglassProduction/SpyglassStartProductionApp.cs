@@ -18,7 +18,8 @@ public class SpyglassStartProductionApp : InstantActionBase
     private readonly IProductionRepository _productionRepository;
     // TODO: production repository 
 
-    public SpyglassStartProductionApp(SpyglassProductionFirstStageAction spyglassProductionFirstStageAction, IUnitOfWork unitOfWork,
+    public SpyglassStartProductionApp(SpyglassProductionFirstStageAction spyglassProductionFirstStageAction,
+        IUnitOfWork unitOfWork,
         IPlayerRepository playerRepository, IProductionRepository productionRepository) : base(
         ActionNames
             .SpyglassProductionStart)
@@ -45,6 +46,10 @@ public class SpyglassStartProductionApp : InstantActionBase
 
     public async override Task Execute(ExecuteActionRequest request)
     {
-        throw new NotImplementedException();
+        Player player = await _playerRepository.GetPlayer(request.PlayerId);
+        
+        _spyglassProductionFirstStageAction.InitiateProduction(player);
+        
+        await _unitOfWork.SaveChangesAsync();
     }
 }

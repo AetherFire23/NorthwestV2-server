@@ -26,7 +26,7 @@ public class RegisterHandlerTest : NorthwestIntegrationTestBase
         
         base._scope.Dispose();
 
-        var users = base._serviceProvider.CreateScope().ServiceProvider.GetRequiredService<NorthwestContext>();
+        var users = base.RootServiceProvider.CreateScope().ServiceProvider.GetRequiredService<NorthwestContext>();
         Assert.NotEmpty(users.Users);
     }
 }

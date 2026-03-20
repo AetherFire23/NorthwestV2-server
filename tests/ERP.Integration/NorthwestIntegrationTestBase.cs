@@ -15,16 +15,17 @@ public class NorthwestIntegrationTestBase //: PostgresTestContainer
     private readonly ITestOutputHelper _output;
 
     // TODO: Remove these two as they are not scoped. 
-    protected readonly IMediator Mediator;
-    protected readonly NorthwestContext Context;
-    public readonly ServiceProvider _serviceProvider;
-    public readonly IServiceScope _scope;
+    protected IMediator Mediator => _scope.ServiceProvider.GetRequiredService<IMediator>();
+    protected NorthwestContext Context => _scope.ServiceProvider.GetRequiredService<NorthwestContext>();
+    public IServiceScope _scope;
+    protected IServiceProvider RootServiceProvider;
 
     public NorthwestIntegrationTestBase(ITestOutputHelper output)
     {
         _output = output;
         var instance =
             new PostgreSqlBuilder("postgres:18")
+                .WithDatabase($"northwest-{Guid.NewGuid()}")
                 .WithReuse(false)
                 .Build();
 
@@ -32,10 +33,7 @@ public class NorthwestIntegrationTestBase //: PostgresTestContainer
 
         Dictionary<string, string?> configurationDictionary = new();
 
-        var cs = Regex.Replace(instance.GetConnectionString(), "Database=[a-z0-9]*;", $"Database=northwest;");
-
-
-        configurationDictionary.Add("northwestConnectionString", cs);
+        configurationDictionary.Add("northwestConnectionString", instance.GetConnectionString());
         // TODO: add northwestConfig
         IConfigurationRoot configuration =
             new ConfigurationBuilder().AddInMemoryCollection(configurationDictionary).Build();
@@ -54,13 +52,11 @@ public class NorthwestIntegrationTestBase //: PostgresTestContainer
         });
         AppComposer.ComposeApplication(serviceCollection, configuration);
 
-        _serviceProvider = serviceCollection.BuildServiceProvider();
+
+        RootServiceProvider = serviceCollection.BuildServiceProvider();
         
-        AppComposer.Initialize(_serviceProvider);
+        AppComposer.Initialize(RootServiceProvider);
 
-
-        _scope = _serviceProvider.CreateScope();
-        Mediator = _scope.ServiceProvider.GetRequiredService<IMediator>();
-        Context = _scope.ServiceProvider.GetRequiredService<NorthwestContext>();
+        _scope = RootServiceProvider.CreateScope();
     }
 }

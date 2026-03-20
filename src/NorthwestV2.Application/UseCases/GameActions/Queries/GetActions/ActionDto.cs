@@ -41,4 +41,9 @@ public class ActionDto
 
         return acti;
     }
+
+    public override string ToString()
+    {
+        return this.Name;
+    }
 }
