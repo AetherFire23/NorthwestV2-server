@@ -1,6 +1,8 @@
 ﻿using AetherFire23.ERP.Domain.Entity;
 using AetherFire23.ERP.Domain.Features.Actions.Core;
 using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.Instant;
+using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.Requirements;
+using AetherFire23.ERP.Domain.Features.Actions.Productions.Core.Entities;
 using AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction;
 using NorthwestV2.Application.Features.Actions.Core.Bases;
 using NorthwestV2.Application.Repositories;
@@ -14,23 +16,26 @@ public class SpyglassProductionApp : InstantActionBase
     private readonly SpyglassProductionAction _spyglassProductionAction;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IPlayerRepository _playerRepository;
+    private readonly IProductionRepository _productionRepository;
     // TODO: production repository 
 
     public SpyglassProductionApp(SpyglassProductionAction spyglassProductionAction, IUnitOfWork unitOfWork,
-        IPlayerRepository playerRepository) : base(
+        IPlayerRepository playerRepository, IProductionRepository productionRepository) : base(
         ActionNames
             .SpyglassProduction)
     {
         _spyglassProductionAction = spyglassProductionAction;
         _unitOfWork = unitOfWork;
         _playerRepository = playerRepository;
+        _productionRepository = productionRepository;
     }
 
     public async override Task<InstantActionAvailability> GetAvailabilityResult(GetActionsRequest request)
     {
         Player player = await _playerRepository.GetPlayerWithRoomAndInventory(request.PlayerId);
 
-
+        // Production production = await _productionRepository.GetProduction()
+        InstantActionAvailability availability = _spyglassProductionAction.DetermineAvailability(player);
         // var availability = _spyglassProductionAction.DetermineAvailability(player,);
 
         // tdd that shit
@@ -38,9 +43,16 @@ public class SpyglassProductionApp : InstantActionBase
 
         return new InstantActionAvailability()
         {
-            ActionName = "sd",
+            ActionName = "Allo!",
             DisplayName = "sds",
-            ActionRequirements = []
+            ActionRequirements =
+            [
+                new ActionRequirement()
+                {
+                    Description = ":as",
+                    IsFulfilled = true
+                }
+            ]
         };
     }
 

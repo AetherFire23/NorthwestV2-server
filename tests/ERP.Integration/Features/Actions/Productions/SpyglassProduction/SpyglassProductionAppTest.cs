@@ -4,6 +4,7 @@ using AetherFire23.ERP.Domain.Role;
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 using NorthwestV2.Application.Features.Actions.Productions.SpyglassProduction;
+using NorthwestV2.Application.UseCases.GameActions.Queries.GetActions;
 using NorthwestV2.Infrastructure;
 using Xunit.Abstractions;
 
@@ -18,7 +19,7 @@ public class SpyglassProductionAppTest : NorthwestIntegrationTestBase
     /*
      * 1st stage tests
      */
-    
+
     /*
      * Item can be owend by room OR player (not a problem usuers)
      * But now I need 2 fks, doesnt work.
@@ -41,9 +42,8 @@ public class SpyglassProductionAppTest : NorthwestIntegrationTestBase
         // await Context.SaveChangesAsync();
         var player = Context.Players
             .Include(x => x.Inventory)
-                .ThenInclude(x => x.Items)
+            .ThenInclude(x => x.Items)
             .First(x => x.Id == playerId);
-        
         var item = new Item(ItemTypes.Scrap, 1)
         {
             ItemType = ItemTypes.Scrap,
@@ -53,17 +53,15 @@ public class SpyglassProductionAppTest : NorthwestIntegrationTestBase
             Inventory = player.Inventory,
             InventoryId = player.Inventory.Id
         };
-        
-        // Context.Items.Add(item);
         player.Inventory.Items.Add(item);
-    
-
         await Context.SaveChangesAsync();
 
-        player = Context.Players
-            .Include(x => x.Inventory)
-            .ThenInclude(x => x.Items)
-            .First(x => x.Id == playerId);
+        GetActionsResult actions = await Mediator.Send(new GetActionsRequest
+        {
+            PlayerId = playerId,
+            
+        });
+        
     }
 
     private async Task PlaceScrapInRoom()

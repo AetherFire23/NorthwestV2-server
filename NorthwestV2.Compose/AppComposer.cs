@@ -14,8 +14,6 @@ public static class AppComposer
         
         InfraInstaller.Install(serviceCOllection);
         MediatorInstaller.Install(serviceCOllection);
-        //
-        // //
         DomainInstaller.Install(serviceCOllection, configuration);
         ApplicationInstaller.Install(serviceCOllection);
     }

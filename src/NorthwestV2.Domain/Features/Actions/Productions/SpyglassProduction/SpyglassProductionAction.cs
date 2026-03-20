@@ -18,13 +18,41 @@ public class SpyglassProductionAction
     /// </summary>
     /// 
     /// <returns></returns>
-    public InstantActionAvailability DetermineAvailability(Player player, Production production)
+    public InstantActionAvailability DetermineAvailability(Player player)
     {
-        Stage currentStage = this.Stages.ElementAt(production.CurrentStageIndex);
+        var unfinishedSpyglassInRoomOrPlayer = player.Inventory.Items.Union(player.Room.Inventory.Items).ToList();
 
-        InstantActionAvailability availability = currentStage.CalculateAvailability(player, production);
+        bool hasUnfinished = unfinishedSpyglassInRoomOrPlayer.Any(x => x.ItemType == ItemTypes.UnfinishedSpyglass);
 
-        return availability;
+        bool hasScrapItem = unfinishedSpyglassInRoomOrPlayer.Any(x => x.ItemType == ItemTypes.Scrap);
+        if (hasUnfinished)
+        {
+            // Check if we can continue the stages
+        }
+        else if (hasScrapItem)
+        {
+            // Check if we can start the production.  
+        }
+
+
+        int i = 0;
+        // Check if there is an item in the room with the player OR in the player's inventory.
+        // Check if the it's an UnfinishedSpyglass
+        // If no unfinished spyglass -> check if scrap present -> if not present return nothing 
+        // If scrap present && noSpyglass-> make this action available 
+
+        // If there is an unfinished spyglass -> it's stages 2-3. (stage 1 is actually just a start condition of there is no unfinished spyglass.)
+        // Stages should be stored as ValueObjects.
+
+
+        // If there is a spyglass. 
+
+
+        // Stage currentStage = this.Stages.ElementAt(production._currentStageIndex);
+        //
+        // InstantActionAvailability availability = currentStage.CalculateAvailability(player, production);
+
+        return null;
     }
 
     // TODO: Check how many other productions have the same shape. 

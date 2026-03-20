@@ -4,7 +4,7 @@ namespace AetherFire23.ERP.Domain.Entity;
 
 public class EntityBase
 {
-    [Key] public Guid Id { get; set; } = Guid.NewGuid();
+    [Key] public Guid Id { get; set; } = Guid.Empty;
 
     public override bool Equals(object? obj)
     {
