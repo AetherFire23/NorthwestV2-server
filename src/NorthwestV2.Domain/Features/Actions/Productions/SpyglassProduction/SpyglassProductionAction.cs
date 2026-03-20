@@ -20,7 +20,8 @@ public class SpyglassProductionAction
     /// <returns></returns>
     public InstantActionAvailability DetermineAvailability(Player player)
     {
-        var unfinishedSpyglassInRoomOrPlayer = player.Inventory.Items.Union(player.Room.Inventory.Items).ToList();
+        List<Item> unfinishedSpyglassInRoomOrPlayer =
+            player.Inventory.Items.Union(player.Room.Inventory.Items).ToList();
 
         bool hasUnfinished = unfinishedSpyglassInRoomOrPlayer.Any(x => x.ItemType == ItemTypes.UnfinishedSpyglass);
 
