@@ -21,6 +21,5 @@ public abstract class Stage
     }
 
 
-    // TODO: Check if room and items required stay the same 
-    public abstract InstantActionAvailability CalculateAvailability(Player player, Production production);
+  
 }

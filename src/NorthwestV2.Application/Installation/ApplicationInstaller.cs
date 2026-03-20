@@ -20,6 +20,6 @@ public class ApplicationInstaller
         serviceCollection.AddScoped<DebugTargetsActionApp>();
         serviceCollection.AddScoped<ChangeRoomApp>();
         serviceCollection.AddScoped<JwtTokenService>();
-        serviceCollection.AddScoped<SpyglassProductionApp>();
+        serviceCollection.AddScoped<SpyglassStartProductionApp>();
     }
 }

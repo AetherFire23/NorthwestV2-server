@@ -1,11 +1,9 @@
 ﻿using AetherFire23.ERP.Domain.Entity;
 using AetherFire23.ERP.Domain.Features.Actions.Core;
-using AetherFire23.ERP.Domain.Features.Actions.Core.Availability;
 using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.Instant;
 using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.Requirements;
-using AetherFire23.ERP.Domain.Features.Actions.Productions.Core.Entities;
 
-namespace AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.Stages;
+namespace AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.Stages._1_Start;
 
 public class SpyglassFirstStage : Stage
 {
@@ -13,14 +11,14 @@ public class SpyglassFirstStage : Stage
     {
     }
 
-    public override InstantActionAvailability CalculateAvailability(Player player, Production production)
+    public  InstantActionAvailability CalculateAvailability(Player player)
     {
         List<ActionRequirement> spyglassInitiationRequirement =
-            GetPlayerInRoomAndPlayerHoldsItemRequirements(player, production);
+            GetPlayerInRoomAndPlayerHoldsItemRequirements(player);
 
         InstantActionAvailability instant = new InstantActionAvailability()
         {
-            ActionName = ActionNames.SpyglassProduction,
+            ActionName = ActionNames.SpyglassProductionStart,
             DisplayName = "Initiate spyglass production",
             ActionRequirements = spyglassInitiationRequirement,
         };
@@ -28,7 +26,7 @@ public class SpyglassFirstStage : Stage
         return instant;
     }
 
-    private List<ActionRequirement> GetPlayerInRoomAndPlayerHoldsItemRequirements(Player player, Production production)
+    private List<ActionRequirement> GetPlayerInRoomAndPlayerHoldsItemRequirements(Player player)
     {
         // Player must hold all required items
         // Player must be in room 

@@ -10,10 +10,10 @@ using Xunit.Abstractions;
 
 namespace NorthwestV2.Integration.Features.Actions.Productions.SpyglassProduction;
 
-[TestSubject(typeof(SpyglassProductionApp))]
-public class SpyglassProductionAppTest : NorthwestIntegrationTestBase
+[TestSubject(typeof(SpyglassStartProductionApp))]
+public class SpyglassStartProductionAppTest : NorthwestIntegrationTestBase
 {
-    public SpyglassProductionAppTest(ITestOutputHelper output) : base(output)
+    public SpyglassStartProductionAppTest(ITestOutputHelper output) : base(output)
     {
     }
     /*
@@ -61,7 +61,9 @@ public class SpyglassProductionAppTest : NorthwestIntegrationTestBase
             PlayerId = playerId,
             
         });
-        
+
+
+        int i = 0;
     }
 
     private async Task PlaceScrapInRoom()

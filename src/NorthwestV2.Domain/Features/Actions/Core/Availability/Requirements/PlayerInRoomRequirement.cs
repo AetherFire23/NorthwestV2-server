@@ -13,6 +13,7 @@ public class PlayerInRoomRequirement : ActionRequirement
         _requiredRoom = requiredRoom;
     }
 
+
     public override bool IsFulfilled => this._player.Room.RoomEnum == _requiredRoom;
     public override string Description => $"Player must be in given room {_requiredRoom}";
 }
