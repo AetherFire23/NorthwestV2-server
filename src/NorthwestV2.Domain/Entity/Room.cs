@@ -10,7 +10,7 @@ public class Room : EntityBase
 
     public List<Room> AdjacentRooms { get; set; } = [];
 
-    public Inventory Inventory { get; set; } = new Inventory();
+    public Inventory Inventory { get; set; }
 
 
     public override string ToString()

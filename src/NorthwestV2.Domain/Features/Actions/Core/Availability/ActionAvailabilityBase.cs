@@ -1,4 +1,6 @@
-﻿namespace AetherFire23.ERP.Domain.Features.Actions.Core.Availability;
+﻿using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.Requirements;
+
+namespace AetherFire23.ERP.Domain.Features.Actions.Core.Availability;
 
 /// <summary>
 /// Represents the availability state of a game action, including its name
@@ -18,7 +20,14 @@ public abstract class ActionAvailabilityBase
 {
     public required string ActionName { get; set; }
 
-    public List<ActionRequirement> ActionRequirements { get; set; } = ActionRequirement.None;
+    public List<ActionRequirement> ActionRequirements { get; set; } =
+    [
+        new ActionRequirement
+        {
+            Description = " Undefined",
+            IsFulfilled = true
+        }
+    ];
 
     public required string DisplayName { get; set; }
 

@@ -18,6 +18,7 @@ public class SapperRoleInitializer : RoleInitializer
             Room = context.Rooms.First(),
             User = context.User,
             BaseToughness = ToughnessInitializationConstants.TOUGH,
+            Inventory = new Inventory()
         };
     }
 }

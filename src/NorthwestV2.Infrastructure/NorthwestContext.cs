@@ -16,9 +16,6 @@ public class NorthwestContext : DbContext, IUnitOfWork
     public DbSet<Log> Logs { get; set; }
     public DbSet<Inventory> Inventories { get; set; }
     public DbSet<Production> Productions { get; set; }
-    public DbSet<Blog> Blogs { get; set; }
-    public DbSet<Post> Posts { get; set; }
-    
 
     public NorthwestContext(DbContextOptions<NorthwestContext> options) : base(options)
     {
@@ -26,10 +23,26 @@ public class NorthwestContext : DbContext, IUnitOfWork
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-
-        // modelBuilder.Entity<Item>()
-        //     .HasDiscriminator(i => i.ItemType)
-        //     .HasValue<Item>(ItemTypes.);
+        // modelBuilder.Entity<Inventory>()
+        //     .HasMany(i => i.Items)
+        //     .WithOne(i => i.Inventory)
+        //     .HasForeignKey(i => i.InventoryId)
+        //     .OnDelete(DeleteBehavior.Cascade);
+        //
+        // modelBuilder.Entity<Player>()
+        //     .HasOne(p => p.Inventory)
+        //     .WithOne(i => i.Player)
+        //     .HasForeignKey<Inventory>(i => i.PlayerId);
+        //
+        // modelBuilder.Entity<Room>()
+        //     .HasOne(r => r.Inventory)
+        //     .WithOne(i => i.Room)
+        //     .HasForeignKey<Inventory>(i => i.RoomId);
+        //
+        // modelBuilder.Entity<Production>()
+        //     .HasMany(p => p.LockedItems)
+        //     .WithOne(i => i.Production)
+        //     .HasForeignKey(i => i.ProductionId);
     }
     //
     // var productionItems = await _db.Items
@@ -45,17 +58,4 @@ public class NorthwestContext : DbContext, IUnitOfWork
 
         return changes;
     }
-}
-
-public class Blog
-{
-    public Guid Id { get; set; }
-    public List<Post> Posts { get; set; } = new List<Post>();
-}
-
-public class Post
-{
-    public Guid Id { get; set; }
-    public Guid BlogId { get; set; }
-    public Blog Blog { get; set; }
 }

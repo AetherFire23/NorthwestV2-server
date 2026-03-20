@@ -24,7 +24,7 @@ public class Player : EntityBase
     public Guid RoomId { get; set; }
     public required Room Room { get; set; }
 
-    public Inventory Inventory { get; set; } = new Inventory();// Empty inventory by default 
+    public Inventory Inventory { get; set; } 
 
     public int ActionPoints { get; set; } = 8; // default 8
 

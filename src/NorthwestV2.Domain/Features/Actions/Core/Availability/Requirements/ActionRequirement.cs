@@ -1,8 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Runtime.InteropServices;
 using AetherFire23.ERP.Domain.Entity;
 
-namespace AetherFire23.ERP.Domain.Features.Actions.Core.Availability;
+namespace AetherFire23.ERP.Domain.Features.Actions.Core.Availability.Requirements;
 
 /// <summary>
 /// Represents a single requirement that must be satisfied for an action
@@ -20,14 +19,13 @@ public class ActionRequirement
     /// Useful for UI feedback or debugging.
     /// </summary>
     [Required]
-    public required string Description { get; set; }
+    public virtual string Description { get; set; }
 
     /// <summary>
     /// Indicates whether this requirement is currently satisfied.
     /// </summary>
-    public bool IsFulfilled { get; set; }
+    public virtual bool IsFulfilled { get; set; }
 
-    public static List<ActionRequirement> None = [NoCondition];
 
     public ActionRequirement()
     {
@@ -50,8 +48,9 @@ public class ActionRequirement
     {
         return $"{this.Description} : {this.IsFulfilled}";
     }
-    
-    public static ActionRequirement CreateAnyOtherPlayerExistsInRoomRequirement(Player caster, List<Player> otherPlayersInSameRoom)
+
+    public static ActionRequirement CreateAnyOtherPlayerExistsInRoomRequirement(Player caster,
+        List<Player> otherPlayersInSameRoom)
     {
         if (otherPlayersInSameRoom.Contains(caster))
         {

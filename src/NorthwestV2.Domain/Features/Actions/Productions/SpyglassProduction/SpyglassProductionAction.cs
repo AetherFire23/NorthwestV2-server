@@ -16,6 +16,7 @@ public class SpyglassProductionAction
     /// Will send differfent information depending on the current availability.
     /// 
     /// </summary>
+    /// 
     /// <returns></returns>
     public InstantActionAvailability DetermineAvailability(Player player, Production production)
     {
@@ -25,9 +26,8 @@ public class SpyglassProductionAction
 
         return availability;
     }
-    
-    // TODO: Check how many other productions have the same shape. 
 
+    // TODO: Check how many other productions have the same shape. 
     public void InitiateProduction(Production production, Item scrapItem, Room room)
     {
         if (scrapItem.ItemType != ItemTypes.Scrap)

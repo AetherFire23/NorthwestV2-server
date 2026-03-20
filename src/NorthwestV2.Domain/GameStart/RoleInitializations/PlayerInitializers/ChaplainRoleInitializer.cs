@@ -18,6 +18,7 @@ public class ChaplainRoleInitializer : RoleInitializer
             Room = context.Rooms.First(),
             User = context.User,
             BaseToughness = ToughnessInitializationConstants.WEAK,
+            Inventory = new Inventory()
         };
     }
 }

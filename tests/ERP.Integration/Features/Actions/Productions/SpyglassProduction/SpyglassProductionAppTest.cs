@@ -59,6 +59,11 @@ public class SpyglassProductionAppTest : NorthwestIntegrationTestBase
     
 
         await Context.SaveChangesAsync();
+
+        player = Context.Players
+            .Include(x => x.Inventory)
+            .ThenInclude(x => x.Items)
+            .First(x => x.Id == playerId);
     }
 
     private async Task PlaceScrapInRoom()

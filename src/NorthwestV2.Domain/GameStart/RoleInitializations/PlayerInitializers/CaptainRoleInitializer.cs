@@ -18,6 +18,7 @@ public class CaptainRoleInitializer : RoleInitializer
             Room = context.Rooms.First(),
             Role = Roles.Captain,
             BaseToughness = ToughnessInitializationConstants.NORMAL,
+            Inventory = new Inventory()
         };
 
         return player;

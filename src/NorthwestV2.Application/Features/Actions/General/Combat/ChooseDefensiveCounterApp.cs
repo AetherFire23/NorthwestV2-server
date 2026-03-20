@@ -1,6 +1,7 @@
 ﻿using AetherFire23.ERP.Domain.Entity;
 using AetherFire23.ERP.Domain.Features.Actions.Core;
 using AetherFire23.ERP.Domain.Features.Actions.Core.Availability;
+using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.Requirements;
 using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.WithTargets;
 using AetherFire23.ERP.Domain.Features.Actions.General.Combat;
 using NorthwestV2.Application.Features.Actions.Core.Bases;

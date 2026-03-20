@@ -11,6 +11,7 @@ public class RoomFactory
         {
             RoomEnum = RoomEnum.BoilerRoom,
             Game = game,
+            Inventory = new Inventory(),
         };
 
         // boilerRoom.Inventory.Items.Add(new Item(ItemTypes.Spyglass, 2)
@@ -23,147 +24,172 @@ public class RoomFactory
         {
             RoomEnum = RoomEnum.Brig,
             Game = game,
+            Inventory = new Inventory(),
         };
 
         Room armory = new Room
         {
             RoomEnum = RoomEnum.Armory,
             Game = game,
+            Inventory = new Inventory(),
         };
 
         Room captainsQuarters = new Room
         {
             RoomEnum = RoomEnum.CaptainsQuarters,
             Game = game,
+            Inventory = new Inventory(),
         };
 
         Room chartsRoom = new Room
         {
             RoomEnum = RoomEnum.ChartsRoom,
             Game = game,
+            Inventory = new Inventory(),
         };
 
         Room coal = new Room
         {
             RoomEnum = RoomEnum.Coal,
             Game = game,
+            Inventory = new Inventory(),
         };
 
         Room crowsNest = new Room
         {
             RoomEnum = RoomEnum.CrowsNest,
             Game = game,
+            Inventory = new Inventory(),
         };
 
         Room crewsQuarters = new Room
         {
             RoomEnum = RoomEnum.CrewsQuarters,
             Game = game,
+            Inventory = new Inventory(),
         };
 
         Room engineRoom = new Room
         {
             RoomEnum = RoomEnum.EngineRoom,
             Game = game,
+            Inventory = new Inventory(),
         };
 
         Room food = new Room
         {
             RoomEnum = RoomEnum.Food,
             Game = game,
+            Inventory = new Inventory(),
         };
 
         Room forecastle = new Room
         {
             RoomEnum = RoomEnum.ForeCastle,
             Game = game,
+            Inventory = new Inventory(),
         };
 
         Room frontStairway = new Room
         {
             RoomEnum = RoomEnum.FrontStairway,
             Game = game,
+            Inventory = new Inventory(),
         };
 
         Room workshop = new Room
         {
             RoomEnum = RoomEnum.Workshop,
             Game = game,
+            Inventory = new Inventory(),
         };
 
         Room sickbay = new Room
         {
             RoomEnum = RoomEnum.Sickbay,
             Game = game,
+            Inventory = new Inventory(),
         };
 
         Room middleCorridor = new Room
         {
             RoomEnum = RoomEnum.MiddleCorridor,
             Game = game,
+            Inventory = new Inventory(),
         };
 
         Room officersQuarters = new Room
         {
             RoomEnum = RoomEnum.OfficersQuarters,
             Game = game,
+            Inventory = new Inventory(),
         };
 
         Room hold = new Room
         {
             RoomEnum = RoomEnum.Hold,
             Game = game,
+            Inventory = new Inventory(),
         };
 
         Room magazine = new Room
         {
             RoomEnum = RoomEnum.Magazine,
             Game = game,
+            Inventory = new Inventory(),
         };
 
         Room mainDeck = new Room
         {
             RoomEnum = RoomEnum.MainDeck,
             Game = game,
+            Inventory = new Inventory(),
         };
 
         Room mess = new Room
         {
             RoomEnum = RoomEnum.Mess,
             Game = game,
+            Inventory = new Inventory(),
         };
 
         Room laundryRoom = new Room
         {
             RoomEnum = RoomEnum.LaundryRoom,
             Game = game,
+            Inventory = new Inventory(),
         };
         Room galley = new Room
         {
             RoomEnum = RoomEnum.Galley,
             Game = game,
+            Inventory = new Inventory(),
         };
         Room lowerCorridor = new Room
         {
             RoomEnum = RoomEnum.LowerCorridor,
             Game = game,
+            Inventory = new Inventory(),
         };
 
         Room lowerStairway = new Room
         {
             RoomEnum = RoomEnum.LowerStairway,
             Game = game,
+            Inventory = new Inventory(),
         };
         Room quarterDeck = new Room
         {
             RoomEnum = RoomEnum.QuarterDeck,
             Game = game,
+            Inventory = new Inventory(),
         };
 
         Room rearStairway = new Room
         {
             RoomEnum = RoomEnum.RearStairway,
             Game = game,
+            Inventory = new Inventory(),
         };
 
 

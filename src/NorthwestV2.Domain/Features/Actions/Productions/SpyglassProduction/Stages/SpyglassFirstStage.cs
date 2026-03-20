@@ -2,6 +2,7 @@
 using AetherFire23.ERP.Domain.Features.Actions.Core;
 using AetherFire23.ERP.Domain.Features.Actions.Core.Availability;
 using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.Instant;
+using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.Requirements;
 using AetherFire23.ERP.Domain.Features.Actions.Productions.Core.Entities;
 
 namespace AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.Stages;
@@ -31,11 +32,7 @@ public class SpyglassFirstStage : Stage
     {
         // Player must hold all required items
         // Player must be in room 
-        ActionRequirement playerInRoomRequirement = new ActionRequirement()
-        {
-            Description = $"Player is in required room : {player.Room.RoomEnum}",
-            IsFulfilled = player.Room.RoomEnum == this.RequiredRoom,
-        };
+        PlayerInRoomRequirement playerInRoomRequirement = new PlayerInRoomRequirement(player, RoomEnum.Armory);
 
         ActionRequirement playerHoldsItemRequirement = new ActionRequirement()
         {

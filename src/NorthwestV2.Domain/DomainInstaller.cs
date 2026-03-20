@@ -3,6 +3,7 @@ using AetherFire23.ERP.Domain.Features.Actions.Debg;
 using AetherFire23.ERP.Domain.Features.Actions.Debug;
 using AetherFire23.ERP.Domain.Features.Actions.General.Combat;
 using AetherFire23.ERP.Domain.Features.Actions.General.Movement;
+using AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction;
 using AetherFire23.ERP.Domain.GameStart;
 using AetherFire23.ERP.Domain.GameStart.RoleInitializations;
 using AetherFire23.ERP.Domain.GameStart.RoleInitializations.PlayerInitializers;
@@ -24,7 +25,7 @@ public static class DomainInstaller
         serviceCollection.AddScoped<DebugTargetAction>();
         serviceCollection.AddScoped<DebugInstantAction>();
         serviceCollection.AddScoped<ChangeRoomAction>();
-
+        serviceCollection.AddScoped<SpyglassProductionAction>();
 
         serviceCollection.AddScoped<IRandomProvider, RealRandom>();
         InstallActionServices(serviceCollection);

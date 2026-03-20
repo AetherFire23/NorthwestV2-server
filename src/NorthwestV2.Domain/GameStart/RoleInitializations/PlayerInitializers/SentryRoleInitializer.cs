@@ -18,6 +18,7 @@ public class SentryRoleInitializer : RoleInitializer
             Room = context.Rooms.First(),
             User = context.User,
             BaseToughness = ToughnessInitializationConstants.NORMAL,
+            Inventory = new Inventory()
         };
     }
 }
