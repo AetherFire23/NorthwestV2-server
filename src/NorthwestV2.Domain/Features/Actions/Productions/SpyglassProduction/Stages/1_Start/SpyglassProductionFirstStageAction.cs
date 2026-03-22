@@ -33,14 +33,13 @@ public class SpyglassProductionFirstStageAction
     // TODO: TEST IF ALL THE ADDINGS OF ALL THE ENTITIES ACTUALLY WORK ! 
     public void InitiateProduction(Player player)
     {
-        Production production = new();
+        // Production production = new();
 
-        Item scrapItem = player.Inventory.Find(REQUIRED_ITEM_TYPE_SPYGLASS_START);
-        // Locked required Items 
+        Scrap scrapItem = player.Inventory.Find<Scrap>();
 
-        scrapItem.LockForProduction(production);
-
-        player.Room.Inventory.Add(new UnfinishedSpyglass());
+        UnfinishedSpyglass usp = UnfinishedSpyglass.CreateFromItemsAndLock(scrapItem);
+        
+        player.Room.Inventory.Add(usp);
     }
 
     public void Cancel()

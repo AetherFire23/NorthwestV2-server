@@ -21,7 +21,7 @@ public class NorthwestContext : DbContext, IUnitOfWork
     public DbSet<Item> Items { get; set; }
     public DbSet<Log> Logs { get; set; }
     public DbSet<Inventory> Inventories { get; set; }
-    public DbSet<Production> Productions { get; set; }
+    // public DbSet<Production> Productions { get; set; }
 
     public NorthwestContext(DbContextOptions<NorthwestContext> options) : base(options)
     {

@@ -1,4 +1,5 @@
 ﻿using AetherFire23.ERP.Domain.Entity;
+using AetherFire23.ERP.Domain.Features.Actions.Core;
 using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.Instant;
 using AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.Stages._2_Second;
 using NorthwestV2.Application.Features.Actions.Core.Bases;
@@ -14,9 +15,9 @@ public class SpyglassSecondStageApp : InstantActionBase
     private readonly IPlayerRepository _playerRepository;
     private readonly SpyglassProductionSecondStageAction _spyglassProductionSecondStageAction;
 
-    public SpyglassSecondStageApp(string actionName, IUnitOfWork unitOfWork,
+    public SpyglassSecondStageApp(IUnitOfWork unitOfWork,
         SpyglassProductionSecondStageAction spyglassProductionSecondStageAction, IPlayerRepository playerRepository) :
-        base(actionName)
+        base(ActionNames.SpyglassProductionSecond)
     {
         _unitOfWork = unitOfWork;
         _spyglassProductionSecondStageAction = spyglassProductionSecondStageAction;

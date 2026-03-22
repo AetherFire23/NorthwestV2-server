@@ -2,14 +2,16 @@
 
 namespace AetherFire23.ERP.Domain.Entity;
 
+// TODO: Make it abstract please. 
 public class Item : EntityBase
 {
     // May not have a production at all times 
     public Guid? InventoryId { get; set; }
     public Inventory? Inventory { get; set; }
 
-    public Guid? ProductionId { get; set; }
-    public Production? Production { get; private set; }
+
+    public Guid? ProductionItemId { get; set; }
+    public ProductionItem? ProductionItem { get; set; }
     public ItemTypes ItemType { get; set; }
     public int CarryValue { get; set; }
 
@@ -25,11 +27,5 @@ public class Item : EntityBase
     {
         ItemType = itemType;
         CarryValue = carryValue;
-    }
-
-    public void LockForProduction(Production production)
-    {
-        this.IsLocked = true;
-        this.Production = production;
     }
 }

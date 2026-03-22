@@ -4,5 +4,4 @@ namespace NorthwestV2.Application.Repositories;
 
 public interface IProductionRepository
 {
-    public Task<Production> GetProduction(Guid productionId);
 }

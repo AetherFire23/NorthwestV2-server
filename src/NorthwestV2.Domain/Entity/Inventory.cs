@@ -19,6 +19,18 @@ public class Inventory : EntityBase
         return item;
     }
 
+    /// <summary>
+    /// FInds the first occurence of item matching the subtype.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    public T Find<T>() where T : Item
+    {
+        var item = this.Items.First(x => x is T);
+
+        return (T)item;
+    }
+
     public void Add(Item item)
     {
         this.Items.Add(item);

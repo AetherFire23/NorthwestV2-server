@@ -13,9 +13,5 @@ public class ProductionRepository : IProductionRepository
         _northwestContext = northwestContext;
     }
 
-    public async Task<Production> GetProduction(Guid productionId)
-    {
-        Production prod = await _northwestContext.Productions.FirstAsync(x => x.Id == productionId);
-        return prod;
-    }
+
 }

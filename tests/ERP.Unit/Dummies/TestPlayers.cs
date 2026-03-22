@@ -18,6 +18,7 @@ public static class TestPlayers
     {
         Room room = new Room()
         {
+            Id = Guid.NewGuid(),
             Game = game,
             RoomEnum = roomEnum,
             Inventory = new Inventory(),
@@ -30,6 +31,7 @@ public static class TestPlayers
     {
         Player player = new Player()
         {
+            Id = Guid.NewGuid(),
             Game = game,
             Room = initialRoom,
             Role = role,
