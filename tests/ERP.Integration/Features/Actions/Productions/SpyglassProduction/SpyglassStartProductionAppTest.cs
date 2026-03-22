@@ -63,15 +63,36 @@ public class SpyglassStartProductionAppTest : NorthwestIntegrationTestBase
 
         Assert.True(room.Inventory.Items.Any(x => x.ItemType == ItemTypes.UnfinishedSpyglass));
     }
-    
-    // TODO: make ItemBase <- (NormalItem, ProductionItem)  
-    
-    // TODO: Combine the new SpyglassFirstSTageData
-    
+
     // TODO: Test for checking that a first stage is created inside the unfinished spyglass.
-    
+    [Fact]
+    public async Task GivenUnfinishedSpyglass_WhenInitiated_ThenHasFirstStage()
+    {
+        Guid playerId = await SetupForSpyglassStartAction();
+        var actions = await Mediator.Send(new ExecuteActionRequest()
+        {
+            ActionName = ActionNames.SpyglassProductionStart,
+            PlayerId = playerId,
+        });
+
+        this._scope = this.RootServiceProvider.CreateScope();
+        Player player = Context.Players.First(x => x.Id == playerId);
+        Room room = Context.Rooms
+            .Include(x => x.Inventory)
+            .ThenInclude(x => x.Items)
+            .First(x => x.Id == player.RoomId);
+
+        // TODO: make sure that ef core understands Stages. I guess it can be a DbSet<> But Technicallyt it is just a tracker for a DbSet<>
+        // Also, it would be interesting to know if sql can actually handle all the plymoprphism there 
+        UnfinishedSpyglass unfinishedSpyglass = room.Inventory.Find(ItemTypes.UnfinishedSpyglass) as UnfinishedSpyglass;
+        // Assert.True(unfinishedSpyglass.CurrentStage is SpyglassFirstStageData);
+    }
+
+    // TODO: Combine the new SpyglassFirstSTageData
+
+
     // TODO: TEst that we can contribute 1 point
-    
+
     // TODO: TEst that when we reach the next stage, we cannot contribute more points
 
     private async Task<Guid> SetupForSpyglassStartAction()

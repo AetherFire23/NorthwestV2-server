@@ -2,7 +2,7 @@
 
 namespace AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.Items;
 
-public class Spyglass : Item
+public class Spyglass : ItemBase
 {
     public const int SpyglassStartCarryValue = 1;
 

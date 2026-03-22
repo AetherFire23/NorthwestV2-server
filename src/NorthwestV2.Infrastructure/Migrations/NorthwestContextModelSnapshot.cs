@@ -44,7 +44,7 @@ namespace NorthwestV2.Infrastructure.Migrations
                     b.ToTable("Inventories");
                 });
 
-            modelBuilder.Entity("AetherFire23.ERP.Domain.Entity.Item", b =>
+            modelBuilder.Entity("AetherFire23.ERP.Domain.Entity.ItemBase", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -61,27 +61,21 @@ namespace NorthwestV2.Infrastructure.Migrations
                     b.Property<Guid?>("InventoryId")
                         .HasColumnType("uuid");
 
-                    b.Property<bool>("IsLocked")
-                        .HasColumnType("boolean");
-
                     b.Property<int>("ItemType")
                         .HasColumnType("integer");
 
-                    b.Property<Guid?>("ProductionItemId")
+                    b.Property<Guid?>("ProductionItemBaseId")
                         .HasColumnType("uuid");
-
-                    b.Property<int>("TimePointsContributions")
-                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
                     b.HasIndex("InventoryId");
 
-                    b.HasIndex("ProductionItemId");
+                    b.HasIndex("ProductionItemBaseId");
 
                     b.ToTable("Items");
 
-                    b.HasDiscriminator<string>("Discriminator").HasValue("Item");
+                    b.HasDiscriminator<string>("Discriminator").HasValue("ItemBase");
 
                     b.UseTphMappingStrategy();
                 });
@@ -221,26 +215,49 @@ namespace NorthwestV2.Infrastructure.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("AetherFire23.ERP.Domain.Features.Actions.Productions.Core.Entities.ProductionItem", b =>
+            modelBuilder.Entity("AetherFire23.ERP.Domain.Entity.NormalItemBase", b =>
                 {
-                    b.HasBaseType("AetherFire23.ERP.Domain.Entity.Item");
+                    b.HasBaseType("AetherFire23.ERP.Domain.Entity.ItemBase");
 
-                    b.HasDiscriminator().HasValue("ProductionItem");
+                    b.Property<bool>("IsLocked")
+                        .HasColumnType("boolean");
+
+                    b.Property<Guid?>("ProductionItemId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("TimePointsContributions")
+                        .HasColumnType("integer");
+
+                    b.HasIndex("ProductionItemId");
+
+                    b.HasDiscriminator().HasValue("NormalItemBase");
                 });
 
-            modelBuilder.Entity("AetherFire23.ERP.Domain.Entity.Item", b =>
+            modelBuilder.Entity("AetherFire23.ERP.Domain.Features.Actions.Productions.Core.Entities.ProductionItemBase", b =>
+                {
+                    b.HasBaseType("AetherFire23.ERP.Domain.Entity.ItemBase");
+
+                    b.HasDiscriminator().HasValue("ProductionItemBase");
+                });
+
+            modelBuilder.Entity("AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.Items.UnfinishedSpyglass", b =>
+                {
+                    b.HasBaseType("AetherFire23.ERP.Domain.Features.Actions.Productions.Core.Entities.ProductionItemBase");
+
+                    b.HasDiscriminator().HasValue("UnfinishedSpyglass");
+                });
+
+            modelBuilder.Entity("AetherFire23.ERP.Domain.Entity.ItemBase", b =>
                 {
                     b.HasOne("AetherFire23.ERP.Domain.Entity.Inventory", "Inventory")
                         .WithMany("Items")
                         .HasForeignKey("InventoryId");
 
-                    b.HasOne("AetherFire23.ERP.Domain.Features.Actions.Productions.Core.Entities.ProductionItem", "ProductionItem")
+                    b.HasOne("AetherFire23.ERP.Domain.Features.Actions.Productions.Core.Entities.ProductionItemBase", null)
                         .WithMany("LockedItems")
-                        .HasForeignKey("ProductionItemId");
+                        .HasForeignKey("ProductionItemBaseId");
 
                     b.Navigation("Inventory");
-
-                    b.Navigation("ProductionItem");
                 });
 
             modelBuilder.Entity("AetherFire23.ERP.Domain.Entity.Player", b =>
@@ -310,6 +327,15 @@ namespace NorthwestV2.Infrastructure.Migrations
                     b.Navigation("Lobby");
                 });
 
+            modelBuilder.Entity("AetherFire23.ERP.Domain.Entity.NormalItemBase", b =>
+                {
+                    b.HasOne("AetherFire23.ERP.Domain.Features.Actions.Productions.Core.Entities.ProductionItemBase", "ProductionItem")
+                        .WithMany()
+                        .HasForeignKey("ProductionItemId");
+
+                    b.Navigation("ProductionItem");
+                });
+
             modelBuilder.Entity("AetherFire23.ERP.Domain.Entity.Game", b =>
                 {
                     b.Navigation("Players");
@@ -337,7 +363,7 @@ namespace NorthwestV2.Infrastructure.Migrations
                     b.Navigation("Player");
                 });
 
-            modelBuilder.Entity("AetherFire23.ERP.Domain.Features.Actions.Productions.Core.Entities.ProductionItem", b =>
+            modelBuilder.Entity("AetherFire23.ERP.Domain.Features.Actions.Productions.Core.Entities.ProductionItemBase", b =>
                 {
                     b.Navigation("LockedItems");
                 });

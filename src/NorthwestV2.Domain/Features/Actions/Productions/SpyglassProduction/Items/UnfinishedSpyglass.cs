@@ -5,23 +5,28 @@ using AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.St
 
 namespace AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.Items;
 
-public class UnfinishedSpyglass : ProductionItem
+public class UnfinishedSpyglass : ProductionItemBase
 {
-    public StageBase CurrentStage { get; set; }
+    // public StageBase CurrentStage { get; set; }
 
-    public UnfinishedSpyglass(StageBase stage) : base(ItemTypes.UnfinishedSpyglass, 1)
+    public UnfinishedSpyglass() : base(ItemTypes.UnfinishedSpyglass, 1)
     {
-        this.CurrentStage = stage;
+        // this.CurrentStage = stage;
     }
 
     public static UnfinishedSpyglass CreateFromItemsAndLock(Scrap scrap)
     {
         SpyglassFirstStageData spyglassFirstStage = new SpyglassFirstStageData();
 
-        UnfinishedSpyglass unfinishedSpyglass = new UnfinishedSpyglass(spyglassFirstStage);
+        UnfinishedSpyglass unfinishedSpyglass = new UnfinishedSpyglass();
 
         unfinishedSpyglass.LockForProduction(scrap);
         
         return unfinishedSpyglass;
+    }
+
+    public override string ToString()
+    {
+        return nameof(UnfinishedSpyglass);
     }
 }

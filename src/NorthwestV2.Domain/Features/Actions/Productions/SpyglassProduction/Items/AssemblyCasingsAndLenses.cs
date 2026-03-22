@@ -5,7 +5,7 @@ namespace AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProductio
 /// <summary>
 /// Intermediate item
 /// </summary>
-public class AssemblyCasingsAndLenses : Item
+public class AssemblyCasingsAndLenses : ItemBase
 {
     public const int CARRY_VALUE = 1;
 

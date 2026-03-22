@@ -1,4 +1,5 @@
-﻿using AetherFire23.ERP.Domain.Entity;
+﻿using System.Diagnostics.CodeAnalysis;
+using AetherFire23.ERP.Domain.Entity;
 using AetherFire23.ERP.Domain.Features.Actions.Core;
 using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.Instant;
 using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.Requirements;

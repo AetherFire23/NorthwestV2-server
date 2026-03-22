@@ -41,7 +41,7 @@ public class SpyglassProductionSecondStageAction
          * How contributing works :
          *
          */
-        Item unfinishedSpyglassProduction = player.Inventory.Find(ItemTypes.UnfinishedSpyglass);
+        ItemBase unfinishedSpyglassProduction = player.Inventory.Find(ItemTypes.UnfinishedSpyglass);
 
         // add points;
 

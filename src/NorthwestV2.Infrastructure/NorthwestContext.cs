@@ -1,5 +1,6 @@
 ﻿using AetherFire23.ERP.Domain.Entity;
 using AetherFire23.ERP.Domain.Features.Actions.Productions.Core.Entities;
+using AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.Items;
 using Microsoft.EntityFrameworkCore;
 using NorthwestV2.Application;
 
@@ -7,9 +8,9 @@ namespace NorthwestV2.Infrastructure;
 
 /*
  * I did the whole UOW patteern initially for mocking; separartion. It's not necessary.
- * However I like having my queries elsewhere. 
+ * However I like having my queries elsewhere.
  * https://learn.microsoft.com/en-us/ef/ef6/fundamentals/testing/mocking?redirectedfrom=MSDN
- * 
+ *
  */
 public class NorthwestContext : DbContext, IUnitOfWork
 {
@@ -18,10 +19,9 @@ public class NorthwestContext : DbContext, IUnitOfWork
     public DbSet<Game> Games { get; set; }
     public DbSet<Room> Rooms { get; set; }
     public DbSet<Player> Players { get; set; }
-    public DbSet<Item> Items { get; set; }
+    public DbSet<ItemBase> Items { get; set; }
     public DbSet<Log> Logs { get; set; }
     public DbSet<Inventory> Inventories { get; set; }
-    // public DbSet<Production> Productions { get; set; }
 
     public NorthwestContext(DbContextOptions<NorthwestContext> options) : base(options)
     {
@@ -29,31 +29,13 @@ public class NorthwestContext : DbContext, IUnitOfWork
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        // modelBuilder.Entity<Inventory>()
-        //     .HasMany(i => i.Items)
-        //     .WithOne(i => i.Inventory)
-        //     .HasForeignKey(i => i.InventoryId)
-        //     .OnDelete(DeleteBehavior.Cascade);
-        //
-        // modelBuilder.Entity<Player>()
-        //     .HasOne(p => p.Inventory)
-        //     .WithOne(i => i.Player)
-        //     .HasForeignKey<Inventory>(i => i.PlayerId);
-        //
-        // modelBuilder.Entity<Room>()
-        //     .HasOne(r => r.Inventory)
-        //     .WithOne(i => i.Room)
-        //     .HasForeignKey<Inventory>(i => i.RoomId);
-        //
-        // modelBuilder.Entity<Production>()
-        //     .HasMany(p => p.LockedItems)
-        //     .WithOne(i => i.Production)
-        //     .HasForeignKey(i => i.ProductionId);
+        modelBuilder.Entity<ItemBase>()
+            .HasDiscriminator<string>("Discriminator")
+            .HasValue<ItemBase>(nameof(ItemBase))
+            .HasValue<NormalItemBase>("NormalItemBase")
+            .HasValue<ProductionItemBase>("ProductionItemBase")
+            .HasValue<UnfinishedSpyglass>("UnfinishedSpyglass");
     }
-    //
-    // var productionItems = await _db.Items
-    //     .OfType<ProductionItem>()
-    //     .ToListAsync();
 
     public override async Task<int> SaveChangesAsync(CancellationToken ct = default)
     {

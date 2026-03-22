@@ -10,9 +10,9 @@ public class Inventory : EntityBase
     //
     // public Guid? RoomId { get; set; }
     // public Room? Room { get; set; }
-    public List<Item> Items { get; set; } = [];
+    public List<ItemBase> Items { get; set; } = [];
 
-    public Item Find(ItemTypes itemType)
+    public ItemBase Find(ItemTypes itemType)
     {
         var item = this.Items.First(x => x.ItemType == itemType);
 
@@ -24,15 +24,15 @@ public class Inventory : EntityBase
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    public T Find<T>() where T : Item
+    public T Find<T>() where T : ItemBase
     {
         var item = this.Items.First(x => x is T);
 
         return (T)item;
     }
 
-    public void Add(Item item)
+    public void Add(ItemBase itemBase)
     {
-        this.Items.Add(item);
+        this.Items.Add(itemBase);
     }
 }
