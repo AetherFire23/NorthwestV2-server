@@ -25,6 +25,7 @@ public class SpyglassProductionSecondStageAction
             [
                 playerHasItemsRequirement,
                 playerInRoomRequiremnt,
+                playerInRoomRequiremnt,
                 hasTimePointsRequirement
             ]
         };
@@ -36,6 +37,14 @@ public class SpyglassProductionSecondStageAction
 
     public void ContributePointsToProduction(Player player)
     {
+        /*
+         * How contributing works :
+         *
+         */
         Item unfinishedSpyglassProduction = player.Inventory.Find(ItemTypes.UnfinishedSpyglass);
+
+        // add points;
+
+        // Check how many points it should ahve at the end of this stage (6,7)
     }
 }
