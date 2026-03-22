@@ -9,6 +9,7 @@ public class SpyglassFirstStage : Stage
 {
     public SpyglassFirstStage() : base(RoomEnum.Workshop, [ItemTypes.Scrap])
     {
+        
     }
 
     public  InstantActionAvailability CalculateAvailability(Player player)

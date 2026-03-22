@@ -63,6 +63,16 @@ public class SpyglassStartProductionAppTest : NorthwestIntegrationTestBase
 
         Assert.True(room.Inventory.Items.Any(x => x.ItemType == ItemTypes.UnfinishedSpyglass));
     }
+    
+    // TODO: make ItemBase <- (NormalItem, ProductionItem)  
+    
+    // TODO: Combine the new SpyglassFirstSTageData
+    
+    // TODO: Test for checking that a first stage is created inside the unfinished spyglass.
+    
+    // TODO: TEst that we can contribute 1 point
+    
+    // TODO: TEst that when we reach the next stage, we cannot contribute more points
 
     private async Task<Guid> SetupForSpyglassStartAction()
     {
