@@ -109,6 +109,7 @@ public class SpyglassProductionInitiationAppTest : NorthwestIntegrationTestBase
             .Include(x => x.Inventory)
             .ThenInclude(x => x.Items)
             .First(x => x.Id == player.RoomId);
+        
         UnfinishedSpyglass unfinishedSpyglass = room.Inventory.Find(ItemTypes.UnfinishedSpyglass) as UnfinishedSpyglass;
         
         Assert.Equal(1, unfinishedSpyglass.CurrentStage.Contributions);

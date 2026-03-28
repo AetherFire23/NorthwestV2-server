@@ -21,8 +21,11 @@ public class SpyglassProductionInitiationAction
     {
         PlayerInRoomRequirement isInArmory = new PlayerInRoomRequirement(player, REQUIRED_ROOM_SPYGLASS_START);
 
+        // TODO: Room has items Requirement
         PlayerHasItemsRequirement isHoldingScrap =
             new PlayerHasItemsRequirement(player, REQUIRED_ITEM_TYPE_SPYGLASS_START);
+        // TODO: Chjange it, jsut for debug
+
 
         // TODO: TimePoints requirements 
         InstantActionAvailability availability = new InstantActionAvailability
@@ -40,8 +43,9 @@ public class SpyglassProductionInitiationAction
     {
         Scrap scrapItemInPlayersInventory = player.Inventory.Find<Scrap>();
 
-        UnfinishedSpyglass createdUnfinishedSpyglass = UnfinishedSpyglass.CreateFromItemsAndLock(scrapItemInPlayersInventory);
-        
+        UnfinishedSpyglass createdUnfinishedSpyglass =
+            UnfinishedSpyglass.CreateFromItemsAndLock(scrapItemInPlayersInventory);
+
         // Add to room's inventory. 
         player.Room.Inventory.Add(createdUnfinishedSpyglass);
     }

@@ -10,16 +10,15 @@ public class SpyglassProductionContributionAction
 {
     public InstantActionAvailability DetermineAvailability(Player player)
     {
-        PlayerHasItemsRequirement isHoldingUnfinishedSpyglass =
-            new PlayerHasItemsRequirement(player, ItemTypes.UnfinishedSpyglass);
-
+        RoomHasItemRequirement isRoomHavinunfinishedspyglass =
+            new RoomHasItemRequirement(player.Room, ItemTypes.UnfinishedSpyglass);
 
         // TODO: get the current contribution's stage 
         InstantActionAvailability availability = new InstantActionAvailability
         {
             ActionName = ActionNames.SpyglassContribution,
             DisplayName = $"Contribute to spyglass production: ",
-            ActionRequirements = [isHoldingUnfinishedSpyglass]
+            ActionRequirements = [isRoomHavinunfinishedspyglass]
         };
 
         return availability;

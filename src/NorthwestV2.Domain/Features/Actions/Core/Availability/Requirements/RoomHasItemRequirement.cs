@@ -1,19 +1,19 @@
-﻿using AetherFire23.ERP.Domain.Entity;
+using AetherFire23.ERP.Domain.Entity;
 
 namespace AetherFire23.ERP.Domain.Features.Actions.Core.Availability.Requirements;
 
-public class PlayerHasItemsRequirement : ActionRequirement
+public class RoomHasItemRequirement : ActionRequirement
 {
-    private readonly Player _player;
+    private readonly Room _room;
     private readonly List<ItemTypes> _requiredItems;
 
-    public PlayerHasItemsRequirement(Player player, List<ItemTypes> requiredItems)
+    public RoomHasItemRequirement(Room room, List<ItemTypes> requiredItems)
     {
-        _player = player;
+        _room = room;
         _requiredItems = requiredItems;
     }
 
-    public PlayerHasItemsRequirement(Player player, ItemTypes requiredItems) : this(player, [requiredItems])
+    public RoomHasItemRequirement(Room room, ItemTypes requiredItems) : this(room, [requiredItems])
     {
     }
 
@@ -23,7 +23,7 @@ public class PlayerHasItemsRequirement : ActionRequirement
     {
         get
         {
-            var playerItemTypes = _player.Inventory.Items.Select(x => x.ItemType);
+            var playerItemTypes = _room.Inventory.Items.Select(x => x.ItemType);
             bool isContainedAll = _requiredItems.All(playerItemTypes.Contains);
             return isContainedAll;
         }
