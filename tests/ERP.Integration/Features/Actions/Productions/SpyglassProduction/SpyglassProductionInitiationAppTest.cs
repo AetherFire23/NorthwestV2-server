@@ -1,10 +1,10 @@
 ﻿using AetherFire23.ERP.Domain.Entity;
 using AetherFire23.ERP.Domain.Features.Actions.Core;
+using AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.ContributionToStages._1_Start;
 using AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.ContributionToStages._2_Second;
 using AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.ContributionToStages._3_Third;
 using AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.Initiation;
 using AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.Items;
-using AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.Stages._1_Start;
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -88,7 +88,7 @@ public class SpyglassProductionInitiationAppTest : NorthwestIntegrationTestBase
         // TODO: make sure that ef core understands Stages. I guess it can be a DbSet<> But Technicallyt it is just a tracker for an integer
         // Also, it would be interesting to know if sql can actually handle all the plymoprphism there 
         UnfinishedSpyglass unfinishedSpyglass = room.Inventory.Find(ItemTypes.UnfinishedSpyglass) as UnfinishedSpyglass;
-        Assert.True(unfinishedSpyglass.CurrentStage is SpyglassFirstStageData);
+        Assert.True(unfinishedSpyglass.CurrentStageContribution is SpyglassFirstStageContributionData);
     }
 
     [Fact]
@@ -114,7 +114,7 @@ public class SpyglassProductionInitiationAppTest : NorthwestIntegrationTestBase
             .ThenInclude(x => x.Items)
             .First(x => x.Id == player.RoomId);
         UnfinishedSpyglass unfinishedSpyglass = room.Inventory.Find(ItemTypes.UnfinishedSpyglass) as UnfinishedSpyglass;
-        Assert.Equal(1, unfinishedSpyglass.CurrentStage.Contributions);
+        Assert.Equal(1, unfinishedSpyglass.CurrentStageContribution.Contributions);
     }
 
     [Fact]
@@ -143,7 +143,7 @@ public class SpyglassProductionInitiationAppTest : NorthwestIntegrationTestBase
             .ThenInclude(x => x.Items)
             .First(x => x.Id == player.RoomId);
         UnfinishedSpyglass unfinishedSpyglass = room.Inventory.Find(ItemTypes.UnfinishedSpyglass) as UnfinishedSpyglass;
-        Assert.True(unfinishedSpyglass.CurrentStage is SpyglassSecondStageData);
+        Assert.True(unfinishedSpyglass.CurrentStageContribution is SpyglassSecondStageContributionData);
     }
 
 
@@ -177,7 +177,7 @@ public class SpyglassProductionInitiationAppTest : NorthwestIntegrationTestBase
             .ThenInclude(x => x.Items)
             .First(x => x.Id == playerAfter.RoomId);
         UnfinishedSpyglass unfinishedSpyglass = room.Inventory.Find(ItemTypes.UnfinishedSpyglass) as UnfinishedSpyglass;
-        Assert.True(unfinishedSpyglass.CurrentStage is SpyglassProductionThirdStageData);
+        Assert.True(unfinishedSpyglass.CurrentStageContribution is SpyglassProductionThirdStageContributionData);
     }
 
     [Fact]
@@ -210,7 +210,7 @@ public class SpyglassProductionInitiationAppTest : NorthwestIntegrationTestBase
             .ThenInclude(x => x.Items)
             .First(x => x.Id == playerAfter.RoomId);
         UnfinishedSpyglass unfinishedSpyglass = room.Inventory.Find(ItemTypes.UnfinishedSpyglass) as UnfinishedSpyglass;
-        Assert.True(unfinishedSpyglass.CurrentStage.IsProductionComplete);
+        Assert.True(unfinishedSpyglass.CurrentStageContribution.IsProductionComplete);
     }
 
     [Fact]
@@ -236,9 +236,14 @@ public class SpyglassProductionInitiationAppTest : NorthwestIntegrationTestBase
         }
 
         this._scope = this.RootServiceProvider.CreateScope();
-        Player playerAfter = Context.Players.Include(x => x.Inventory).First(x => x.Id == playerId);
+        Player playerAfter = Context.Players
+            .Include(x => x.Inventory)
+            .ThenInclude(x => x.Items)
+            .First(x => x.Id == playerId);
         Assert.True(playerAfter.Inventory.Items.Any(x => x.ItemType == ItemTypes.Spyglass));
     }
+    
+    // TODO: RUn a full scenario to ensure it's possible. 
 
     [Fact]
     public async Task GivenMaxContributionsReached_WhenContributingMOre_ThenStagesChanged()
@@ -249,7 +254,6 @@ public class SpyglassProductionInitiationAppTest : NorthwestIntegrationTestBase
             ActionName = ActionNames.SpyglassProductionStart,
             PlayerId = playerId,
         });
-
 
         GetActionsResult actions = await Mediator.Send(new GetActionsRequest
         {

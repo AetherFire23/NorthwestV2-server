@@ -1,8 +1,8 @@
 using System.Text.Json.Serialization;
 using AetherFire23.ERP.Domain.Entity;
+using AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.ContributionToStages._1_Start;
 using AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.ContributionToStages._2_Second;
 using AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.ContributionToStages._3_Third;
-using AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.Stages._1_Start;
 
 namespace AetherFire23.ERP.Domain.Features.Actions.Productions.Core;
 
@@ -15,16 +15,16 @@ namespace AetherFire23.ERP.Domain.Features.Actions.Productions.Core;
 /// I need immutable updates for records. Ef core checks only reference equality for 
 /// </summary>
 [JsonPolymorphic(TypeDiscriminatorPropertyName = "$type")]
-[JsonDerivedType(typeof(SpyglassFirstStageData), "spyglass_first_stage")]
-[JsonDerivedType(typeof(SpyglassSecondStageData), "spyglass_second_stage")]
-[JsonDerivedType(typeof(SpyglassProductionThirdStageData), "spyglass_third_stage")]
-public record StageBase
+[JsonDerivedType(typeof(SpyglassFirstStageContributionData), "spyglass_first_stage")]
+[JsonDerivedType(typeof(SpyglassSecondStageContributionData), "spyglass_second_stage")]
+[JsonDerivedType(typeof(SpyglassProductionThirdStageContributionData), "spyglass_third_stage")]
+public record StageContributionBase
 {
     public string StageName { get; set; }
     public int Contributions { get; set; }
 
     [JsonConstructor]
-    public StageBase(string stageName, int contributions, int end)
+    public StageContributionBase(string stageName, int contributions, int end)
     {
         StageName = stageName;
         Contributions = contributions;
@@ -36,7 +36,7 @@ public record StageBase
     /// </summary>
     public int End { get; set; }
 
-    public StageBase(int end, string stageName)
+    public StageContributionBase(int end, string stageName)
     {
         End = end;
         StageName = stageName;
@@ -45,24 +45,24 @@ public record StageBase
     public bool IsStageEnded => Contributions >= End;
     public bool IsProductionComplete => this.Contributions == End && GetNextStage() is null;
 
-    public StageBase GetNextStageIfStageEnded()
+    public StageContributionBase GetNextStageIfStageEnded()
     {
         if (!IsStageEnded)
         {
             throw new Exception("Can only advance to the next stage if the current stage is over.");
         }
 
-        StageBase nextStage = GetNextStage();
+        StageContributionBase nextStageContribution = GetNextStage();
 
-        if (nextStage is null)
+        if (nextStageContribution is null)
         {
             throw new Exception("This stage doesn't have a next stage");
         }
 
-        return nextStage;
+        return nextStageContribution;
     }
 
-    protected virtual StageBase? GetNextStage()
+    protected virtual StageContributionBase? GetNextStage()
     {
         return null;
     }

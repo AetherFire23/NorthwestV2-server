@@ -48,10 +48,10 @@ public class NorthwestContext : DbContext, IUnitOfWork
         
         modelBuilder.Entity<ProductionItemBase>(x =>
         {
-            x.Property(x => x.CurrentStage)
+            x.Property(x => x.CurrentStageContribution)
                 .HasConversion(
                     v => JsonSerializer.Serialize(v, (JsonSerializerOptions?)null),
-                    v => JsonSerializer.Deserialize<StageBase>(v, (JsonSerializerOptions?)null)!
+                    v => JsonSerializer.Deserialize<StageContributionBase>(v, (JsonSerializerOptions?)null)!
                 );
             // .Metadata.SetValueComparer(new ValueComparer<StageBase>(
             //     (c1, c2) => JsonSerializer.Serialize(c1, (JsonSerializerOptions?)null) == JsonSerializer.Serialize(c2, (JsonSerializerOptions?)null),

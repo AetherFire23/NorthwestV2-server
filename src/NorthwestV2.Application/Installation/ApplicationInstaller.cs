@@ -1,9 +1,11 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using AetherFire23.ERP.Domain.Features.Actions.Productions.HammerProduction.Initiation;
+using Microsoft.Extensions.DependencyInjection;
 using NorthwestV2.Application.Features.Actions.ActDeDebg;
 using NorthwestV2.Application.Features.Actions.Core;
 using NorthwestV2.Application.Features.Actions.Debug;
 using NorthwestV2.Application.Features.Actions.General.Combat;
 using NorthwestV2.Application.Features.Actions.General.Movement;
+using NorthwestV2.Application.Features.Actions.Productions.HammerProduction.Initiation;
 using NorthwestV2.Application.Features.Actions.Productions.SpyglassProduction.ContributionToStages._1_Start;
 using NorthwestV2.Application.Features.Actions.Productions.SpyglassProduction.Stages._1_Start;
 using NorthwestV2.Application.Features.Actions.Productions.SpyglassProduction.Stages._2_Second;
@@ -25,5 +27,7 @@ public class ApplicationInstaller
         serviceCollection.AddScoped<SpyglassProductionInitiationActionApp>();
         serviceCollection.AddScoped<SpyglassSecondStageApp>();
         serviceCollection.AddScoped<SpyglassProductionContributionActionApp>();
+        
+        serviceCollection.AddScoped<HammerProductionInitiationApp>();
     }
 }
