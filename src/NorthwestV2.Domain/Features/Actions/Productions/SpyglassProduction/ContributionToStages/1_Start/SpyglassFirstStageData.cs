@@ -1,11 +1,35 @@
 using AetherFire23.ERP.Domain.Features.Actions.Productions.Core;
+using AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.ContributionToStages._2_Second;
 
 namespace AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.Stages._1_Start;
 
+/// <summary>
+/// Represents the first production stage for crafting a spyglass.
+/// This stage focuses on assembling the casings and lenses components.
+/// </summary>
+/// <remarks>
+/// Inherits from <see cref="StageBase"/> and defines the contribution limit and 
+/// stage name for the initial phase of spyglass production.
+/// </remarks>
 public record SpyglassFirstStageData : StageBase
 {
+    /// <summary>
+    /// The maximum number of contributions required to complete the first stage.
+    /// Player must contribute a total of 8 time points to advance.
+    /// </summary>
     public const int SPYGLASS_FIRST_STAGE_CONTRIBUTION_LIMIT = 8;
-    public SpyglassFirstStageData() : base(SPYGLASS_FIRST_STAGE_CONTRIBUTION_LIMIT, "First stage - assembly of casings and lenses")
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SpyglassFirstStageData"/> class
+    /// with the contribution limit and descriptive stage name.
+    /// </summary>
+    public SpyglassFirstStageData() : base(SPYGLASS_FIRST_STAGE_CONTRIBUTION_LIMIT,
+        "First stage - assembly of casings and lenses")
     {
+    }
+
+    protected override StageBase? GetNextStage()
+    {
+        return new SpyglassSecondStageData();
     }
 }

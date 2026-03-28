@@ -1,11 +1,15 @@
 ﻿using AetherFire23.ERP.Domain.Entity;
 using AetherFire23.ERP.Domain.Features.Actions.Core;
+using AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.ContributionToStages._2_Second;
+using AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.ContributionToStages._3_Third;
+using AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.Initiation;
 using AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.Items;
 using AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.Stages._1_Start;
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NorthwestV2.Application.Features.Actions.Productions.SpyglassProduction.Stages._1_Start;
+using NorthwestV2.Application.Features.Actions.Productions.SpyglassProduction.Stages._2_Second;
 using NorthwestV2.Application.Repositories;
 using NorthwestV2.Application.UseCases.GameActions.Command.ExecuteAction;
 using NorthwestV2.Application.UseCases.GameActions.Queries.GetActions;
@@ -109,17 +113,152 @@ public class SpyglassProductionInitiationAppTest : NorthwestIntegrationTestBase
             .Include(x => x.Inventory)
             .ThenInclude(x => x.Items)
             .First(x => x.Id == player.RoomId);
-        
         UnfinishedSpyglass unfinishedSpyglass = room.Inventory.Find(ItemTypes.UnfinishedSpyglass) as UnfinishedSpyglass;
-        
         Assert.Equal(1, unfinishedSpyglass.CurrentStage.Contributions);
     }
-    // TODO: Combine the new SpyglassFirstSTageData
+
+    [Fact]
+    public async Task GivenFirstStage_WhenGettingActions_ThenContributionActionIsAvailable()
+    {
+        Guid playerId = await SetupForSpyglassStartAction();
+        await Mediator.Send(new ExecuteActionRequest
+        {
+            ActionName = ActionNames.SpyglassProductionStart,
+            PlayerId = playerId,
+        });
+
+        for (int i = 0; i < 8; i++)
+        {
+            await Mediator.Send(new ExecuteActionRequest
+            {
+                ActionName = ActionNames.SpyglassContribution,
+                PlayerId = playerId,
+            });
+        }
+
+        this._scope = this.RootServiceProvider.CreateScope();
+        Player player = Context.Players.First(x => x.Id == playerId);
+        Room room = Context.Rooms
+            .Include(x => x.Inventory)
+            .ThenInclude(x => x.Items)
+            .First(x => x.Id == player.RoomId);
+        UnfinishedSpyglass unfinishedSpyglass = room.Inventory.Find(ItemTypes.UnfinishedSpyglass) as UnfinishedSpyglass;
+        Assert.True(unfinishedSpyglass.CurrentStage is SpyglassSecondStageData);
+    }
 
 
-    // TODO: TEst that we can contribute 1 point
+    [Fact]
+    public async Task GivenFirstStage_WhenContributingEnoughToReachThirdStage_ThenAdvancesToThirdStage()
+    {
+        Guid playerId = await SetupForSpyglassStartAction();
+        Player player = await Context.Players.FirstAsync(x => x.Id == playerId);
+        player.ActionPoints = 99;
+        await Context.SaveChangesAsync();
 
-    // TODO: TEst that when we reach the next stage, we cannot contribute more points
+        await Mediator.Send(new ExecuteActionRequest
+        {
+            ActionName = ActionNames.SpyglassProductionStart,
+            PlayerId = playerId,
+        });
+
+        for (int i = 0; i < 20; i++)
+        {
+            await Mediator.Send(new ExecuteActionRequest
+            {
+                ActionName = ActionNames.SpyglassContribution,
+                PlayerId = playerId,
+            });
+        }
+
+        this._scope = this.RootServiceProvider.CreateScope();
+        Player playerAfter = Context.Players.First(x => x.Id == playerId);
+        Room room = Context.Rooms
+            .Include(x => x.Inventory)
+            .ThenInclude(x => x.Items)
+            .First(x => x.Id == playerAfter.RoomId);
+        UnfinishedSpyglass unfinishedSpyglass = room.Inventory.Find(ItemTypes.UnfinishedSpyglass) as UnfinishedSpyglass;
+        Assert.True(unfinishedSpyglass.CurrentStage is SpyglassProductionThirdStageData);
+    }
+
+    [Fact]
+    public async Task GivenFirstStage_WhenContributingEnoughToReachThirdStage_ThenCanCompleteTask()
+    {
+        Guid playerId = await SetupForSpyglassStartAction();
+        Player player = await Context.Players.FirstAsync(x => x.Id == playerId);
+        player.ActionPoints = 99;
+        await Context.SaveChangesAsync();
+
+        await Mediator.Send(new ExecuteActionRequest
+        {
+            ActionName = ActionNames.SpyglassProductionStart,
+            PlayerId = playerId,
+        });
+
+        for (int i = 0; i < 35; i++)
+        {
+            await Mediator.Send(new ExecuteActionRequest
+            {
+                ActionName = ActionNames.SpyglassContribution,
+                PlayerId = playerId,
+            });
+        }
+
+        this._scope = this.RootServiceProvider.CreateScope();
+        Player playerAfter = Context.Players.First(x => x.Id == playerId);
+        Room room = Context.Rooms
+            .Include(x => x.Inventory)
+            .ThenInclude(x => x.Items)
+            .First(x => x.Id == playerAfter.RoomId);
+        UnfinishedSpyglass unfinishedSpyglass = room.Inventory.Find(ItemTypes.UnfinishedSpyglass) as UnfinishedSpyglass;
+        Assert.True(unfinishedSpyglass.CurrentStage.IsProductionComplete);
+    }
+
+    [Fact]
+    public async Task
+        GivenFirstStage_WhenContributingEnoughToReachThirdStage_ThenFinishedSpyglassInsideExistsPlayersInventory()
+    {
+        Guid playerId = await SetupForSpyglassStartAction();
+        Player player = await Context.Players.FirstAsync(x => x.Id == playerId);
+        player.ActionPoints = 99;
+        await Context.SaveChangesAsync();
+        await Mediator.Send(new ExecuteActionRequest
+        {
+            ActionName = ActionNames.SpyglassProductionStart,
+            PlayerId = playerId,
+        });
+        for (int i = 0; i < 35; i++)
+        {
+            await Mediator.Send(new ExecuteActionRequest
+            {
+                ActionName = ActionNames.SpyglassContribution,
+                PlayerId = playerId,
+            });
+        }
+
+        this._scope = this.RootServiceProvider.CreateScope();
+        Player playerAfter = Context.Players.Include(x=> x.Inventory).First(x => x.Id == playerId);
+        Assert.True(playerAfter.Inventory.Items.Any(x => x.ItemType == ItemTypes.Spyglass));
+    }
+
+    [Fact]
+    public async Task GivenMaxContributionsReached_WhenContributingMOre_ThenStagesChanged()
+    {
+        Guid playerId = await SetupForSpyglassStartAction();
+        await Mediator.Send(new ExecuteActionRequest
+        {
+            ActionName = ActionNames.SpyglassProductionStart,
+            PlayerId = playerId,
+        });
+
+
+        GetActionsResult actions = await Mediator.Send(new GetActionsRequest
+        {
+            PlayerId = playerId,
+        });
+
+        Assert.True(actions.Actions.Any());
+    }
+
 
     private async Task<Guid> SetupForSpyglassStartAction()
     {

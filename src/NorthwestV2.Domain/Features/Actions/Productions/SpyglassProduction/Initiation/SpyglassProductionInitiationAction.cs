@@ -4,7 +4,7 @@ using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.Instant;
 using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.Requirements;
 using AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.Items;
 
-namespace AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.Stages._1_Start;
+namespace AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.Initiation;
 
 public class SpyglassProductionInitiationAction
 {
@@ -25,8 +25,6 @@ public class SpyglassProductionInitiationAction
         PlayerHasItemsRequirement isHoldingScrap =
             new PlayerHasItemsRequirement(player, REQUIRED_ITEM_TYPE_SPYGLASS_START);
         // TODO: Chjange it, jsut for debug
-
-
         // TODO: TimePoints requirements 
         InstantActionAvailability availability = new InstantActionAvailability
         {
@@ -48,12 +46,5 @@ public class SpyglassProductionInitiationAction
 
         // Add to room's inventory. 
         player.Room.Inventory.Add(createdUnfinishedSpyglass);
-    }
-
-    public void Cancel()
-    {
-        // Destroy the unfinished item
-
-        // Release the locked items back into the room's inventory
     }
 }

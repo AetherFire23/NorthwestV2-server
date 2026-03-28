@@ -3,8 +3,9 @@ using AetherFire23.ERP.Domain.Features.Actions.Core;
 using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.Instant;
 using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.Requirements;
 
-namespace AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.Stages._2_Second;
+namespace AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.ContributionToStages._2_Second;
 
+// TODO: Should be under Contribution action
 public class SpyglassProductionSecondStageAction
 {
     public const int TIME_POINTS_REQUIREMENTS_SPYGLASS_SECONDSTAGE_ACTION = 2;

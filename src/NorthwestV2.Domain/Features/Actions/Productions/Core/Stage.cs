@@ -1,9 +1,7 @@
 ﻿using AetherFire23.ERP.Domain.Entity;
-using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.Instant;
-using AetherFire23.ERP.Domain.Features.Actions.Productions.Core.Entities;
 using AetherFire23.ERP.Domain.Role;
 
-namespace AetherFire23.ERP.Domain.Features.Actions.Productions;
+namespace AetherFire23.ERP.Domain.Features.Actions.Productions.Core;
 
 public abstract class Stage
 {

@@ -1,5 +1,7 @@
 using System.Text.Json.Serialization;
 using AetherFire23.ERP.Domain.Entity;
+using AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.ContributionToStages._2_Second;
+using AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.ContributionToStages._3_Third;
 using AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.Stages._1_Start;
 
 namespace AetherFire23.ERP.Domain.Features.Actions.Productions.Core;
@@ -14,6 +16,8 @@ namespace AetherFire23.ERP.Domain.Features.Actions.Productions.Core;
 /// </summary>
 [JsonPolymorphic(TypeDiscriminatorPropertyName = "$type")]
 [JsonDerivedType(typeof(SpyglassFirstStageData), "spyglass_first_stage")]
+[JsonDerivedType(typeof(SpyglassSecondStageData), "spyglass_second_stage")]
+[JsonDerivedType(typeof(SpyglassProductionThirdStageData), "spyglass_third_stage")]
 public record StageBase
 {
     public string StageName { get; set; }
@@ -39,6 +43,7 @@ public record StageBase
     }
 
     public bool IsStageEnded => Contributions >= End;
+    public bool IsProductionComplete => this.Contributions == End && GetNextStage() is null;
 
     public StageBase GetNextStageIfStageEnded()
     {
@@ -56,9 +61,6 @@ public record StageBase
 
         return nextStage;
     }
-
-    // TODO: ? Move contribute into player or productionItem so it can handle the swapping of stages. 
-
 
     protected virtual StageBase? GetNextStage()
     {

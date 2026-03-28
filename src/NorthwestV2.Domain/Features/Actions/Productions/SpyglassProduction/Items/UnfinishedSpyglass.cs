@@ -22,7 +22,7 @@ public class UnfinishedSpyglass : ProductionItemBase
     /// <returns></returns>
     public static UnfinishedSpyglass CreateFromItemsAndLock(Scrap scrap)
     {
-        SpyglassFirstStageData spyglassFirstStageData = new SpyglassFirstStageData()
+        SpyglassFirstStageData spyglassFirstStageData = new SpyglassFirstStageData
         {
             Contributions = 0,
             End = 8,

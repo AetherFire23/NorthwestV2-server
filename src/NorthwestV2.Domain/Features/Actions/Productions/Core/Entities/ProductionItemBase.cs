@@ -43,6 +43,15 @@ public class ProductionItemBase : ItemBase
         }
 
         player.ActionPoints--;
+
+        // Increment the current stage by 1 
         this.CurrentStage = this.CurrentStage with { Contributions = this.CurrentStage.Contributions + 1 };
+
+
+        if (this.CurrentStage.IsStageEnded && !CurrentStage.IsProductionComplete)
+        {
+            var nextStage = CurrentStage.GetNextStageIfStageEnded();
+            this.CurrentStage = nextStage;
+        }
     }
 }

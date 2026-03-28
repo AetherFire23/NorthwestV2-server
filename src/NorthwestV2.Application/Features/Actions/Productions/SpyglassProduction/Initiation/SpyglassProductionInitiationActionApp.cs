@@ -1,6 +1,7 @@
 ﻿using AetherFire23.ERP.Domain.Entity;
 using AetherFire23.ERP.Domain.Features.Actions.Core;
 using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.Instant;
+using AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.Initiation;
 using NorthwestV2.Application.Features.Actions.Core.Bases;
 using NorthwestV2.Application.Repositories;
 using NorthwestV2.Application.UseCases.GameActions.Command.ExecuteAction;
@@ -10,13 +11,13 @@ namespace NorthwestV2.Application.Features.Actions.Productions.SpyglassProductio
 
 public class SpyglassProductionInitiationActionApp : InstantActionBase
 {
-    private readonly AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.Stages._1_Start.SpyglassProductionInitiationAction _spyglassProductionInitiationAction;
+    private readonly SpyglassProductionInitiationAction _spyglassProductionInitiationAction;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IPlayerRepository _playerRepository;
     private readonly IProductionRepository _productionRepository;
     // TODO: production repository 
 
-    public SpyglassProductionInitiationActionApp(AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.Stages._1_Start.SpyglassProductionInitiationAction spyglassProductionInitiationAction,
+    public SpyglassProductionInitiationActionApp(SpyglassProductionInitiationAction spyglassProductionInitiationAction,
         IUnitOfWork unitOfWork,
         IPlayerRepository playerRepository, IProductionRepository productionRepository) : base(
         ActionNames
