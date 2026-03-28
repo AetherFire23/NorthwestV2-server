@@ -236,7 +236,7 @@ public class SpyglassProductionInitiationAppTest : NorthwestIntegrationTestBase
         }
 
         this._scope = this.RootServiceProvider.CreateScope();
-        Player playerAfter = Context.Players.Include(x=> x.Inventory).First(x => x.Id == playerId);
+        Player playerAfter = Context.Players.Include(x => x.Inventory).First(x => x.Id == playerId);
         Assert.True(playerAfter.Inventory.Items.Any(x => x.ItemType == ItemTypes.Spyglass));
     }
 

@@ -19,4 +19,5 @@ public static class ActionNames
     public const string SpyglassContribution = "SpyglassContribution";
 
     // public const string SpyglassProduction = "Spyglass Production";
+    public static string HammerProductionInitiation => "Initiate hammer production";
 }
