@@ -4,6 +4,7 @@ using NorthwestV2.Application.Features.Actions.Core;
 using NorthwestV2.Application.Features.Actions.Debug;
 using NorthwestV2.Application.Features.Actions.General.Combat;
 using NorthwestV2.Application.Features.Actions.General.Movement;
+using NorthwestV2.Application.Features.Actions.Productions.SpyglassProduction.ContributionToStages._1_Start;
 using NorthwestV2.Application.Features.Actions.Productions.SpyglassProduction.Stages._1_Start;
 using NorthwestV2.Application.Features.Actions.Productions.SpyglassProduction.Stages._2_Second;
 using NorthwestV2.Application.UseCases.Authentication.Login.Tokens;
@@ -21,7 +22,8 @@ public class ApplicationInstaller
         serviceCollection.AddScoped<DebugTargetsActionApp>();
         serviceCollection.AddScoped<ChangeRoomApp>();
         serviceCollection.AddScoped<JwtTokenService>();
-        serviceCollection.AddScoped<SpyglassStartProductionApp>();
+        serviceCollection.AddScoped<SpyglassProductionInitiationActionApp>();
         serviceCollection.AddScoped<SpyglassSecondStageApp>();
+        serviceCollection.AddScoped<SpyglassProductionContributionActionApp>();
     }
 }

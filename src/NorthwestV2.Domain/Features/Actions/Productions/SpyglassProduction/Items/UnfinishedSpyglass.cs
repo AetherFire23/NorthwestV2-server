@@ -7,18 +7,29 @@ namespace AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProductio
 
 public class UnfinishedSpyglass : ProductionItemBase
 {
-    // public StageBase CurrentStage { get; set; }
-
-    public UnfinishedSpyglass() : base(ItemTypes.UnfinishedSpyglass, 1)
+    public UnfinishedSpyglass()
     {
-        // this.CurrentStage = stage;
     }
 
+    public UnfinishedSpyglass(StageBase initialFirstStage) : base(ItemTypes.UnfinishedSpyglass, 1, initialFirstStage)
+    {
+    }
+    
+    /// <summary>
+    /// Creates an unfinished spyglass for the production of the Spyglass item. 
+    /// </summary>
+    /// <param name="scrap">The required item to create an unfinished spyglass</param>
+    /// <returns></returns>
     public static UnfinishedSpyglass CreateFromItemsAndLock(Scrap scrap)
     {
-        SpyglassFirstStageData spyglassFirstStage = new SpyglassFirstStageData();
-
-        UnfinishedSpyglass unfinishedSpyglass = new UnfinishedSpyglass();
+        SpyglassFirstStageData spyglassFirstStageData = new SpyglassFirstStageData()
+        {
+            Contributions = 0,
+            End = 8,
+            StageName = "first stage "
+        };
+        
+        UnfinishedSpyglass unfinishedSpyglass = new UnfinishedSpyglass(spyglassFirstStageData);
 
         unfinishedSpyglass.LockForProduction(scrap);
         

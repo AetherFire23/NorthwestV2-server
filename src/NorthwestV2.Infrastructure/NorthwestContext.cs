@@ -1,7 +1,10 @@
-﻿using AetherFire23.ERP.Domain.Entity;
+﻿using System.Text.Json;
+using AetherFire23.ERP.Domain.Entity;
+using AetherFire23.ERP.Domain.Features.Actions.Productions.Core;
 using AetherFire23.ERP.Domain.Features.Actions.Productions.Core.Entities;
 using AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.Items;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using NorthwestV2.Application;
 
 namespace NorthwestV2.Infrastructure;
@@ -23,10 +26,12 @@ public class NorthwestContext : DbContext, IUnitOfWork
     public DbSet<Log> Logs { get; set; }
     public DbSet<Inventory> Inventories { get; set; }
 
+    
     public NorthwestContext(DbContextOptions<NorthwestContext> options) : base(options)
     {
     }
 
+    // TODO: Do a configuration file for each entity 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<ItemBase>()
@@ -35,6 +40,25 @@ public class NorthwestContext : DbContext, IUnitOfWork
             .HasValue<NormalItemBase>("NormalItemBase")
             .HasValue<ProductionItemBase>("ProductionItemBase")
             .HasValue<UnfinishedSpyglass>("UnfinishedSpyglass");
+
+        // modelBuilder.Entity<ProductionItemBase>(x => { x.OwnsOne(x => x.CurrentStage, c =>
+        // {
+        //     c.ToJson();
+        // }); });
+        
+        modelBuilder.Entity<ProductionItemBase>(x =>
+        {
+            x.Property(x => x.CurrentStage)
+                .HasConversion(
+                    v => JsonSerializer.Serialize(v, (JsonSerializerOptions?)null),
+                    v => JsonSerializer.Deserialize<StageBase>(v, (JsonSerializerOptions?)null)!
+                );
+            // .Metadata.SetValueComparer(new ValueComparer<StageBase>(
+            //     (c1, c2) => JsonSerializer.Serialize(c1, (JsonSerializerOptions?)null) == JsonSerializer.Serialize(c2, (JsonSerializerOptions?)null),
+            //     c => c == null ? 0 : JsonSerializer.Serialize(c, (JsonSerializerOptions?)null).GetHashCode(),
+            //     c => JsonSerializer.Deserialize<StageBase>(JsonSerializer.Serialize(c, (JsonSerializerOptions?)null), (JsonSerializerOptions?)null)!));
+        });
+        // TODO: Automatic discovery of children types of items 
     }
 
     public override async Task<int> SaveChangesAsync(CancellationToken ct = default)

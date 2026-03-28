@@ -89,7 +89,9 @@ public partial class Program
             x.AllowCredentials(); // cookies allowed
         });
         app.MapControllers();
-        AppComposer.Initialize(app.Services);
+        
+        // TODO: baby TeBeCo the sugar cane guy told me to do async for reasonz
+         AppComposer.Initialize(app.Services);
 
         app.MapSwagger();
 

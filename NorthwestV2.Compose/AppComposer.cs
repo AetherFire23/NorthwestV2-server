@@ -20,6 +20,6 @@ public static class AppComposer
 
     public static void Initialize(IServiceProvider serviceProvider)
     {
-        NorthwestContextInstaller.Initialize(serviceProvider);
+         NorthwestContextInstaller.Initialize(serviceProvider);
     }
 }

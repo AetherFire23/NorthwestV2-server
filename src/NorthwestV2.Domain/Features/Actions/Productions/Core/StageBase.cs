@@ -1,11 +1,35 @@
+using System.Text.Json.Serialization;
 using AetherFire23.ERP.Domain.Entity;
+using AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.Stages._1_Start;
 
 namespace AetherFire23.ERP.Domain.Features.Actions.Productions.Core;
 
-public abstract class StageBase
+/// <summary>
+/// Each production is divided into one or several stages; each with its own TP quota and room requirement.
+/// Contributions are permanent, but bound to the ProductionItem.
+/// When one stage is complete, the next becomes immediately available.
+///
+/// Also, it's a record. The reason is that it's getting saved inside of entity framework.
+/// I need immutable updates for records. Ef core checks only reference equality for 
+/// </summary>
+[JsonPolymorphic(TypeDiscriminatorPropertyName = "$type")]
+[JsonDerivedType(typeof(SpyglassFirstStageData), "spyglass_first_stage")]
+public record StageBase
 {
     public string StageName { get; set; }
-    public int Contributions { get; set; } = 0;
+    public int Contributions { get; set; }
+
+    [JsonConstructor]
+    public StageBase(string stageName, int contributions, int end)
+    {
+        StageName = stageName;
+        Contributions = contributions;
+        End = end;
+    }
+
+    /// <summary>
+    /// The required time points to end the current stage. 
+    /// </summary>
     public int End { get; set; }
 
     public StageBase(int end, string stageName)
@@ -33,16 +57,8 @@ public abstract class StageBase
         return nextStage;
     }
 
-    public void Contribute(Player player)
-    {
-        if (player.ActionPoints - 1 == -1)
-        {
-            throw new Exception("Player does not have enough points to contribute.");
-        }
+    // TODO: ? Move contribute into player or productionItem so it can handle the swapping of stages. 
 
-        player.ActionPoints--;
-        this.Contributions++;
-    }
 
     protected virtual StageBase? GetNextStage()
     {

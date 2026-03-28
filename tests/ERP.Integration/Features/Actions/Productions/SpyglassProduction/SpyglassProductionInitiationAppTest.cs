@@ -5,8 +5,6 @@ using AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.St
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using NorthwestV2.Application.EfCoreExtensions;
-using NorthwestV2.Application.Features.Actions.Productions.SpyglassProduction;
 using NorthwestV2.Application.Features.Actions.Productions.SpyglassProduction.Stages._1_Start;
 using NorthwestV2.Application.Repositories;
 using NorthwestV2.Application.UseCases.GameActions.Command.ExecuteAction;
@@ -15,10 +13,10 @@ using Xunit.Abstractions;
 
 namespace NorthwestV2.Integration.Features.Actions.Productions.SpyglassProduction;
 
-[TestSubject(typeof(SpyglassStartProductionApp))]
-public class SpyglassStartProductionAppTest : NorthwestIntegrationTestBase
+[TestSubject(typeof(SpyglassProductionInitiationActionApp))]
+public class SpyglassProductionInitiationAppTest : NorthwestIntegrationTestBase
 {
-    public SpyglassStartProductionAppTest(ITestOutputHelper output) : base(output)
+    public SpyglassProductionInitiationAppTest(ITestOutputHelper output) : base(output)
     {
     }
     /*
@@ -45,7 +43,8 @@ public class SpyglassStartProductionAppTest : NorthwestIntegrationTestBase
     }
 
     [Fact]
-    public async Task GivenPlayerWithScrapInInventory_WhenActionExecuted_ThenIsUnfinishedSpyglassCreated()
+    public async Task
+        GivenPlayerWithScrapInInventory_WhenActionExecuted_ThenIsUnfinishedSpyglassCreatedInRoomsInventory()
     {
         Guid playerId = await SetupForSpyglassStartAction();
         var actions = await Mediator.Send(new ExecuteActionRequest()
@@ -66,10 +65,11 @@ public class SpyglassStartProductionAppTest : NorthwestIntegrationTestBase
 
     // TODO: Test for checking that a first stage is created inside the unfinished spyglass.
     [Fact]
-    public async Task GivenUnfinishedSpyglass_WhenInitiated_ThenHasFirstStage()
+    public async Task GivenUnfinishedSpyglass_WhenAfterInitiated_ThenHasItsOwnFirstStage()
     {
         Guid playerId = await SetupForSpyglassStartAction();
-        var actions = await Mediator.Send(new ExecuteActionRequest()
+
+        await Mediator.Send(new ExecuteActionRequest
         {
             ActionName = ActionNames.SpyglassProductionStart,
             PlayerId = playerId,
@@ -81,13 +81,38 @@ public class SpyglassStartProductionAppTest : NorthwestIntegrationTestBase
             .Include(x => x.Inventory)
             .ThenInclude(x => x.Items)
             .First(x => x.Id == player.RoomId);
-
-        // TODO: make sure that ef core understands Stages. I guess it can be a DbSet<> But Technicallyt it is just a tracker for a DbSet<>
+        // TODO: make sure that ef core understands Stages. I guess it can be a DbSet<> But Technicallyt it is just a tracker for an integer
         // Also, it would be interesting to know if sql can actually handle all the plymoprphism there 
         UnfinishedSpyglass unfinishedSpyglass = room.Inventory.Find(ItemTypes.UnfinishedSpyglass) as UnfinishedSpyglass;
-        // Assert.True(unfinishedSpyglass.CurrentStage is SpyglassFirstStageData);
+        Assert.True(unfinishedSpyglass.CurrentStage is SpyglassFirstStageData);
     }
 
+    [Fact]
+    public async Task GivenFirstStage_WhenContributingOnce_ThenHasPointsContributed()
+    {
+        Guid playerId = await SetupForSpyglassStartAction();
+        await Mediator.Send(new ExecuteActionRequest
+        {
+            ActionName = ActionNames.SpyglassProductionStart,
+            PlayerId = playerId,
+        });
+
+        await Mediator.Send(new ExecuteActionRequest
+        {
+            ActionName = ActionNames.SpyglassContribution,
+            PlayerId = playerId,
+        });
+
+        this._scope = this.RootServiceProvider.CreateScope();
+        Player player = Context.Players.First(x => x.Id == playerId);
+        Room room = Context.Rooms
+            .Include(x => x.Inventory)
+            .ThenInclude(x => x.Items)
+            .First(x => x.Id == player.RoomId);
+        UnfinishedSpyglass unfinishedSpyglass = room.Inventory.Find(ItemTypes.UnfinishedSpyglass) as UnfinishedSpyglass;
+        
+        Assert.Equal(1, unfinishedSpyglass.CurrentStage.Contributions);
+    }
     // TODO: Combine the new SpyglassFirstSTageData
 
 
@@ -99,7 +124,7 @@ public class SpyglassStartProductionAppTest : NorthwestIntegrationTestBase
     {
         GameDataSeed gameDataSeed = await ShareSeeds.ArrangeUntilGameCreation(this.Mediator, this.Context);
         Guid playerId = await TeleportPlayerTo(gameDataSeed,
-            SpyglassProductionFirstStageAction.REQUIRED_ROOM_SPYGLASS_START);
+            SpyglassProductionInitiationAction.REQUIRED_ROOM_SPYGLASS_START);
         return playerId;
     }
 
@@ -116,6 +141,4 @@ public class SpyglassStartProductionAppTest : NorthwestIntegrationTestBase
         await Context.SaveChangesAsync();
         return playerId;
     }
-
-    // todo: Test that we can execute the first stage
 }

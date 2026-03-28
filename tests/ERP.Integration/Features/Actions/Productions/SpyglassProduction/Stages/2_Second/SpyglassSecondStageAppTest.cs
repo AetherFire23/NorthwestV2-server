@@ -42,7 +42,7 @@ public class SpyglassSecondStageAppTest : NorthwestIntegrationTestBase
     {
         GameDataSeed gameDataSeed = await ShareSeeds.ArrangeUntilGameCreation(this.Mediator, this.Context);
         Guid playerId = await TeleportPlayerTo(gameDataSeed,
-            SpyglassProductionFirstStageAction.REQUIRED_ROOM_SPYGLASS_START);
+            SpyglassProductionInitiationAction.REQUIRED_ROOM_SPYGLASS_START);
         return playerId;
     }
 

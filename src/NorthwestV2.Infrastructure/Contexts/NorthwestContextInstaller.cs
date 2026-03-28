@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NorthwestV2.Application;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Infrastructure;
 
 namespace NorthwestV2.Infrastructure.Contexts;
 
@@ -22,13 +21,19 @@ public static class NorthwestContextInstaller
 
     public static void Initialize(IServiceProvider serviceProvider)
     {
-        using var scope = serviceProvider.CreateScope();
+        /*
+         * TeBeCo the white angel: 
+         * DisposeAsync vs normal dispoe
+         * proprely handles IO when reaching end of scope for stuff like seeding
+         * all-the-way-clean
+         */
+         using var scope = serviceProvider.CreateScope();
 
         var db = scope.ServiceProvider.GetRequiredService<NorthwestContext>();
 
         // No need to do EnsureDeleted because it will always be a clean-slate test container by default.
         // Method is virtual, override as needed. 
-        db.Database.Migrate();
+         db.Database.Migrate();
     }
 
 
