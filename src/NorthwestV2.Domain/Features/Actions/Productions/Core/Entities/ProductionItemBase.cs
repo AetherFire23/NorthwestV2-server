@@ -7,21 +7,21 @@ namespace AetherFire23.ERP.Domain.Features.Actions.Productions.Core.Entities;
 /// They have the accumulated Time points.
 /// Programmatically: they are unfinished items and contain at least a stage. 
 /// </summary>
-public class ProductionItemBase : ItemBase
+public abstract class ProductionItemBase : ItemBase
 {
     // TODO: Include a Stage 
     public List<ItemBase> LockedItems { get; set; }
 
-    public StageBase CurrentStage { get; set; }
+    public StageContributionBase CurrentStageContribution { get; set; }
     // TODO: Maybe move 
 
     public ProductionItemBase()
     {
     }
 
-    public ProductionItemBase(ItemTypes itemType, int carryValue, StageBase initialStage) : base(itemType, carryValue)
+    public ProductionItemBase(ItemTypes itemType, int carryValue, StageContributionBase initialStageContribution) : base(itemType, carryValue)
     {
-        this.CurrentStage = initialStage;
+        this.CurrentStageContribution = initialStageContribution;
     }
 
     public void LockForProduction(NormalItemBase other)
@@ -37,7 +37,8 @@ public class ProductionItemBase : ItemBase
 
     public void Contribute(Player player)
     {
-        if (player.ActionPoints - 1 == -1)
+        bool wouldHitPointsFallBelowZero = player.ActionPoints - 1 == -1;
+        if (wouldHitPointsFallBelowZero)
         {
             throw new Exception("Player does not have enough points to contribute.");
         }
@@ -45,13 +46,22 @@ public class ProductionItemBase : ItemBase
         player.ActionPoints--;
 
         // Increment the current stage by 1 
-        this.CurrentStage = this.CurrentStage with { Contributions = this.CurrentStage.Contributions + 1 };
+        this.CurrentStageContribution = this.CurrentStageContribution with { Contributions = this.CurrentStageContribution.Contributions + 1 };
 
-
-        if (this.CurrentStage.IsStageEnded && !CurrentStage.IsProductionComplete)
+        bool isCurrentStadedEndedButCurrentIsNotComplete =
+            this.CurrentStageContribution.IsStageEnded && !CurrentStageContribution.IsProductionComplete;
+        if (isCurrentStadedEndedButCurrentIsNotComplete)
         {
-            var nextStage = CurrentStage.GetNextStageIfStageEnded();
-            this.CurrentStage = nextStage;
+            var nextStage = CurrentStageContribution.GetNextStageIfStageEnded();
+            this.CurrentStageContribution = nextStage;
+        }
+
+
+        if (this.CurrentStageContribution.IsProductionComplete)
+        {
+            OnProductionCompleted(player);
         }
     }
+
+    public abstract void OnProductionCompleted(Player player);
 }

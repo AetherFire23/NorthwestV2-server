@@ -3,11 +3,11 @@ using AetherFire23.ERP.Domain.Features.Actions.Debg;
 using AetherFire23.ERP.Domain.Features.Actions.Debug;
 using AetherFire23.ERP.Domain.Features.Actions.General.Combat;
 using AetherFire23.ERP.Domain.Features.Actions.General.Movement;
+using AetherFire23.ERP.Domain.Features.Actions.Productions.HammerProduction.Initiation;
 using AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction;
 using AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.ContributionToStages;
 using AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.ContributionToStages._2_Second;
 using AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.Initiation;
-using AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.Stages._1_Start;
 using AetherFire23.ERP.Domain.GameStart;
 using AetherFire23.ERP.Domain.GameStart.RoleInitializations;
 using AetherFire23.ERP.Domain.GameStart.RoleInitializations.PlayerInitializers;
@@ -32,6 +32,7 @@ public static class DomainInstaller
         serviceCollection.AddScoped<SpyglassProductionSecondStageAction>();
         serviceCollection.AddScoped<SpyglassProductionInitiationAction>();
         serviceCollection.AddScoped<SpyglassProductionContributionAction>();
+        serviceCollection.AddScoped<HammerProductionInitiation>();
 
         serviceCollection.AddScoped<IRandomProvider, RealRandom>();
         InstallActionServices(serviceCollection);
