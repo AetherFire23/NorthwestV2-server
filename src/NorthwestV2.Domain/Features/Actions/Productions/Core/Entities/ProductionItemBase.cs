@@ -10,7 +10,7 @@ namespace AetherFire23.ERP.Domain.Features.Actions.Productions.Core.Entities;
 public abstract class ProductionItemBase : ItemBase
 {
     // TODO: Include a Stage 
-    public List<ItemBase> LockedItems { get; set; }
+    public List<ItemBase> LockedItems { get; set; } = [];
 
     public StageContributionBase CurrentStageContribution { get; set; }
     // TODO: Maybe move 
@@ -19,7 +19,8 @@ public abstract class ProductionItemBase : ItemBase
     {
     }
 
-    public ProductionItemBase(ItemTypes itemType, int carryValue, StageContributionBase initialStageContribution) : base(itemType, carryValue)
+    public ProductionItemBase(ItemTypes itemType, int carryValue, StageContributionBase initialStageContribution) :
+        base(itemType, carryValue)
     {
         this.CurrentStageContribution = initialStageContribution;
     }
@@ -32,7 +33,9 @@ public abstract class ProductionItemBase : ItemBase
         }
 
         other.IsLocked = true;
-        other.ProductionItem = this;
+        other.Inventory = null;
+
+        this.LockedItems.Add(other);
     }
 
     public void Contribute(Player player)
@@ -46,7 +49,10 @@ public abstract class ProductionItemBase : ItemBase
         player.ActionPoints--;
 
         // Increment the current stage by 1 
-        this.CurrentStageContribution = this.CurrentStageContribution with { Contributions = this.CurrentStageContribution.Contributions + 1 };
+        this.CurrentStageContribution = this.CurrentStageContribution with
+        {
+            Contributions = this.CurrentStageContribution.Contributions + 1
+        };
 
         bool isCurrentStadedEndedButCurrentIsNotComplete =
             this.CurrentStageContribution.IsStageEnded && !CurrentStageContribution.IsProductionComplete;

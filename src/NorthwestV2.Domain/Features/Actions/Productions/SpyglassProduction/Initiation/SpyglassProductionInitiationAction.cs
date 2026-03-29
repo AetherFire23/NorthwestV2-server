@@ -24,8 +24,8 @@ public class SpyglassProductionInitiationAction
         // TODO: Room has items Requirement
         PlayerHasItemsRequirement isHoldingScrap =
             new PlayerHasItemsRequirement(player, REQUIRED_ITEM_TYPE_SPYGLASS_START);
-        // TODO: Chjange it, jsut for debug
-        // TODO: TimePoints requirements 
+
+        
         InstantActionAvailability availability = new InstantActionAvailability
         {
             ActionName = ActionNames.SpyglassProductionStart,
@@ -36,7 +36,6 @@ public class SpyglassProductionInitiationAction
         return availability;
     }
 
-    // TODO: TEST IF ALL THE ADDINGS OF ALL THE ENTITIES ACTUALLY WORK ! 
     public void InitiateProduction(Player player)
     {
         Scrap scrapItemInPlayersInventory = player.Inventory.Find<Scrap>();

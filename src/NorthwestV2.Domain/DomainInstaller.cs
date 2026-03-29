@@ -6,7 +6,6 @@ using AetherFire23.ERP.Domain.Features.Actions.General.Movement;
 using AetherFire23.ERP.Domain.Features.Actions.Productions.HammerProduction.Initiation;
 using AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction;
 using AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.ContributionToStages;
-using AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.ContributionToStages._2_Second;
 using AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.Initiation;
 using AetherFire23.ERP.Domain.GameStart;
 using AetherFire23.ERP.Domain.GameStart.RoleInitializations;

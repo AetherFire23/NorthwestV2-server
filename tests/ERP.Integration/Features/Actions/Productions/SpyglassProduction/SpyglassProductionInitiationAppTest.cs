@@ -1,5 +1,6 @@
 using AetherFire23.ERP.Domain.Entity;
 using AetherFire23.ERP.Domain.Features.Actions.Core;
+using AetherFire23.ERP.Domain.Features.Actions.Productions.Core.Entities;
 using AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.ContributionToStages.Stages;
 using AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.Initiation;
 using AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.Items;
@@ -52,6 +53,8 @@ public class SpyglassProductionInitiationAppTest : NorthwestIntegrationTestBase
         Room room = Context.Rooms
             .Include(x => x.Inventory)
             .ThenInclude(x => x.Items)
+            .ThenInclude(x =>
+                ((ProductionItemBase)x).LockedItems) // Trick to make sub-types collections load inside of ef. 
             .First(x => x.Id == player.RoomId);
 
         Assert.True(room.Inventory.Items.Any(x => x.ItemType == ItemTypes.UnfinishedSpyglass));
@@ -76,6 +79,28 @@ public class SpyglassProductionInitiationAppTest : NorthwestIntegrationTestBase
             .First(x => x.Id == player.RoomId);
         UnfinishedSpyglass unfinishedSpyglass = room.Inventory.Find(ItemTypes.UnfinishedSpyglass) as UnfinishedSpyglass;
         Assert.True(unfinishedSpyglass.CurrentStageContribution is SpyglassFirstStageContributionData);
+    }
+
+    [Fact]
+    public async Task GivenUnfinishedSpyglass_WhenAfterInitiated_ThenHasScrapLockedItem()
+    {
+        Guid playerId = await SetupForSpyglassStartAction();
+
+        await Mediator.Send(new ExecuteActionRequest
+        {
+            ActionName = ActionNames.SpyglassProductionStart,
+            PlayerId = playerId,
+        });
+
+        this._scope = this.RootServiceProvider.CreateScope();
+        Player player = Context.Players.First(x => x.Id == playerId);
+        Room room = Context.Rooms
+            .Include(x => x.Inventory)
+            .ThenInclude(x => x.Items)
+            .ThenInclude(x => ((ProductionItemBase)x).LockedItems)
+            .First(x => x.Id == player.RoomId);
+        UnfinishedSpyglass unfinishedSpyglass = (UnfinishedSpyglass)room.Inventory.Find(ItemTypes.UnfinishedSpyglass);
+        Assert.True(unfinishedSpyglass.LockedItems.Any(x => x.ItemType == ItemTypes.Scrap));
     }
 
 
