@@ -9,7 +9,6 @@ using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NorthwestV2.Application.Features.Actions.Productions.SpyglassProduction.Stages._1_Start;
-using NorthwestV2.Application.Features.Actions.Productions.SpyglassProduction.Stages._2_Second;
 using NorthwestV2.Application.Repositories;
 using NorthwestV2.Application.UseCases.GameActions.Command.ExecuteAction;
 using NorthwestV2.Application.UseCases.GameActions.Queries.GetActions;

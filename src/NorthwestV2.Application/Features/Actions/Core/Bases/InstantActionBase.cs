@@ -23,5 +23,5 @@ public abstract class InstantActionBase : ActionBase
     /// </summary>
     /// <param name="request">The request containing player and game context.</param>
     /// <returns>An availability result describing whether the action can be executed.</returns>
-    public abstract Task<InstantActionAvailability> GetAvailabilityResult(GetActionsRequest request);
+    public abstract Task<InstantActionAvailability?> GetAvailabilityResult(GetActionsRequest request);
 }

@@ -7,7 +7,7 @@ using NorthwestV2.Application.Repositories;
 using NorthwestV2.Application.UseCases.GameActions.Command.ExecuteAction;
 using NorthwestV2.Application.UseCases.GameActions.Queries.GetActions;
 
-namespace NorthwestV2.Application.Features.Actions.Productions.SpyglassProduction.Stages._2_Second;
+namespace NorthwestV2.Application.Features.Actions.Productions.SpyglassProduction.ContributionToStages._2_Second;
 
 public class SpyglassSecondStageApp : InstantActionBase
 {

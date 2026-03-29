@@ -7,7 +7,7 @@ using AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.St
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using NorthwestV2.Application.Features.Actions.Productions.SpyglassProduction.Stages._2_Second;
+using NorthwestV2.Application.Features.Actions.Productions.SpyglassProduction.ContributionToStages._2_Second;
 using NorthwestV2.Application.Repositories;
 using NorthwestV2.Application.UseCases.GameActions.Command.ExecuteAction;
 using Xunit.Abstractions;

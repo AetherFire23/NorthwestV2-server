@@ -10,6 +10,16 @@ public class SpyglassProductionContributionAction
 {
     public InstantActionAvailability DetermineAvailability(Player player)
     {
+        /*
+         *  There is an issue where tehre could be 2 different unfinishedSpyglasess.
+         * It's highly unlikely that this would be the case, however, in that case I am just picking the spyglass with
+         * the highest Contributions.
+         * Since there is just one spyglass production' there is an increased responsibility to build the
+         * appropraite availability. ie :
+         */
+
+        // Get the current stage (If it exists)
+        
         RoomHasItemRequirement isRoomHavinunfinishedspyglass =
             new RoomHasItemRequirement(player.Room, ItemTypes.UnfinishedSpyglass);
 
