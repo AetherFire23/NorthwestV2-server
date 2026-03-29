@@ -37,6 +37,7 @@ public class SpyglassProductionInitiationAppTest : NorthwestIntegrationTestBase
         Assert.True(allRequirementsFulfilled, "All requirements should be fulfilled to start spyglass production");
     }
 
+
     [Fact]
     public async Task
         GivenPlayerWithScrapInInventory_WhenActionExecuted_ThenIsUnfinishedSpyglassCreatedInRoomsInventory()
@@ -49,7 +50,8 @@ public class SpyglassProductionInitiationAppTest : NorthwestIntegrationTestBase
         });
 
         this._scope = this.RootServiceProvider.CreateScope();
-        Player player = Context.Players.First(x => x.Id == playerId);
+        Player player = Context.Players.Include(x => x.Inventory).ThenInclude(x => x.Items)
+            .First(x => x.Id == playerId);
         Room room = Context.Rooms
             .Include(x => x.Inventory)
             .ThenInclude(x => x.Items)
@@ -102,7 +104,6 @@ public class SpyglassProductionInitiationAppTest : NorthwestIntegrationTestBase
         UnfinishedSpyglass unfinishedSpyglass = (UnfinishedSpyglass)room.Inventory.Find(ItemTypes.UnfinishedSpyglass);
         Assert.True(unfinishedSpyglass.LockedItems.Any(x => x.ItemType == ItemTypes.Scrap));
     }
-
 
     private async Task<Guid> SetupForSpyglassStartAction()
     {

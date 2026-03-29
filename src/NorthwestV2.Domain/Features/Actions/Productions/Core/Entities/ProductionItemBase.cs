@@ -27,17 +27,29 @@ public abstract class ProductionItemBase : ItemBase
 
     public void LockForProduction(NormalItemBase other)
     {
+        if (other.Inventory is null || other.Inventory.Items.Count == 0)
+        {
+            throw new Exception("Cannot remove from inventory if inventory is not loaded;");
+        }
+
         if (other.IsLocked)
         {
             throw new Exception($"Cannot be locked twice - {other}");
         }
 
+        // removes the item from the room's inventory ( exists only by virtue of being a locked item. of this object)
         other.IsLocked = true;
-        other.Inventory = null;
+        other.Inventory.Items.Remove(other);
 
         this.LockedItems.Add(other);
     }
 
+    /*
+     * TODO: Add specialized TP.
+     * The feature is kinda awkward because the points *coints* are tripled. So basically the requirement is dynamic :
+     * If not of the given role; then the cost is 3. ( but it would just be increased by 1 ) to not fuck up the logic.
+     * But actually I just
+     */
     public void Contribute(Player player)
     {
         bool wouldHitPointsFallBelowZero = player.ActionPoints - 1 == -1;
@@ -62,12 +74,15 @@ public abstract class ProductionItemBase : ItemBase
             this.CurrentStageContribution = nextStage;
         }
 
-
         if (this.CurrentStageContribution.IsProductionComplete)
         {
             OnProductionCompleted(player);
         }
     }
 
+    // TODO: DELETE THE PRODUCTION ITEMS ON COMPLETION
+    // TODO: PLAYER ACTUALLY PICKS UP THE ITEM (NOT THE ROOM)
+    //TODO: ITEM CANCELLATION ( ALL THE SAME FOR ALL ITEMS SO...
+    
     public abstract void OnProductionCompleted(Player player);
 }
