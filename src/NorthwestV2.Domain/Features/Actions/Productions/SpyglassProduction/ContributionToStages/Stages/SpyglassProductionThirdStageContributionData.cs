@@ -7,7 +7,8 @@ namespace AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProductio
 public record SpyglassProductionThirdStageContributionData : StageContributionBase
 {
     public const int SPYGLASS_THIRD_STAGE_CONTRIBUTION_LIMIT = 15;
-    public const string DESCRIPTION = "Third stage";
+    public const string DESCRIPTION = "Third stage - final fitting and reinforcement";
+    public const RoomEnum REQUIRED_ROOM = RoomEnum.Workshop;
 
     public SpyglassProductionThirdStageContributionData() : base(SPYGLASS_THIRD_STAGE_CONTRIBUTION_LIMIT,
         DESCRIPTION)
@@ -16,6 +17,15 @@ public record SpyglassProductionThirdStageContributionData : StageContributionBa
 
     public override List<ActionRequirement> GetRequirements(Player player)
     {
-        return [];
+        RoomHasItemRequirement isRoomHavingUnfinishedSpyglass =
+            new RoomHasItemRequirement(player.Room, ItemTypes.UnfinishedSpyglass);
+
+        PlayerHasTimePointsRequirement playerHasTimePointsRequirement =
+            PlayerHasTimePointsRequirement.Create(player, 1);
+
+        PlayerInRoomRequirement playerInWorkshopRequirement =
+            new PlayerInRoomRequirement(player, REQUIRED_ROOM);
+
+        return [playerInWorkshopRequirement, isRoomHavingUnfinishedSpyglass, playerHasTimePointsRequirement];
     }
 }

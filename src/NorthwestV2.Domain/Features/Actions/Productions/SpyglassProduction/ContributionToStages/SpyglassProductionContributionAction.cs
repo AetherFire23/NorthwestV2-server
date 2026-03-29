@@ -32,14 +32,11 @@ public class SpyglassProductionContributionAction
 
         List<ActionRequirement> currentRequirements = contributions.GetRequirements(player);
 
-        RoomHasItemRequirement isRoomHavinunfinishedspyglass =
-            new RoomHasItemRequirement(player.Room, ItemTypes.UnfinishedSpyglass);
-
         InstantActionAvailability availability = new InstantActionAvailability
         {
             ActionName = ActionNames.SpyglassContribution,
-            DisplayName = $"{contributions.StageName}",
-            ActionRequirements = currentRequirements
+            DisplayName = contributions.StageName,
+            ActionRequirements = currentRequirements,
         };
 
         return availability;

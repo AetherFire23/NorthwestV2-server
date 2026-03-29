@@ -4,7 +4,6 @@ namespace AetherFire23.ERP.Domain.Features.Actions.Core.Availability.Requirement
 
 public class PlayerInRoomRequirement : ActionRequirement
 {
-
     public PlayerInRoomRequirement(Player player, RoomEnum requiredRoom)
     {
         this.IsFulfilled = player.Room.RoomEnum == requiredRoom;

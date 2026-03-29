@@ -20,8 +20,6 @@ public abstract class ActionAvailabilityBase
 {
     public required string ActionName { get; set; }
 
-    public bool IsVisible { get; set; } = false;
-
     public List<ActionRequirement> ActionRequirements { get; set; } =
     [
         new ActionRequirement

@@ -39,6 +39,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="Features\Actions\Productions\SpyglassProduction\Stages\" />
       <Folder Include="SeedHelpers\" />
       <Folder Include="UseCases\Lobbies\" />
       <Folder Include="UseCases\Lobbies\Commands\CreateLobby\" />

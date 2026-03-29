@@ -8,18 +8,18 @@ namespace AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProductio
 
 public class SpyglassProductionInitiationAction
 {
-    public const RoomEnum REQUIRED_ROOM_SPYGLASS_START = RoomEnum.Armory;
+    public const RoomEnum REQUIRED_ROOM_SPYGLASS_START = RoomEnum.Workshop;
     public const ItemTypes REQUIRED_ITEM_TYPE_SPYGLASS_START = ItemTypes.Scrap;
 
     /// <summary>
-    /// The required room is Armory. The player needs to have the spyglass in his inventory when
+    /// The required room is Workshop. The player needs to have the spyglass in his inventory when
     /// he wants to execute the action. 
     /// </summary>
     /// <param name="player"></param>
     /// <returns></returns>
     public InstantActionAvailability DetermineAvailability(Player player)
     {
-        PlayerInRoomRequirement isInArmory = new PlayerInRoomRequirement(player, REQUIRED_ROOM_SPYGLASS_START);
+        PlayerInRoomRequirement isInWorkshop = new PlayerInRoomRequirement(player, REQUIRED_ROOM_SPYGLASS_START);
 
         // TODO: Room has items Requirement
         PlayerHasItemsRequirement isHoldingScrap =
@@ -30,7 +30,7 @@ public class SpyglassProductionInitiationAction
         {
             ActionName = ActionNames.SpyglassProductionStart,
             DisplayName = "Start a spyglass production",
-            ActionRequirements = [isHoldingScrap, isInArmory]
+            ActionRequirements = [isHoldingScrap, isInWorkshop]
         };
 
         return availability;

@@ -29,7 +29,6 @@ public static class DomainInstaller
         serviceCollection.AddScoped<DebugTargetAction>();
         serviceCollection.AddScoped<DebugInstantAction>();
         serviceCollection.AddScoped<ChangeRoomAction>();
-        serviceCollection.AddScoped<SpyglassProductionSecondStageAction>();
         serviceCollection.AddScoped<SpyglassProductionInitiationAction>();
         serviceCollection.AddScoped<SpyglassProductionContributionAction>();
         serviceCollection.AddScoped<HammerProductionInitiation>();

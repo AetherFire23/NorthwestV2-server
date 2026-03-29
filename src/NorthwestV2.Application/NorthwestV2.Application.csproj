@@ -25,7 +25,6 @@
     <ItemGroup>
       <Folder Include="Features\Actions\ByRoles\" />
       <Folder Include="Features\Actions\General\TransferItems\" />
-      <Folder Include="Features\Actions\Productions\SpyglassProduction\ContributionToStages\3_Third\" />
     </ItemGroup>
 
 </Project>
