@@ -25,11 +25,11 @@ public class SpyglassProductionContributionActionApp : InstantActionBase
         _unitOfWork = unitOfWork;
     }
 
-    public override async Task<InstantActionAvailability> GetAvailabilityResult(GetActionsRequest request)
+    public override async Task<InstantActionAvailability?> GetAvailabilityResult(GetActionsRequest request)
     {
         Player player = await _playerRepository.GetPlayerWithRoomAndInventory(request.PlayerId);
 
-        InstantActionAvailability availability = _spyglassProductionContributionAction.DetermineAvailability(player);
+        InstantActionAvailability? availability = _spyglassProductionContributionAction.DetermineAvailability(player);
 
         return availability;
     }

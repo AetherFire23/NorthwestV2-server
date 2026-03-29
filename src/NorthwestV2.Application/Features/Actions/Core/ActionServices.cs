@@ -69,8 +69,12 @@ public class ActionServices
 
         foreach (ActionWithTargetsBase instantActionAppService in instantActions)
         {
-            ActionWithTargetsAvailability availability = await instantActionAppService.GetAvailabilityResult(request);
-            instantActionAvailabilities.Add(availability);
+            ActionWithTargetsAvailability? availability = await instantActionAppService.GetAvailabilityResult(request);
+
+            if (availability is not null)
+            {
+                instantActionAvailabilities.Add(availability);
+            }
         }
 
         return instantActionAvailabilities;

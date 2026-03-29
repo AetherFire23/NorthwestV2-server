@@ -9,5 +9,5 @@ public abstract class ActionWithTargetsBase : ActionBase
     {
     }
 
-    public abstract Task<ActionWithTargetsAvailability> GetAvailabilityResult(GetActionsRequest request);
+    public abstract Task<ActionWithTargetsAvailability?> GetAvailabilityResult(GetActionsRequest request);
 }

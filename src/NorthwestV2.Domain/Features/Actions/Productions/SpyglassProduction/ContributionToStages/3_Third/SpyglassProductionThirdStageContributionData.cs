@@ -1,3 +1,5 @@
+using AetherFire23.ERP.Domain.Entity;
+using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.Requirements;
 using AetherFire23.ERP.Domain.Features.Actions.Productions.Core;
 
 namespace AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.ContributionToStages._3_Third;
@@ -11,4 +13,9 @@ public record SpyglassProductionThirdStageContributionData : StageContributionBa
         THIRD_STAGE_NAME)
     {
     }
+
+    // public override List<ActionRequirement> GetRequirements(Player player)
+    // {
+    //     return [];
+    // }
 }

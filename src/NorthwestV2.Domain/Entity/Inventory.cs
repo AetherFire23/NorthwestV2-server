@@ -35,4 +35,10 @@ public class Inventory : EntityBase
     {
         this.Items.Add(itemBase);
     }
+
+    public void TakeOwnership(Inventory otherInventory, ItemBase toTake)
+    {
+        otherInventory.Items.Remove(toTake);
+        this.Items.Add(toTake);
+    }
 }

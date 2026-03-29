@@ -13,9 +13,6 @@ public abstract class ActionBase
     /// </summary>
     public string ActionName { get; private set; }
 
-
-
-
     /// <summary>
     /// Initializes a new action with the given database context and action name.
     /// </summary>

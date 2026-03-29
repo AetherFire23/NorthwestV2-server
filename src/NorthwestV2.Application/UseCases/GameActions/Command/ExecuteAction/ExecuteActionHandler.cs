@@ -8,7 +8,6 @@ using NorthwestV2.Application.UseCases.GameActions.Queries.GetActions;
 
 namespace NorthwestV2.Application.UseCases.GameActions.Command.ExecuteAction;
 
-
 /// <summary>
 /// Handles the execution of a game action requested by a player.
 /// 
@@ -39,7 +38,7 @@ namespace NorthwestV2.Application.UseCases.GameActions.Command.ExecuteAction;
 /// an exception is thrown and execution is aborted.
 /// </para>
 /// /// </summary>
-public class 
+public class
     ExecuteActionHandler : IRequestHandler<ExecuteActionRequest>
 {
     private readonly ActionServices _actionServices;
@@ -56,24 +55,40 @@ public class
     public async ValueTask<Unit> Handle(ExecuteActionRequest request, CancellationToken cancellationToken)
     {
         ActionBase action = await _actionServices.GetActionFromName(request.ActionName);
-        
+
         switch (action)
         {
             case ActionWithTargetsBase actionWithTargets:
             {
-                ActionWithTargetsAvailability availability = await
+                ActionWithTargetsAvailability? availability = await
                     actionWithTargets.GetAvailabilityResult(new GetActionsRequest() { PlayerId = request.PlayerId });
 
-                _gameActionsWithTargetsValidator.EnsureIsValidActionExecutionOrThrow(availability, request.ActionTargets);
+                if (availability is null)
+                {
+                    throw new Exception(
+                        "There is a problem, because the action that wants to be executed is this one, but it's returning a null availability.");
+                }
+
+                _gameActionsWithTargetsValidator.EnsureIsValidActionExecutionOrThrow(availability,
+                    request.ActionTargets);
                 break;
             }
             case InstantActionBase instantAction:
             {
-                InstantActionAvailability availabilityResult = await instantAction.GetAvailabilityResult(new GetActionsRequest(){PlayerId = request.PlayerId});
-            
+                InstantActionAvailability? availabilityResult =
+                    await instantAction.GetAvailabilityResult(new GetActionsRequest() { PlayerId = request.PlayerId });
+
+                if (availabilityResult is null)
+                {
+                    throw new Exception(
+                        "There is a problem, because the action that wants to be executed is this one, but it's returning a null availability.");
+                }
+
                 if (!availabilityResult.CanExecute)
                 {
-                    throw new Exception($"requested action not available anymore. {instantAction}");
+                    string culprits = String.Join(". ",
+                        availabilityResult.ActionRequirements.Select(x => x.Description));
+                    throw new Exception($"requested action not available anymore. {instantAction}. " + culprits);
                 }
 
                 break;

@@ -94,11 +94,13 @@ public class SpyglassProductionInitiationAppTest : NorthwestIntegrationTestBase
     public async Task GivenFirstStage_WhenContributingOnce_ThenHasPointsContributed()
     {
         Guid playerId = await SetupForSpyglassStartAction();
+        Player pp = await this._scope.ServiceProvider.GetRequiredService<IPlayerRepository>().GetPlayerAndRoomAndInventoryAndGame(playerId);
         await Mediator.Send(new ExecuteActionRequest
         {
             ActionName = ActionNames.SpyglassProductionStart,
             PlayerId = playerId,
         });
+
 
         await Mediator.Send(new ExecuteActionRequest
         {
@@ -153,7 +155,6 @@ public class SpyglassProductionInitiationAppTest : NorthwestIntegrationTestBase
         Player player = await Context.Players.FirstAsync(x => x.Id == playerId);
         player.ActionPoints = 99;
         await Context.SaveChangesAsync();
-
         await Mediator.Send(new ExecuteActionRequest
         {
             ActionName = ActionNames.SpyglassProductionStart,
@@ -248,7 +249,8 @@ public class SpyglassProductionInitiationAppTest : NorthwestIntegrationTestBase
     }
 
     [Fact]
-    public async Task GivenPlayerInCorrectRoom_WhenCompletingFullSpyglassProductionInOneSequence_ThenSpyglassInPlayersInventory()
+    public async Task
+        GivenPlayerInCorrectRoom_WhenCompletingFullSpyglassProductionInOneSequence_ThenSpyglassInPlayersInventory()
     {
         Guid playerId = await SetupForSpyglassStartAction();
         Player player = await Context.Players.FirstAsync(x => x.Id == playerId);
@@ -277,7 +279,7 @@ public class SpyglassProductionInitiationAppTest : NorthwestIntegrationTestBase
             .First(x => x.Id == playerId);
         Assert.True(playerAfter.Inventory.Items.Any(x => x.ItemType == ItemTypes.Spyglass));
     }
-    
+
     // TODO: RUn a full scenario to ensure it's possible. 
 
     [Fact]

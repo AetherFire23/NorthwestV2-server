@@ -2,14 +2,22 @@ using AetherFire23.ERP.Domain.Entity;
 using AetherFire23.ERP.Domain.Features.Actions.Core;
 using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.Instant;
 using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.Requirements;
+using AetherFire23.ERP.Domain.Features.Actions.Productions.Core;
 using AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.Items;
 
 namespace AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.ContributionToStages;
 
 public class SpyglassProductionContributionAction
 {
-    public InstantActionAvailability DetermineAvailability(Player player)
+    public InstantActionAvailability? DetermineAvailability(Player player)
     {
+        bool hasUnfinishedSPyglass =
+            player.Room.Inventory.Items.Any(x => x.ItemType == ItemTypes.UnfinishedSpyglass);
+        if (!hasUnfinishedSPyglass)
+        {
+            return null;
+        }
+
         /*
          *  There is an issue where tehre could be 2 different unfinishedSpyglasess.
          * It's highly unlikely that this would be the case, however, in that case I am just picking the spyglass with
@@ -19,7 +27,13 @@ public class SpyglassProductionContributionAction
          */
 
         // Get the current stage (If it exists)
+
+        UnfinishedSpyglass unfinishedSpyglass = player.Room.Inventory.Find<UnfinishedSpyglass>();
+
+        StageContributionBase contributions = unfinishedSpyglass.CurrentStageContribution;
+
         
+
         RoomHasItemRequirement isRoomHavinunfinishedspyglass =
             new RoomHasItemRequirement(player.Room, ItemTypes.UnfinishedSpyglass);
 

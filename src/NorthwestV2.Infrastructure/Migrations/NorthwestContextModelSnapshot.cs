@@ -237,7 +237,7 @@ namespace NorthwestV2.Infrastructure.Migrations
                 {
                     b.HasBaseType("AetherFire23.ERP.Domain.Entity.ItemBase");
 
-                    b.Property<string>("CurrentStage")
+                    b.Property<string>("CurrentStageContribution")
                         .IsRequired()
                         .HasColumnType("text");
 
