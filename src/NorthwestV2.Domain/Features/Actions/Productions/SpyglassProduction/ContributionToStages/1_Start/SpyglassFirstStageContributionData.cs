@@ -21,12 +21,14 @@ public record SpyglassFirstStageContributionData : StageContributionBase
     /// </summary>
     public const int SPYGLASS_FIRST_STAGE_CONTRIBUTION_LIMIT = 8;
 
+    public const string DESCRIPTION = "First stage - assembly of casings and lenses";
+
     /// <summary>
     /// Initializes a new instance of the <see cref="SpyglassFirstStageContributionData"/> class
     /// with the contribution limit and descriptive stage name.
     /// </summary>
     public SpyglassFirstStageContributionData() : base(SPYGLASS_FIRST_STAGE_CONTRIBUTION_LIMIT,
-        "First stage - assembly of casings and lenses")
+        DESCRIPTION)
     {
     }
 
@@ -34,10 +36,16 @@ public record SpyglassFirstStageContributionData : StageContributionBase
     {
         return new SpyglassSecondStageContributionData();
     }
+
     //
-    // public override List<ActionRequirement> GetRequirements(Player player)
-    // {
-    //     PlayerHasItemsRequirement hasUnfinishedSPyglass = new PlayerHasItemsRequirement(player, ItemTypes.UnfinishedSpyglass);
-    //     return [hasUnfinishedSPyglass];
-    // }
+    public override List<ActionRequirement> GetRequirements(Player player)
+    {
+        RoomHasItemRequirement roomOfPlayerHasRequirementItem =
+            new RoomHasItemRequirement(player.Room, ItemTypes.UnfinishedSpyglass);
+
+        PlayerHasTimePointsRequirement playerHasTimePointsRequirement =
+            PlayerHasTimePointsRequirement.Create(player, 1);
+
+        return [roomOfPlayerHasRequirementItem, playerHasTimePointsRequirement];
+    }
 }

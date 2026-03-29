@@ -26,23 +26,20 @@ public class SpyglassProductionContributionAction
          * appropraite availability. ie :
          */
 
-        // Get the current stage (If it exists)
-
         UnfinishedSpyglass unfinishedSpyglass = player.Room.Inventory.Find<UnfinishedSpyglass>();
 
         StageContributionBase contributions = unfinishedSpyglass.CurrentStageContribution;
 
-        
+        List<ActionRequirement> currentRequirements = contributions.GetRequirements(player);
 
         RoomHasItemRequirement isRoomHavinunfinishedspyglass =
             new RoomHasItemRequirement(player.Room, ItemTypes.UnfinishedSpyglass);
 
-        // TODO: get the current contribution's stage 
         InstantActionAvailability availability = new InstantActionAvailability
         {
             ActionName = ActionNames.SpyglassContribution,
-            DisplayName = $"Contribute to spyglass production: ",
-            ActionRequirements = [isRoomHavinunfinishedspyglass]
+            DisplayName = $"{contributions.StageName}",
+            ActionRequirements = currentRequirements
         };
 
         return availability;

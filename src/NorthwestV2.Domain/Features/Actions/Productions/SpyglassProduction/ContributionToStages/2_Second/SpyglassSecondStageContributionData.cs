@@ -1,3 +1,4 @@
+using System.Security.Cryptography;
 using AetherFire23.ERP.Domain.Entity;
 using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.Requirements;
 using AetherFire23.ERP.Domain.Features.Actions.Productions.Core;
@@ -8,8 +9,10 @@ namespace AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProductio
 public record SpyglassSecondStageContributionData : StageContributionBase
 {
     public const int SPYGLASS_SECOND_STAGE_CONTRIBUTION_LIMIT = 12;
+    public const string DESCRIPTION = "spyglass Second stage";
 
-    public SpyglassSecondStageContributionData() : base(SPYGLASS_SECOND_STAGE_CONTRIBUTION_LIMIT, "spyglass Second stage")
+    public SpyglassSecondStageContributionData() : base(SPYGLASS_SECOND_STAGE_CONTRIBUTION_LIMIT,
+        DESCRIPTION)
     {
     }
 
@@ -18,8 +21,14 @@ public record SpyglassSecondStageContributionData : StageContributionBase
         return new SpyglassProductionThirdStageContributionData();
     }
 
-    // public override List<ActionRequirement> GetRequirements(Player player)
-    // {
-    //     return [];
-    // }
+    public override List<ActionRequirement> GetRequirements(Player player)
+    {
+        RoomHasItemRequirement isRoomHavinunfinishedspyglass =
+            new RoomHasItemRequirement(player.Room, ItemTypes.UnfinishedSpyglass);
+
+        PlayerHasTimePointsRequirement playerHasTimePointsRequirement =
+            PlayerHasTimePointsRequirement.Create(player, 1);
+
+        return [isRoomHavinunfinishedspyglass, playerHasTimePointsRequirement];
+    }
 }

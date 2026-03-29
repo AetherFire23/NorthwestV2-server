@@ -19,7 +19,7 @@ namespace AetherFire23.ERP.Domain.Features.Actions.Productions.Core;
 [JsonDerivedType(typeof(SpyglassFirstStageContributionData), "spyglass_first_stage")]
 [JsonDerivedType(typeof(SpyglassSecondStageContributionData), "spyglass_second_stage")]
 [JsonDerivedType(typeof(SpyglassProductionThirdStageContributionData), "spyglass_third_stage")]
-public record StageContributionBase
+public abstract record StageContributionBase
 {
     public string StageName { get; set; }
     public int Contributions { get; set; }
@@ -68,6 +68,5 @@ public record StageContributionBase
         return null;
     }
 
-    
-    
+    public abstract List<ActionRequirement> GetRequirements(Player player);
 }

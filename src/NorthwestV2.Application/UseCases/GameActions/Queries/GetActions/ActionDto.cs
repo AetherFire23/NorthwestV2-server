@@ -19,7 +19,7 @@ public class ActionDto
         ActionDto acti = new()
         {
             Requirements = availability.ActionRequirements,
-            Description = "Not set yet",
+            Description = availability.DisplayName,
             Kind = ActionKinds.Instant,
             Name = availability.ActionName,
             Prompts = new List<TargetSelectionPrompt>(), // Always empty
@@ -33,7 +33,7 @@ public class ActionDto
         ActionDto acti = new()
         {
             Requirements = availability.ActionRequirements,
-            Description = "Not set yet",
+            Description = availability.DisplayName,
             Kind = ActionKinds.WithTargets,
             Name = availability.ActionName,
             Prompts = availability.TargetSelectionPrompts, // Always empty

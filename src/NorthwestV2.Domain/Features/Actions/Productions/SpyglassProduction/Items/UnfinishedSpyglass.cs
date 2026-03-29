@@ -11,7 +11,8 @@ public class UnfinishedSpyglass : ProductionItemBase
     {
     }
 
-    public UnfinishedSpyglass(StageContributionBase initialFirstStageContribution) : base(ItemTypes.UnfinishedSpyglass, 1, initialFirstStageContribution)
+    public UnfinishedSpyglass(StageContributionBase initialFirstStageContribution) : base(ItemTypes.UnfinishedSpyglass,
+        1, initialFirstStageContribution)
     {
     }
 
@@ -22,12 +23,8 @@ public class UnfinishedSpyglass : ProductionItemBase
     /// <returns></returns>
     public static UnfinishedSpyglass CreateFromItemsAndLock(Scrap scrap)
     {
-        SpyglassFirstStageContributionData spyglassFirstStageContributionData = new SpyglassFirstStageContributionData
-        {
-            Contributions = 0,
-            End = 8,
-            StageName = "first stage "
-        };
+        SpyglassFirstStageContributionData
+            spyglassFirstStageContributionData = new SpyglassFirstStageContributionData();
 
         UnfinishedSpyglass unfinishedSpyglass = new UnfinishedSpyglass(spyglassFirstStageContributionData);
 

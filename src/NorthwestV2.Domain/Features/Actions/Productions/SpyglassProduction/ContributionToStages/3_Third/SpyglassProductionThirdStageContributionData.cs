@@ -7,15 +7,15 @@ namespace AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProductio
 public record SpyglassProductionThirdStageContributionData : StageContributionBase
 {
     public const int SPYGLASS_THIRD_STAGE_CONTRIBUTION_LIMIT = 15;
-    public const string THIRD_STAGE_NAME = "Third stage";
+    public const string DESCRIPTION = "Third stage";
 
     public SpyglassProductionThirdStageContributionData() : base(SPYGLASS_THIRD_STAGE_CONTRIBUTION_LIMIT,
-        THIRD_STAGE_NAME)
+        DESCRIPTION)
     {
     }
 
-    // public override List<ActionRequirement> GetRequirements(Player player)
-    // {
-    //     return [];
-    // }
+    public override List<ActionRequirement> GetRequirements(Player player)
+    {
+        return [];
+    }
 }
