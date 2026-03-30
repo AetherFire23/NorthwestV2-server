@@ -7,7 +7,7 @@ public class HammerProductionInitiation
 {
     public InstantActionAvailability DetermineAvailability()
     {
-        InstantActionAvailability instant = new InstantActionAvailability()
+        InstantActionAvailability instant = new InstantActionAvailability
         {
             ActionName = ActionNames.HammerProductionInitiation,
             DisplayName = "Initiate hammer production",

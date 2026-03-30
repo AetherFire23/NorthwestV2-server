@@ -68,4 +68,10 @@ public abstract record StageContributionBase
     }
 
     public abstract List<ActionRequirement> GetRequirements(Player player);
+
+    public void CancelProduction(Player player)
+    {
+        // Unlock Items. Destroy this item. (dereference item from an inventory. Let the Cancel action
+        throw new NotImplementedException("CancelProduction is not implemented");
+    }
 }

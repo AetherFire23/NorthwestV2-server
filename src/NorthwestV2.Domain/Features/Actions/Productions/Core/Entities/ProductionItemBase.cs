@@ -67,7 +67,8 @@ public abstract class ProductionItemBase : ItemBase
         };
 
         bool isCurrentStadedEndedButCurrentIsNotComplete =
-            this.CurrentStageContribution.IsStageEnded && !CurrentStageContribution.IsProductionComplete;
+            this.CurrentStageContribution.IsStageEnded &&
+            !CurrentStageContribution.IsProductionComplete;
         if (isCurrentStadedEndedButCurrentIsNotComplete)
         {
             var nextStage = CurrentStageContribution.GetNextStageIfStageEnded();
@@ -82,7 +83,7 @@ public abstract class ProductionItemBase : ItemBase
 
     // TODO: DELETE THE PRODUCTION ITEMS ON COMPLETION
     // TODO: PLAYER ACTUALLY PICKS UP THE ITEM (NOT THE ROOM)
-    //TODO: ITEM CANCELLATION ( ALL THE SAME FOR ALL ITEMS SO...
-    
+    // TODO: ITEM CANCELLATION ( ALL THE SAME FOR ALL ITEMS SO...
+
     public abstract void OnProductionCompleted(Player player);
 }
