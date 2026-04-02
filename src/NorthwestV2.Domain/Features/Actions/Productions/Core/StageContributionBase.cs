@@ -3,6 +3,7 @@ using AetherFire23.ERP.Domain.Entity;
 using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.Requirements;
 using AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.ContributionToStages._3_Third;
 using AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.ContributionToStages.Stages;
+using AetherFire23.ERP.Domain.Role;
 
 namespace AetherFire23.ERP.Domain.Features.Actions.Productions.Core;
 
@@ -22,6 +23,8 @@ public abstract record StageContributionBase
 {
     public string StageName { get; set; }
     public int Contributions { get; set; }
+    public bool IsStageEnded => Contributions >= End;
+    public bool IsProductionComplete => this.Contributions == End && GetNextStage() is null;
 
     [JsonConstructor]
     public StageContributionBase(string stageName, int contributions, int end)
@@ -36,14 +39,27 @@ public abstract record StageContributionBase
     /// </summary>
     public int End { get; set; }
 
+    /// <summary>
+    /// The role required to contribute at reduced cost (1 TP). Non-specialists pay 3 TP, QuarterMaster pays 2 TP.
+    /// </summary>
+    public virtual Roles? RequiredRole => null;
+
+    public int CalculateCostForContribution(Player player)
+    {
+        if (player.Role == RequiredRole)
+            return 1;
+
+        if (player.Role == Roles.QuarterMaster)
+            return 2;
+
+        return 3;
+    }
+
     public StageContributionBase(int end, string stageName)
     {
         End = end;
         StageName = stageName;
     }
-
-    public bool IsStageEnded => Contributions >= End;
-    public bool IsProductionComplete => this.Contributions == End && GetNextStage() is null;
 
     public StageContributionBase GetNextStageIfStageEnded()
     {
@@ -69,9 +85,5 @@ public abstract record StageContributionBase
 
     public abstract List<ActionRequirement> GetRequirements(Player player);
 
-    public void CancelProduction(Player player)
-    {
-        // Unlock Items. Destroy this item. (dereference item from an inventory. Let the Cancel action
-        throw new NotImplementedException("CancelProduction is not implemented");
-    }
+
 }

@@ -4,7 +4,6 @@ using AetherFire23.ERP.Domain.Features.Actions.Productions.Core;
 using AetherFire23.ERP.Domain.Features.Actions.Productions.Core.Entities;
 using AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.Items;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using NorthwestV2.Application;
 
 namespace NorthwestV2.Infrastructure;
@@ -40,11 +39,6 @@ public class NorthwestContext : DbContext, IUnitOfWork
             .HasValue<NormalItemBase>("NormalItemBase")
             .HasValue<ProductionItemBase>("ProductionItemBase")
             .HasValue<UnfinishedSpyglass>("UnfinishedSpyglass");
-
-        // modelBuilder.Entity<ProductionItemBase>(x => { x.OwnsOne(x => x.CurrentStage, c =>
-        // {
-        //     c.ToJson();
-        // }); });
         
         modelBuilder.Entity<ProductionItemBase>(x =>
         {

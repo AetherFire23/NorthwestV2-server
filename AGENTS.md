@@ -1,195 +1,202 @@
-# NorthwestV2 AGENTS.md
+# AGENTS.md - NorthwestV2 Development Guide
 
-## output constraints
-
-When building code, you need to always showme : 
-
-0- analyze code context of the changed code (near-references) of the class you're workign on, (inheritors, usages, implementation)
-The reason is I want you to check that the code you write doesn't have unintended consequences.
-1- the changes you make (before - after)
-2- Give me a run down of why you made those changes.
-3- Run teh tests, and rollback all your changes if any of the tests are broken in consequence of your actions. 
+This file provides guidance for AI agents working in this codebase.
 
 ## Project Overview
-A .NET 8 board game with rich OOP domain models, CQRS via MediatR, and EF Core persistence.
 
-## Tech Stack
-- **.NET 8** / C#
-- **MediatR** - CQRS pattern
-- **EF Core** - PostgreSQL + Testcontainers
-- **xUnit** - Integration and unit tests
-- **DDD** - Clear layer separation
+NorthwestV2 is a .NET 10.0 game backend (ERP system). The solution uses:
+- **Framework**: .NET 10.0 with C#
+- **Architecture**: Clean Architecture (Domain → Application → Infrastructure → API)
+- **Pattern**: Mediator for CQRS, Entity Framework Core for data access
+- **Testing**: xUnit with coverage collection
 
-## Architecture Layers
+## Build & Test Commands
+
+### Build
+```powershell
+dotnet build NorthwestV2.sln
+```
+
+### Run Tests (All)
+```powershell
+dotnet test NorthwestV2.sln
+```
+
+### Run Single Test (Unit Tests)
+```powershell
+# By test class name
+dotnet test tests/ERP.Unit/NorthwestV2.Unit.csproj --filter "FullyQualifiedName~PlayerFactoryTest"
+
+# By specific test method
+dotnet test tests/ERP.Unit/NorthwestV2.Unit.csproj --filter "FullyQualifiedName~PlayerFactoryTest.GivenPlayerFactory_WhenCreatePlayers_ThenPlayerCountIsCorrect"
+```
+
+### Run Single Test (Integration Tests)
+```powershell
+dotnet test tests/ERP.Integration/NorthwestV2.Integration.csproj --filter "FullyQualifiedName~TestClassName.TestMethodName"
+```
+
+### Run All Tests in a Project
+```powershell
+dotnet test tests/ERP.Unit/NorthwestV2.Unit.csproj
+```
+
+## Solution Structure
+
 ```
 src/
-├── NorthwestV2.Domain/       # Entities, Domain Services, Value Objects, Actions logic
-├── NorthwestV2.Application/ # Handlers, Repository interfaces, EF extensions
-├── NorthwestV2.Infrastructure/ # Concrete implementations
-├── NortwestV2.Api/           # API layer
-└── NorthwestV2.Seed/        # Database seeding
+├── NorthwestV2.Domain/          # Core domain entities and logic
+├── NorthwestV2.Application/      # Application services, Mediator handlers
+├── NorthwestV2.Infrastructure/  # EF Core, external integrations
+├── NortwestV2.Api/              # ASP.NET Core Web API
+├── NorthwestV2.Seed/             # Database seeding
+└── commons/                      # Shared libraries (AetherFire23.*)
 
 tests/
-├── ERP.Integration/          # Integration tests (Testcontainers)
-└── ERP.Unit/                 # Unit tests
+├── ERP.Unit/                    # Unit tests
+└── ERP.Integration/             # Integration tests
 ```
 
-## Commands
-```bash
-dotnet build    # Build
-dotnet test     # Run tests
-dotnet watch test  # Watch mode
-```
+## Code Style Guidelines
 
-## Naming Conventions
+### Namespaces
+- **Convention**: `AetherFire23.ERP.Domain.*` (note: uses AetherFire23 prefix despite project name)
+- Example: `AetherFire23.ERP.Domain.Entity`, `AetherFire23.ERP.Domain.Features.Actions.General.Combat`
 
-### Classes
-| Pattern | Example | Location |
-|---------|---------|----------|
-| `*Base` | `EntityBase`, `ActionBase` | Base classes |
-| `*App` | `SpyglassProductionContributionActionApp` | Application layer |
-| `*Action` | `SpyglassProductionContributionAction` | Domain layer |
-| `*Requirement` | `RoomHasItemRequirement` | Domain constraints |
-| `*Data` | `SpyglassFirstStageContributionData` | Records/data |
+### Classes & Types
+- Use `class` for entities and services
+- Use `record` for DTOs and value objects
+- Use `interface` for abstractions (e.g., `IRandomProvider`)
 
-### Test Naming (GivenWhenThen)
+### Properties
 ```csharp
-public async Task GivenPlayerWithScrapInInventory_WhenGetProductionAvailability_ThenCanExecuteAction()
+// Required properties with init
+public required User User { get; init; }
+
+// Optional with default
+public int ActionPoints { get; set; } = 8;
+
+// Private setters when needed
+public Guid Id { get; private set; }
 ```
-- `Given*` - Precondition/setup
-- `When*` - Action/event
-- `Then*` - Assertion/result
 
-### Test Files
-- Test class: `{FeatureName}AppTest.cs`
-- Attribute: `[TestSubject(typeof(ClassUnderTest))]`
-- Base class: `NorthwestIntegrationTestBase`
+### Naming
+- **Classes/Methods**: PascalCase (`PlayerFactory`, `CreateFreshPlayersForGame`)
+- **Properties**: PascalCase (`UserId`, `HashedPassword`)
+- **Private fields**: (not commonly used - rely on local variables)
+- **Interfaces**: Prefix with `I` (`IRandomProvider`)
 
-## OOP Patterns
+### Nullable & Types
+- Enabled via `<Nullable>enable</Nullable>` in csproj
+- Use `string?` for nullable strings
+- Use `Guid` for identifiers (not int)
+- Collections: `List<T>`, `IEnumerable<T>`, `[T]` (collection expressions)
 
-### Domain Entities
+### Import Style
+- Use global using (ImplicitUsings enabled)
+- Explicit namespaces only when needed for disambiguation
+
+### Documentation
+- Use XML `<summary>` comments for public APIs
+- Include parameter descriptions in doc comments
+
+### Error Handling
+- Use `throw new Exception("message")` for domain logic errors
+- Validate inputs in constructors or factory methods
+
+### Constants
 ```csharp
-// Abstract base with rich behavior
-public abstract class ProductionItemBase : ItemBase
+public const int INITIALIZATION_HEALTH = 100;
+// Or
+public static class GameSettings
 {
-    public void Contribute(Player player) { ... }
-    public abstract void OnProductionCompleted(Player player);
+    public const int RequiredPlayerCountToStartGame = 12;
 }
+```
 
-// Records for immutable state (EF Core compatible)
-public record SpyglassFirstStageContributionData : StageContributionBase
+## Testing Conventions
+
+### Test Structure (xUnit)
+```csharp
+[TestSubject(typeof(PlayerFactory))]
+public class PlayerFactoryTest
 {
-    // Immutable updates via 'with' expression
-    this.CurrentStageContribution = this.CurrentStageContribution 
-        with { Contributions = this.CurrentStageContribution.Contributions + 1 };
+    private readonly ITestOutputHelper _outputHelper;
+
+    public PlayerFactoryTest(ITestOutputHelper outputHelper)
+    {
+        _outputHelper = outputHelper;
+    }
+
+    [Fact]
+    public void TestName()
+    {
+        // Arrange
+        // Act
+        // Assert
+    }
 }
 ```
 
-### Entity Hierarchy
-```
-EntityBase (Id, Equals, GetHashCode)
-├── ItemBase
-│   ├── NormalItemBase
-│   └── ProductionItemBase (LockedItems, CurrentStageContribution)
-├── Player (Health, ActionPoints, Inventory, Room)
-├── Room (RoomEnum, Inventory)
-├── Game (Players, Rooms)
-└── Inventory (Items)
-```
+### Test Helpers
+- Use `FakeRandom` for deterministic random testing
+- Use `TestOutputLogger<T>` for capturing logs in tests
 
-## EF Core + OOP Strategy
-- **JSON Polymorphism** for stage data: `[JsonPolymorphic]`, `[JsonDerivedType]`
-- **Records** for immutable updates (EF tracks reference equality)
-- **`with` expressions** for immutable mutations
-- **Abstract base classes** for shared behavior
-
-## Integration Test Patterns
-
-### Setup Flow
-```csharp
-// 1. Create game with players
-GameDataSeed seed = await ShareSeeds.ArrangeUntilGameCreation(Mediator, Context);
-
-// 2. Teleport player to room
-Guid playerId = await TeleportPlayerTo(seed, RequiredRoom);
-
-// 3. Add required items
-player.Inventory.Items.Add(new Scrap());
-
-// 4. Execute action via MediatR
-await Mediator.Send(new ExecuteActionRequest { ... });
-
-// 5. RE-QUERY for assertions (CRITICAL!)
-this._scope = RootServiceProvider.CreateScope();
-Player playerAfter = Context.Players.First(x => x.Id == playerId);
-```
-
-### Critical Rule: Re-query After MediatR Calls
-EF Core tracks entities loaded before `Mediator.Send()`. 
-Always re-fetch entities for accurate assertions:
-```csharp
-// WRONG - stale data
-var spyglass = player.Inventory.Find<UnfinishedSpyglass>(); 
-
-// RIGHT - fresh from DB
-this._scope = RootServiceProvider.CreateScope();
-var room = Context.Rooms.Include(x => x.Inventory).ThenInclude(x => x.Items).First(...);
-var spyglass = room.Inventory.Find<UnfinishedSpyglass>();
-```
-
-### Test Base Class
-```csharp
-public class MyFeatureTest : NorthwestIntegrationTestBase
-{
-    // Built-in:
-    // - Mediator (from _scope)
-    // - Context (from _scope)
-    // - RootServiceProvider (for new scopes)
-    
-    // Pattern for fresh data:
-    // this._scope = this.RootServiceProvider.CreateScope();
-}
+### Project References in Tests
+```xml
+<ItemGroup>
+  <ProjectReference Include="..\..\src\NorthwestV2.Application\NorthwestV2.Application.csproj" />
+  <ProjectReference Include="..\..\src\NorthwestV2.Domain\NorthwestV2.Domain.csproj" />
+</ItemGroup>
 ```
 
 ## Common Patterns
 
-### Availability Check Pattern
+### Entity Base
 ```csharp
-public InstantActionAvailability? DetermineAvailability(Player player)
+public class EntityBase
 {
-    if (!player.Room.Inventory.Items.Any(x => x.ItemType == ItemTypes.UnfinishedSpyglass))
-        return null;
-    
-    return new InstantActionAvailability { ... };
+    [Key] public Guid Id { get; set; } = Guid.Empty;
+    // Equals/HashCode based on Id
 }
 ```
 
-### Execute Pattern
+### Domain Actions (Availability)
 ```csharp
-public override async Task Execute(ExecuteActionRequest request)
+public class CombatAction
 {
-    Player player = await _playerRepository.GetPlayerWithRoomAndInventory(request.PlayerId);
-    _domainAction.DoSomething(player);
-    await _unitOfWork.SaveChangesAsync();
+    public ActionWithTargetsAvailability DetermineAvailability(Player caster, List<Player> otherPlayersInSameRoom)
+    {
+        // Return availability with requirements and prompts
+    }
+
+    public FightResult MakeTwoPlayerFightTogether(Player attackerPlayer, Player defenderPlayer)
+    {
+        // Execute the action
+    }
 }
 ```
 
-## Gotchas & Tips
+### Role Initializers
+- Located in `src/NorthwestV2.Domain/GameStart/RoleInitializations/PlayerInitializers/`
+- Implement `RoleInitializer` abstract class
+- Auto-discovered via reflection in `DomainInstaller`
 
-1. **Scope management**: Create new scope (`RootServiceProvider.CreateScope()`) before assertions
-2. **EF tracking**: Re-query entities after any `Mediator.Send()` call
-3. **Business logic location**: Domain layer, not Application layer
-4. **Stage advancement**: Uses `with` expression, EF Core handles reference properly
-5. **Room vs Player inventory**: Be consistent - items belong to ONE inventory at a time
+## Database
 
-## Key Repository Methods
-```csharp
-IPlayerRepository
-├── GetPlayerWithRoomAndInventory(playerId)
-├── GetPlayerAndRoomAndInventoryAndGame(playerId)
-└── ...
-```
+- Uses Entity Framework Core
+- Migrations managed via scripts in `scripts/migrations.ps1`
+- Uses PostgreSQL (see `scripts/docker postgres.ps1`)
 
-## Room Inventory Rule
-Items for production/actions belong in **room inventories**, not player inventories.
-Domain logic consistently uses `player.Room.Inventory.Find<T>()`.
+## Key Files
+
+- `NorthwestV2.sln` - Solution file
+- `src/NorthwestV2.Domain/Entity/Player.cs` - Core player entity
+- `src/NorthwestV2.Domain/GameStart/PlayerFactory.cs` - Factory for creating players
+- `tests/ERP.Unit/PlayerFactoryTest.cs` - Example tests
+
+## Notes
+
+- The project uses a subdomain naming convention (`AetherFire23`) that differs from the solution name (`NorthwestV2`)
+- Domain layer has no external dependencies (pure C#)
+- Application layer depends on Domain + Mediator + EF Core

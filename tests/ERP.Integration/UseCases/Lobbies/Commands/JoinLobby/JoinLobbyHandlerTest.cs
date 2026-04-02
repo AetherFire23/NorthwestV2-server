@@ -38,7 +38,6 @@ public class JoinLobbyHandlerTest : NorthwestIntegrationTestBase
         Assert.Equal(lobbyId, user?.Lobby?.Id);
     }
 
-
     [Fact]
     public async Task GivenLobby_WhenUserJoins_ThenHasPlayerInIt()
     {
@@ -58,6 +57,7 @@ public class JoinLobbyHandlerTest : NorthwestIntegrationTestBase
         Lobby lobby = await Context.Lobbies
             .Include(l => l.Users)
             .FirstAsync(x => x.Id == lobbyId);
+
         Assert.NotEmpty(lobby.Users);
     }
 

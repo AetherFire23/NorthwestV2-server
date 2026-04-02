@@ -1,6 +1,7 @@
 using AetherFire23.ERP.Domain.Entity;
 using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.Requirements;
 using AetherFire23.ERP.Domain.Features.Actions.Productions.Core;
+using AetherFire23.ERP.Domain.Role;
 
 namespace AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.ContributionToStages.Stages;
 
@@ -14,13 +15,10 @@ namespace AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProductio
 /// </remarks>
 public record SpyglassFirstStageContributionData : StageContributionBase
 {
-    /// <summary>
-    /// The maximum number of contributions required to complete the first stage.
-    /// Player must contribute a total of 8 time points to advance.
-    /// </summary>
     public const int SPYGLASS_FIRST_STAGE_CONTRIBUTION_LIMIT = 8;
     public const string DESCRIPTION = "First stage - assembly of casings and lenses";
     public const RoomEnum REQUIRED_ROOM = RoomEnum.Workshop;
+    public override Roles? RequiredRole => Roles.Engineer;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SpyglassFirstStageContributionData"/> class
@@ -37,14 +35,13 @@ public record SpyglassFirstStageContributionData : StageContributionBase
     }
 
 
-    //
     public override List<ActionRequirement> GetRequirements(Player player)
     {
         RoomHasItemRequirement roomOfPlayerHasRequirementItem =
             new RoomHasItemRequirement(player.Room, ItemTypes.UnfinishedSpyglass);
 
         PlayerHasTimePointsRequirement playerHasTimePointsRequirement =
-            PlayerHasTimePointsRequirement.Create(player, 1);
+            PlayerHasTimePointsRequirement.Create(player, CalculateCostForContribution(player));
 
         PlayerInRoomRequirement playerInWorkshopRequirement =
             new PlayerInRoomRequirement(player, REQUIRED_ROOM);

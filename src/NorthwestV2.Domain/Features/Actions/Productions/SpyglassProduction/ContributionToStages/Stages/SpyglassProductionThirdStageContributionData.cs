@@ -1,6 +1,7 @@
 using AetherFire23.ERP.Domain.Entity;
 using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.Requirements;
 using AetherFire23.ERP.Domain.Features.Actions.Productions.Core;
+using AetherFire23.ERP.Domain.Role;
 
 namespace AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.ContributionToStages._3_Third;
 
@@ -9,6 +10,7 @@ public record SpyglassProductionThirdStageContributionData : StageContributionBa
     public const int SPYGLASS_THIRD_STAGE_CONTRIBUTION_LIMIT = 15;
     public const string DESCRIPTION = "Third stage - final fitting and reinforcement";
     public const RoomEnum REQUIRED_ROOM = RoomEnum.Workshop;
+    public override Roles? RequiredRole => Roles.Engineer;
 
     public SpyglassProductionThirdStageContributionData() : base(SPYGLASS_THIRD_STAGE_CONTRIBUTION_LIMIT,
         DESCRIPTION)
@@ -21,7 +23,7 @@ public record SpyglassProductionThirdStageContributionData : StageContributionBa
             new RoomHasItemRequirement(player.Room, ItemTypes.UnfinishedSpyglass);
 
         PlayerHasTimePointsRequirement playerHasTimePointsRequirement =
-            PlayerHasTimePointsRequirement.Create(player, 1);
+            PlayerHasTimePointsRequirement.Create(player, CalculateCostForContribution(player));
 
         PlayerInRoomRequirement playerInWorkshopRequirement =
             new PlayerInRoomRequirement(player, REQUIRED_ROOM);

@@ -1,4 +1,5 @@
 ﻿using AetherFire23.ERP.Domain.Entity;
+using AetherFire23.ERP.Domain.Role;
 
 namespace AetherFire23.ERP.Domain.Features.Actions.Productions.Core.Entities;
 
@@ -47,8 +48,7 @@ public abstract class ProductionItemBase : ItemBase
     /*
      * TODO: Add specialized TP.
      * The feature is kinda awkward because the points *coints* are tripled. So basically the requirement is dynamic :
-     * If not of the given role; then the cost is 3. ( but it would just be increased by 1 ) to not fuck up the logic.
-     * But actually I just
+     * If not of the given role; then the cost is 3. ( but it would just be increased by 1 ) to not disruptt the logic 
      */
     public void Contribute(Player player)
     {
@@ -86,4 +86,6 @@ public abstract class ProductionItemBase : ItemBase
     // TODO: ITEM CANCELLATION ( ALL THE SAME FOR ALL ITEMS SO...
 
     public abstract void OnProductionCompleted(Player player);
+
+  
 }
