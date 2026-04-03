@@ -44,6 +44,8 @@ public class Player : EntityBase
     public AttackerStances AttackerStance { get; set; } = AttackerStances.HitAndRun;
 
 
+
+
     /// <summary>
     /// Strength = Toughness + Weapon + Various Modifiers
     ///  + Weakness caused by Sanity 

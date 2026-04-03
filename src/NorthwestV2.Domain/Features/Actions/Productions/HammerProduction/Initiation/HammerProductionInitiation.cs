@@ -2,6 +2,7 @@ using AetherFire23.ERP.Domain.Entity;
 using AetherFire23.ERP.Domain.Features.Actions.Core;
 using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.Instant;
 using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.Requirements;
+using AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.Items;
 
 namespace AetherFire23.ERP.Domain.Features.Actions.Productions.HammerProduction.Initiation;
 
@@ -33,5 +34,15 @@ public class HammerProductionInitiation
         };
 
         return instant;
+    }
+
+    public void Execute(Player player)
+    {
+        // TODO: make more abstract logic for this
+        Scrap scrap = player.Inventory.Find<Scrap>();
+
+        UnfinishedHammer unfinishedHammer = UnfinishedHammer.CreateFromItemsAndLock(scrap);
+
+        player.Room.Inventory.Add(unfinishedHammer);
     }
 }

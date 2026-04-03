@@ -14,6 +14,12 @@ public class ActionDto
     public required List<ActionRequirement> Requirements { get; set; }
     public required List<TargetSelectionPrompt> Prompts { get; set; }
 
+    public bool IsExecutable()
+    {
+        bool isExecutable = this.Requirements.All(x => x.IsFulfilled);
+        return isExecutable;
+    }
+
     public static ActionDto FromInstant(InstantActionAvailability availability)
     {
         ActionDto acti = new()

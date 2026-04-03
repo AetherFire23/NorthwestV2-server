@@ -18,14 +18,14 @@ public record SpyglassFirstStageContributionData : StageContributionBase
     public const int SPYGLASS_FIRST_STAGE_CONTRIBUTION_LIMIT = 8;
     public const string DESCRIPTION = "First stage - assembly of casings and lenses";
     public const RoomEnum REQUIRED_ROOM = RoomEnum.Workshop;
-    public override Roles? RequiredRole => Roles.Engineer;
+
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SpyglassFirstStageContributionData"/> class
     /// with the contribution limit and descriptive stage name.
     /// </summary>
     public SpyglassFirstStageContributionData() : base(SPYGLASS_FIRST_STAGE_CONTRIBUTION_LIMIT,
-        DESCRIPTION)
+        DESCRIPTION, Roles.Engineer)
     {
     }
 

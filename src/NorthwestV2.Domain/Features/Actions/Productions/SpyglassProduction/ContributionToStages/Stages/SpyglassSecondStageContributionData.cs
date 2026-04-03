@@ -11,10 +11,9 @@ public record SpyglassSecondStageContributionData : StageContributionBase
     public const int SPYGLASS_SECOND_STAGE_CONTRIBUTION_LIMIT = 12;
     public const string DESCRIPTION = "Second stage - calibration, astronomical alignment, and observational tuning";
     public const RoomEnum REQUIRED_ROOM = RoomEnum.ForeCastle;
-    public override Roles? RequiredRole => Roles.Scholar;
 
     public SpyglassSecondStageContributionData() : base(SPYGLASS_SECOND_STAGE_CONTRIBUTION_LIMIT,
-        DESCRIPTION)
+        DESCRIPTION, Roles.Scholar)
     {
     }
 
@@ -26,13 +25,12 @@ public record SpyglassSecondStageContributionData : StageContributionBase
     public override List<ActionRequirement> GetRequirements(Player player)
     {
         ItemInRoomRequirement isItemInRoomHavingUnfinishedSpyglass =
-            new ItemInRoomRequirement(player.Room, ItemTypes.UnfinishedSpyglass);
+            new(player.Room, ItemTypes.UnfinishedSpyglass);
 
         PlayerHasTimePointsRequirement playerHasTimePointsRequirement =
             PlayerHasTimePointsRequirement.Create(player, CalculateCostForContribution(player));
 
-        PlayerInRoomRequirement playerInForecastleRequirement =
-            new PlayerInRoomRequirement(player, REQUIRED_ROOM);
+        PlayerInRoomRequirement playerInForecastleRequirement = new(player, REQUIRED_ROOM);
 
         return [playerInForecastleRequirement, isItemInRoomHavingUnfinishedSpyglass, playerHasTimePointsRequirement];
     }

@@ -13,13 +13,15 @@ public class HammerProductionInitiationApp : InstantActionBase
 {
     private readonly HammerProductionInitiation _hammerProductionInitiation;
     private readonly IPlayerRepository _playerRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
     public HammerProductionInitiationApp(HammerProductionInitiation hammerProductionInitiation,
-        IPlayerRepository playerRepository) : base(ActionNames
+        IPlayerRepository playerRepository, IUnitOfWork unitOfWork) : base(ActionNames
         .HammerProductionInitiation)
     {
         _hammerProductionInitiation = hammerProductionInitiation;
         _playerRepository = playerRepository;
+        _unitOfWork = unitOfWork;
     }
 
     public override async Task<InstantActionAvailability> GetAvailabilityResult(GetActionsRequest request)
@@ -33,6 +35,13 @@ public class HammerProductionInitiationApp : InstantActionBase
 
     public override async Task Execute(ExecuteActionRequest request)
     {
-        throw new NotImplementedException();
+        Player player = await _playerRepository.GetPlayerAndRoomAndInventoryAndGame(request.PlayerId);
+        
+        // Create the UnfinishedHammer in the room's inventory. 
+        
+        _hammerProductionInitiation.Execute(player);
+
+        await _unitOfWork.SaveChangesAsync();
     }
 }
+

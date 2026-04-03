@@ -15,8 +15,8 @@ public abstract class ProductionItemBase : ItemBase
     public List<NormalItemBase> LockedItems { get; set; } = [];
 
     public StageContributionBase CurrentStageContribution { get; set; }
-    // TODO: Maybe move 
-
+    
+    // TODO: Maybe check if we  
     public ProductionItemBase()
     {
     }

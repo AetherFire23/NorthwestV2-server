@@ -14,6 +14,17 @@ public class Room : EntityBase
 
     //TODO: One day make method to get 
 
+    /// <summary>
+    /// Returns true if at least one item of that type is found in the inventory. 
+    /// </summary>
+    /// <param name="itemTypes"></param>
+    /// <returns></returns>
+    public bool Has(ItemTypes itemTypes)
+    {
+        bool hasItem = this.Inventory.Items.Any(x => x.ItemType == itemTypes);
+        return hasItem;
+    }
+    
     public void RemoveItem(ItemBase item)
     {
         this.Inventory.Items.Remove(item);

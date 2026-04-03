@@ -7,11 +7,11 @@ namespace AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProductio
 
 public class UnfinishedSpyglass : ProductionItemBase
 {
-    public UnfinishedSpyglass()
+    private UnfinishedSpyglass()
     {
     }
 
-    public UnfinishedSpyglass(StageContributionBase initialFirstStageContribution) : base(ItemTypes.UnfinishedSpyglass,
+    private UnfinishedSpyglass(StageContributionBase initialFirstStageContribution) : base(ItemTypes.UnfinishedSpyglass,
         1, initialFirstStageContribution)
     {
     }
@@ -40,6 +40,8 @@ public class UnfinishedSpyglass : ProductionItemBase
         return nameof(UnfinishedSpyglass);
     }
 
+    // TODO: Maybe instead just return an ItemBase; and we can Clear the locked items automatically. and add the item to the room's inventory
+    
     public override void OnProductionCompleted(Player player)
     {
         // TODO: Might wanna abstract deletion behaviour after 

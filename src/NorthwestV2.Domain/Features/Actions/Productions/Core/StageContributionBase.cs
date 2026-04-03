@@ -1,6 +1,7 @@
 using System.Text.Json.Serialization;
 using AetherFire23.ERP.Domain.Entity;
 using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.Requirements;
+using AetherFire23.ERP.Domain.Features.Actions.Productions.HammerProduction;
 using AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.ContributionToStages._3_Third;
 using AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.ContributionToStages.Stages;
 using AetherFire23.ERP.Domain.Role;
@@ -19,20 +20,13 @@ namespace AetherFire23.ERP.Domain.Features.Actions.Productions.Core;
 [JsonDerivedType(typeof(SpyglassFirstStageContributionData), "spyglass_first_stage")]
 [JsonDerivedType(typeof(SpyglassSecondStageContributionData), "spyglass_second_stage")]
 [JsonDerivedType(typeof(SpyglassProductionThirdStageContributionData), "spyglass_third_stage")]
+[JsonDerivedType(typeof(HammerProductionFirstStage), "hammer_first_stage")]
 public abstract record StageContributionBase
 {
     public string StageName { get; set; }
     public int Contributions { get; set; }
     public bool IsStageEnded => Contributions >= End;
     public bool IsProductionComplete => this.Contributions == End && GetNextStage() is null;
-
-    [JsonConstructor]
-    public StageContributionBase(string stageName, int contributions, int end)
-    {
-        StageName = stageName;
-        Contributions = contributions;
-        End = end;
-    }
 
     /// <summary>
     /// The required time points to end the current stage. 
@@ -43,7 +37,25 @@ public abstract record StageContributionBase
     /// The role required to contribute at reduced cost (1 TP). Non-specialists pay 3 TP, QuarterMaster pays 2 TP.
     ///  TODO: Verify if all productions have the same requirement for requireroles
     /// </summary>
-    public virtual Roles? RequiredRole => null;
+    public Roles RequiredRole { get; private set; }
+
+    /// <summary> Its the json sconstructor, do not use by default.  </summary>
+    [JsonConstructor]
+    public StageContributionBase(string stageName, int contributions, int end, Roles requiredRole)
+    {
+        StageName = stageName;
+        Contributions = contributions;
+        End = end;
+        this.RequiredRole = requiredRole;
+    }
+
+    public StageContributionBase(int end, string stageName, Roles requiredRole)
+    {
+        End = end;
+        StageName = stageName;
+        this.RequiredRole = requiredRole;
+    }
+
 
     public int CalculateCostForContribution(Player player)
     {
@@ -56,11 +68,6 @@ public abstract record StageContributionBase
         return 3;
     }
 
-    public StageContributionBase(int end, string stageName)
-    {
-        End = end;
-        StageName = stageName;
-    }
 
     public StageContributionBase GetNextStageIfStageEnded()
     {

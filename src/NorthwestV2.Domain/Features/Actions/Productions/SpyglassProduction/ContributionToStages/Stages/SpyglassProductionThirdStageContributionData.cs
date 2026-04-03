@@ -10,10 +10,9 @@ public record SpyglassProductionThirdStageContributionData : StageContributionBa
     public const int SPYGLASS_THIRD_STAGE_CONTRIBUTION_LIMIT = 15;
     public const string DESCRIPTION = "Third stage - final fitting and reinforcement";
     public const RoomEnum REQUIRED_ROOM = RoomEnum.Workshop;
-    public override Roles? RequiredRole => Roles.Engineer;
 
     public SpyglassProductionThirdStageContributionData() : base(SPYGLASS_THIRD_STAGE_CONTRIBUTION_LIMIT,
-        DESCRIPTION)
+        DESCRIPTION, Roles.Engineer)
     {
     }
 
