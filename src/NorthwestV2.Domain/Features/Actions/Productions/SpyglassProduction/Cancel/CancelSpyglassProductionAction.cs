@@ -6,6 +6,7 @@ public class CancelSpyglassProductionAction
 {
     public InstantActionAvailability CancelSpyglassProductionAvailability()
     {
+        
         return null;
     }
 }

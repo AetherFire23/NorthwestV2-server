@@ -54,9 +54,16 @@ public class NorthwestIntegrationTestBase //: PostgresTestContainer
 
 
         RootServiceProvider = serviceCollection.BuildServiceProvider();
-        
+
         AppComposer.Initialize(RootServiceProvider);
 
         _scope = RootServiceProvider.CreateScope();
+    }
+
+    protected T GetServiceFromScope<T>() where T : notnull
+    {
+        var service = this._scope.ServiceProvider.GetRequiredService<T>();
+
+        return service;
     }
 }

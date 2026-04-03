@@ -41,6 +41,7 @@ public abstract record StageContributionBase
 
     /// <summary>
     /// The role required to contribute at reduced cost (1 TP). Non-specialists pay 3 TP, QuarterMaster pays 2 TP.
+    ///  TODO: Verify if all productions have the same requirement for requireroles
     /// </summary>
     public virtual Roles? RequiredRole => null;
 
@@ -84,6 +85,4 @@ public abstract record StageContributionBase
     }
 
     public abstract List<ActionRequirement> GetRequirements(Player player);
-
-
 }

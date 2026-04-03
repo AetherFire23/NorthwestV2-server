@@ -23,7 +23,7 @@ public class RoomHasItemRequirement : ActionRequirement
     {
         get
         {
-            var playerItemTypes = _room.Inventory.Items.Select(x => x.ItemType);
+            IEnumerable<ItemTypes> playerItemTypes = _room.Inventory.Items.Select(x => x.ItemType);
             bool isContainedAll = _requiredItems.All(playerItemTypes.Contains);
             return isContainedAll;
         }

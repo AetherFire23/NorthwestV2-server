@@ -36,6 +36,7 @@ public class ActionRequirement
         Description = description;
         IsFulfilled = isFulfilled;
     }
+
     public static implicit operator bool(ActionRequirement r) => r.IsFulfilled;
 
 
