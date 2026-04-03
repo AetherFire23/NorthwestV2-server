@@ -6,6 +6,7 @@ using NorthwestV2.Application.Features.Actions.Debug;
 using NorthwestV2.Application.Features.Actions.General.Combat;
 using NorthwestV2.Application.Features.Actions.General.Movement;
 using NorthwestV2.Application.Features.Actions.Productions;
+using NorthwestV2.Application.Features.Actions.Productions.HammerProduction.Contribution;
 using NorthwestV2.Application.Features.Actions.Productions.HammerProduction.Initiation;
 using NorthwestV2.Application.Features.Actions.Productions.SpyglassProduction.ContributionToStages;
 using NorthwestV2.Application.Features.Actions.Productions.SpyglassProduction.Stages._1_Start;
@@ -27,6 +28,7 @@ public class ApplicationInstaller
         serviceCollection.AddScoped<SpyglassProductionInitiationActionApp>();
         serviceCollection.AddScoped<SpyglassProductionContributionActionApp>();
         serviceCollection.AddScoped<CancelProductionActionApp>();
+        serviceCollection.AddScoped<HammerProductionContributionApp>();
         
         serviceCollection.AddScoped<HammerProductionInitiationApp>();
     }

@@ -63,4 +63,13 @@ public class Inventory : EntityBase
         this.Items.AddRange(itemsToTake);
         itemsToTake.Clear();
     }
+
+    /// <summary>
+    /// Takes items incoming from a list, add them to this current invenotry, then removes them from the list. 
+    /// </summary>
+    /// <param name="itemsToTake"></param>
+    public void TakeOwnership(List<NormalItemBase> itemsToTake)
+    {
+        this.TakeOwnership(itemsToTake.Cast<ItemBase>().ToList());
+    }
 }

@@ -12,7 +12,7 @@ namespace AetherFire23.ERP.Domain.Features.Actions.Productions.Core.Entities;
 public abstract class ProductionItemBase : ItemBase
 {
     // TODO: Include a Stage 
-    public List<ItemBase> LockedItems { get; set; } = [];
+    public List<NormalItemBase> LockedItems { get; set; } = [];
 
     public StageContributionBase CurrentStageContribution { get; set; }
     // TODO: Maybe move 
@@ -59,7 +59,8 @@ public abstract class ProductionItemBase : ItemBase
             throw new Exception("Player does not have enough points to contribute.");
         }
 
-        player.ActionPoints--;
+        int actionPointsCost = this.CurrentStageContribution.CalculateCostForContribution(player);
+        player.ActionPoints -= actionPointsCost;
 
         // Increment the current stage by 1 
         this.CurrentStageContribution = this.CurrentStageContribution with
@@ -76,15 +77,21 @@ public abstract class ProductionItemBase : ItemBase
             this.CurrentStageContribution = nextStage;
         }
 
+        // TODO: Might wanna move this above so the caller handles deletion and completion completely. 
         if (this.CurrentStageContribution.IsProductionComplete)
         {
             OnProductionCompleted(player);
         }
     }
 
-    // TODO: DELETE THE PRODUCTION ITEMS ON COMPLETION
-    // TODO: PLAYER ACTUALLY PICKS UP THE ITEM (NOT THE ROOM)
-    // TODO: ITEM CANCELLATION ( ALL THE SAME FOR ALL ITEMS SO...
+    public void UnlockAllLockedItems()
+    {
+        foreach (NormalItemBase normalItemBase in this.LockedItems)
+        {
+            normalItemBase.IsLocked = false;
+        }
+    }
+
 
     public abstract void OnProductionCompleted(Player player);
 

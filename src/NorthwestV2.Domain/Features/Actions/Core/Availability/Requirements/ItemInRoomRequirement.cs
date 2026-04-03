@@ -2,18 +2,18 @@ using AetherFire23.ERP.Domain.Entity;
 
 namespace AetherFire23.ERP.Domain.Features.Actions.Core.Availability.Requirements;
 
-public class RoomHasItemRequirement : ActionRequirement
+public class ItemInRoomRequirement : ActionRequirement
 {
     private readonly Room _room;
     private readonly List<ItemTypes> _requiredItems;
 
-    public RoomHasItemRequirement(Room room, List<ItemTypes> requiredItems)
+    public ItemInRoomRequirement(Room room, List<ItemTypes> requiredItems)
     {
         _room = room;
         _requiredItems = requiredItems;
     }
 
-    public RoomHasItemRequirement(Room room, ItemTypes requiredItems) : this(room, [requiredItems])
+    public ItemInRoomRequirement(Room room, ItemTypes requiredItems) : this(room, [requiredItems])
     {
     }
 

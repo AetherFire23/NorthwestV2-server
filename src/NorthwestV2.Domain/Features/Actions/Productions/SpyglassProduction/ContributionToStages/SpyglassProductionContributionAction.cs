@@ -4,7 +4,6 @@ using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.Instant;
 using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.Requirements;
 using AetherFire23.ERP.Domain.Features.Actions.Productions.Core;
 using AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.Items;
-using AetherFire23.ERP.Domain.Role;
 
 namespace AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.ContributionToStages;
 
@@ -47,5 +46,10 @@ public class SpyglassProductionContributionAction
     {
         UnfinishedSpyglass unfinishedSpyglass = player.Room.Inventory.Find<UnfinishedSpyglass>();
         unfinishedSpyglass.Contribute(player);
+
+        if (unfinishedSpyglass.IsProductionComplete)
+        {
+            player.Inventory.Items.Remove(unfinishedSpyglass);
+        }
     }
 }

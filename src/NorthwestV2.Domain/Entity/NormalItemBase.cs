@@ -11,10 +11,17 @@ public class NormalItemBase : ItemBase
     /// A normal item is not always a component for a production. 
     /// </summary>
     public Guid? ProductionItemId { get; set; }
+
     public ProductionItemBase? ProductionItem { get; set; }
     public int TimePointsContributions { get; set; } = 0;
     public bool IsLocked { get; set; } = false;
+
     public NormalItemBase(ItemTypes itemType, int carryValue) : base(itemType, carryValue)
     {
+    }
+
+    public override string ToString()
+    {
+        return this.ItemType.ToString();
     }
 }

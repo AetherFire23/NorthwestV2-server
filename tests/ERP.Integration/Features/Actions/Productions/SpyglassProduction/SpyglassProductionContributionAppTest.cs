@@ -287,12 +287,14 @@ public class SpyglassProductionContributionAppTest : NorthwestIntegrationTestBas
             await Mediator.Send(new ExecuteActionRequest
                 { ActionName = ActionNames.SpyglassContribution, PlayerId = playerId });
         }
+
         await TeleportPlayerToRoom(playerId, SpyglassSecondStageContributionData.REQUIRED_ROOM);
         for (int i = 0; i < SpyglassSecondStageContributionData.SPYGLASS_SECOND_STAGE_CONTRIBUTION_LIMIT; i++)
         {
             await Mediator.Send(new ExecuteActionRequest
                 { ActionName = ActionNames.SpyglassContribution, PlayerId = playerId });
         }
+
         await TeleportPlayerToRoom(playerId, SpyglassProductionThirdStageContributionData.REQUIRED_ROOM);
         for (int i = 0; i < SpyglassProductionThirdStageContributionData.SPYGLASS_THIRD_STAGE_CONTRIBUTION_LIMIT; i++)
         {
@@ -316,29 +318,13 @@ public class SpyglassProductionContributionAppTest : NorthwestIntegrationTestBas
         Player player = await Context.Players.FirstAsync(x => x.Id == playerId);
         player.ActionPoints = 999;
         await Context.SaveChangesAsync();
-
         await Mediator.Send(new ExecuteActionRequest
         {
             ActionName = ActionNames.SpyglassProductionStart,
             PlayerId = playerId,
         });
-        for (int i = 0; i < SpyglassFirstStageContributionData.SPYGLASS_FIRST_STAGE_CONTRIBUTION_LIMIT; i++)
-        {
-            await Mediator.Send(new ExecuteActionRequest
-                { ActionName = ActionNames.SpyglassContribution, PlayerId = playerId });
-        }
-        await TeleportPlayerToRoom(playerId, SpyglassSecondStageContributionData.REQUIRED_ROOM);
-        for (int i = 0; i < SpyglassSecondStageContributionData.SPYGLASS_SECOND_STAGE_CONTRIBUTION_LIMIT; i++)
-        {
-            await Mediator.Send(new ExecuteActionRequest
-                { ActionName = ActionNames.SpyglassContribution, PlayerId = playerId });
-        }
-        await TeleportPlayerToRoom(playerId, SpyglassProductionThirdStageContributionData.REQUIRED_ROOM);
-        for (int i = 0; i < SpyglassProductionThirdStageContributionData.SPYGLASS_THIRD_STAGE_CONTRIBUTION_LIMIT; i++)
-        {
-            await Mediator.Send(new ExecuteActionRequest
-                { ActionName = ActionNames.SpyglassContribution, PlayerId = playerId });
-        }
+
+        await ContributePointsUntilCompletion(playerId);
 
         this._scope = this.RootServiceProvider.CreateScope();
         Player playerAfter = Context.Players
@@ -365,6 +351,103 @@ public class SpyglassProductionContributionAppTest : NorthwestIntegrationTestBas
 
         Assert.True(actions.Actions.Any());
     }
+
+    [Fact]
+    public async Task GivenLastContribution_WhenCompleted_ThenIsUnfinishedItemAbsentFromRoomInventory()
+    {
+        
+    }
+
+    [Fact]
+    public async Task GivenFullProductionFlow_WhenContributingStepByStep_ThenAllStagesTransitionCorrectly()
+    {
+        Guid playerId = await SetupForSpyglassStartAction();
+        Player player = await Context.Players.FirstAsync(x => x.Id == playerId);
+        player.ActionPoints = 999;
+        await Context.SaveChangesAsync();
+
+        await Mediator.Send(new ExecuteActionRequest
+        {
+            ActionName = ActionNames.SpyglassProductionStart,
+            PlayerId = playerId,
+        });
+
+        GetActionsResult actionsAfterInitiation = await Mediator.Send(new GetActionsRequest { PlayerId = playerId });
+        ActionDto contributionActionAfterInitiation =
+            actionsAfterInitiation.Actions.First(x => x.Name == ActionNames.SpyglassContribution);
+        Assert.Equal(SpyglassFirstStageContributionData.DESCRIPTION, contributionActionAfterInitiation.Description);
+
+        int totalContributions = SPYGLASS_ALL_STAGES_CONTRIBUTION_LIMIT;
+
+        for (int i = 0; i < SpyglassFirstStageContributionData.SPYGLASS_FIRST_STAGE_CONTRIBUTION_LIMIT; i++)
+        {
+            GetActionsResult actionsBefore = await Mediator.Send(new GetActionsRequest { PlayerId = playerId });
+            ActionDto contributionAction = actionsBefore.Actions.First(x => x.Name == ActionNames.SpyglassContribution);
+            Assert.True(contributionAction.Requirements.All(r => r.IsFulfilled), $"First stage, contribution {i + 1}");
+            Assert.Equal(SpyglassFirstStageContributionData.DESCRIPTION, contributionAction.Description);
+
+            await Mediator.Send(new ExecuteActionRequest
+                { ActionName = ActionNames.SpyglassContribution, PlayerId = playerId });
+        }
+
+        await TeleportPlayerToRoom(playerId, SpyglassSecondStageContributionData.REQUIRED_ROOM);
+
+        for (int i = 0; i < SpyglassSecondStageContributionData.SPYGLASS_SECOND_STAGE_CONTRIBUTION_LIMIT; i++)
+        {
+            GetActionsResult actionsBefore = await Mediator.Send(new GetActionsRequest { PlayerId = playerId });
+            ActionDto contributionAction = actionsBefore.Actions.First(x => x.Name == ActionNames.SpyglassContribution);
+            Assert.True(contributionAction.Requirements.All(r => r.IsFulfilled), $"Second stage, contribution {i + 1}");
+            Assert.Equal(SpyglassSecondStageContributionData.DESCRIPTION, contributionAction.Description);
+
+            await Mediator.Send(new ExecuteActionRequest
+                { ActionName = ActionNames.SpyglassContribution, PlayerId = playerId });
+        }
+
+        await TeleportPlayerToRoom(playerId, SpyglassProductionThirdStageContributionData.REQUIRED_ROOM);
+
+        for (int i = 0; i < SpyglassProductionThirdStageContributionData.SPYGLASS_THIRD_STAGE_CONTRIBUTION_LIMIT; i++)
+        {
+            GetActionsResult actionsBefore = await Mediator.Send(new GetActionsRequest { PlayerId = playerId });
+            ActionDto contributionAction = actionsBefore.Actions.First(x => x.Name == ActionNames.SpyglassContribution);
+            Assert.True(contributionAction.Requirements.All(r => r.IsFulfilled), $"Third stage, contribution {i + 1}");
+            Assert.Equal(SpyglassProductionThirdStageContributionData.DESCRIPTION, contributionAction.Description);
+
+            await Mediator.Send(new ExecuteActionRequest
+                { ActionName = ActionNames.SpyglassContribution, PlayerId = playerId });
+        }
+
+        this._scope = this.RootServiceProvider.CreateScope();
+        Player playerAfter = Context.Players
+            .Include(x => x.Inventory)
+            .ThenInclude(x => x.Items)
+            .First(x => x.Id == playerId);
+
+        Assert.Contains(playerAfter.Inventory.Items, x => x.ItemType == ItemTypes.Spyglass);
+    }
+
+    private async Task ContributePointsUntilCompletion(Guid playerId)
+    {
+        for (int i = 0; i < SpyglassFirstStageContributionData.SPYGLASS_FIRST_STAGE_CONTRIBUTION_LIMIT; i++)
+        {
+            await Mediator.Send(new ExecuteActionRequest
+                { ActionName = ActionNames.SpyglassContribution, PlayerId = playerId });
+        }
+
+        await TeleportPlayerToRoom(playerId, SpyglassSecondStageContributionData.REQUIRED_ROOM);
+        for (int i = 0; i < SpyglassSecondStageContributionData.SPYGLASS_SECOND_STAGE_CONTRIBUTION_LIMIT; i++)
+        {
+            await Mediator.Send(new ExecuteActionRequest
+                { ActionName = ActionNames.SpyglassContribution, PlayerId = playerId });
+        }
+
+        await TeleportPlayerToRoom(playerId, SpyglassProductionThirdStageContributionData.REQUIRED_ROOM);
+        for (int i = 0; i < SpyglassProductionThirdStageContributionData.SPYGLASS_THIRD_STAGE_CONTRIBUTION_LIMIT; i++)
+        {
+            await Mediator.Send(new ExecuteActionRequest
+                { ActionName = ActionNames.SpyglassContribution, PlayerId = playerId });
+        }
+    }
+
 
     private async Task<Guid> SetupForSpyglassStartAction()
     {
@@ -403,68 +486,5 @@ public class SpyglassProductionContributionAppTest : NorthwestIntegrationTestBas
 
         player.Room = room;
         await Context.SaveChangesAsync();
-    }
-
-    [Fact]
-    public async Task GivenFullProductionFlow_WhenContributingStepByStep_ThenAllStagesTransitionCorrectly()
-    {
-        Guid playerId = await SetupForSpyglassStartAction();
-        Player player = await Context.Players.FirstAsync(x => x.Id == playerId);
-        player.ActionPoints = 999;
-        await Context.SaveChangesAsync();
-
-        await Mediator.Send(new ExecuteActionRequest
-        {
-            ActionName = ActionNames.SpyglassProductionStart,
-            PlayerId = playerId,
-        });
-
-        GetActionsResult actionsAfterInitiation = await Mediator.Send(new GetActionsRequest { PlayerId = playerId });
-        ActionDto contributionActionAfterInitiation = actionsAfterInitiation.Actions.First(x => x.Name == ActionNames.SpyglassContribution);
-        Assert.Equal(SpyglassFirstStageContributionData.DESCRIPTION, contributionActionAfterInitiation.Description);
-
-        int totalContributions = SPYGLASS_ALL_STAGES_CONTRIBUTION_LIMIT;
-        
-        for (int i = 0; i < SpyglassFirstStageContributionData.SPYGLASS_FIRST_STAGE_CONTRIBUTION_LIMIT; i++)
-        {
-            GetActionsResult actionsBefore = await Mediator.Send(new GetActionsRequest { PlayerId = playerId });
-            ActionDto contributionAction = actionsBefore.Actions.First(x => x.Name == ActionNames.SpyglassContribution);
-            Assert.True(contributionAction.Requirements.All(r => r.IsFulfilled), $"First stage, contribution {i + 1}");
-            Assert.Equal(SpyglassFirstStageContributionData.DESCRIPTION, contributionAction.Description);
-
-            await Mediator.Send(new ExecuteActionRequest { ActionName = ActionNames.SpyglassContribution, PlayerId = playerId });
-        }
-
-        await TeleportPlayerToRoom(playerId, SpyglassSecondStageContributionData.REQUIRED_ROOM);
-
-        for (int i = 0; i < SpyglassSecondStageContributionData.SPYGLASS_SECOND_STAGE_CONTRIBUTION_LIMIT; i++)
-        {
-            GetActionsResult actionsBefore = await Mediator.Send(new GetActionsRequest { PlayerId = playerId });
-            ActionDto contributionAction = actionsBefore.Actions.First(x => x.Name == ActionNames.SpyglassContribution);
-            Assert.True(contributionAction.Requirements.All(r => r.IsFulfilled), $"Second stage, contribution {i + 1}");
-            Assert.Equal(SpyglassSecondStageContributionData.DESCRIPTION, contributionAction.Description);
-
-            await Mediator.Send(new ExecuteActionRequest { ActionName = ActionNames.SpyglassContribution, PlayerId = playerId });
-        }
-
-        await TeleportPlayerToRoom(playerId, SpyglassProductionThirdStageContributionData.REQUIRED_ROOM);
-
-        for (int i = 0; i < SpyglassProductionThirdStageContributionData.SPYGLASS_THIRD_STAGE_CONTRIBUTION_LIMIT; i++)
-        {
-            GetActionsResult actionsBefore = await Mediator.Send(new GetActionsRequest { PlayerId = playerId });
-            ActionDto contributionAction = actionsBefore.Actions.First(x => x.Name == ActionNames.SpyglassContribution);
-            Assert.True(contributionAction.Requirements.All(r => r.IsFulfilled), $"Third stage, contribution {i + 1}");
-            Assert.Equal(SpyglassProductionThirdStageContributionData.DESCRIPTION, contributionAction.Description);
-
-            await Mediator.Send(new ExecuteActionRequest { ActionName = ActionNames.SpyglassContribution, PlayerId = playerId });
-        }
-
-        this._scope = this.RootServiceProvider.CreateScope();
-        Player playerAfter = Context.Players
-            .Include(x => x.Inventory)
-            .ThenInclude(x => x.Items)
-            .First(x => x.Id == playerId);
-
-        Assert.Contains(playerAfter.Inventory.Items, x => x.ItemType == ItemTypes.Spyglass);
     }
 }

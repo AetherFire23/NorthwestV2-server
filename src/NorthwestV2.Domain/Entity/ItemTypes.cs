@@ -7,5 +7,8 @@ public enum ItemTypes
     AssemblyOfCasingAndLenses,
     Spyglass,
     UnfinishedSpyglass,
-    Scrap
+    Scrap,
+    
+    UnfinishedHammer,
+    Hammer
 }

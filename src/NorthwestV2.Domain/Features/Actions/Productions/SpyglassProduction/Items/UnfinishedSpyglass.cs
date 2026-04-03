@@ -16,6 +16,8 @@ public class UnfinishedSpyglass : ProductionItemBase
     {
     }
 
+    public bool IsProductionComplete => this.CurrentStageContribution.IsProductionComplete;
+
     /// <summary>
     /// Creates an unfinished spyglass for the production of the Spyglass item. 
     /// </summary>
@@ -40,8 +42,12 @@ public class UnfinishedSpyglass : ProductionItemBase
 
     public override void OnProductionCompleted(Player player)
     {
+        // TODO: Might wanna abstract deletion behaviour after 
         Spyglass spyglass = new Spyglass();
 
         player.Inventory.Add(spyglass);
+
+        // TODO: not actually deleted from DB, just cleared. 
+        LockedItems.Clear();
     }
 }

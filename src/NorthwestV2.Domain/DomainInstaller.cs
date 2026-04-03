@@ -4,6 +4,7 @@ using AetherFire23.ERP.Domain.Features.Actions.Debug;
 using AetherFire23.ERP.Domain.Features.Actions.General.Combat;
 using AetherFire23.ERP.Domain.Features.Actions.General.Movement;
 using AetherFire23.ERP.Domain.Features.Actions.Productions;
+using AetherFire23.ERP.Domain.Features.Actions.Productions.HammerProduction.Contribution;
 using AetherFire23.ERP.Domain.Features.Actions.Productions.HammerProduction.Initiation;
 using AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction;
 using AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.ContributionToStages;
@@ -31,8 +32,13 @@ public static class DomainInstaller
         serviceCollection.AddScoped<ChangeRoomAction>();
         serviceCollection.AddScoped<SpyglassProductionInitiationAction>();
         serviceCollection.AddScoped<SpyglassProductionContributionAction>();
-        serviceCollection.AddScoped<HammerProductionInitiation>();
         serviceCollection.AddScoped<CancelProductionAction>();
+
+        /*
+         * Hammer production
+         */
+        serviceCollection.AddScoped<HammerProductionInitiation>();
+        serviceCollection.AddScoped<HammerProductionContribution>();
 
         serviceCollection.AddScoped<IRandomProvider, RealRandom>();
         InstallActionServices(serviceCollection);

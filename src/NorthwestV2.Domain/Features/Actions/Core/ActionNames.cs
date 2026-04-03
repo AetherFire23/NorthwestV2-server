@@ -21,4 +21,5 @@ public static class ActionNames
     // public const string SpyglassProduction = "Spyglass Production";
     public static string HammerProductionInitiation => "Initiate hammer production";
     public static string CancelProduction => "Cancel a production";
+    public const string HammerProductionContribution = "HammerProductionContribution";
 }

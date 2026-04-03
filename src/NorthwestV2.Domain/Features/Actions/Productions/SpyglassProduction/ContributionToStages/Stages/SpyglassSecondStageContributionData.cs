@@ -25,8 +25,8 @@ public record SpyglassSecondStageContributionData : StageContributionBase
 
     public override List<ActionRequirement> GetRequirements(Player player)
     {
-        RoomHasItemRequirement isRoomHavingUnfinishedSpyglass =
-            new RoomHasItemRequirement(player.Room, ItemTypes.UnfinishedSpyglass);
+        ItemInRoomRequirement isItemInRoomHavingUnfinishedSpyglass =
+            new ItemInRoomRequirement(player.Room, ItemTypes.UnfinishedSpyglass);
 
         PlayerHasTimePointsRequirement playerHasTimePointsRequirement =
             PlayerHasTimePointsRequirement.Create(player, CalculateCostForContribution(player));
@@ -34,6 +34,6 @@ public record SpyglassSecondStageContributionData : StageContributionBase
         PlayerInRoomRequirement playerInForecastleRequirement =
             new PlayerInRoomRequirement(player, REQUIRED_ROOM);
 
-        return [playerInForecastleRequirement, isRoomHavingUnfinishedSpyglass, playerHasTimePointsRequirement];
+        return [playerInForecastleRequirement, isItemInRoomHavingUnfinishedSpyglass, playerHasTimePointsRequirement];
     }
 }

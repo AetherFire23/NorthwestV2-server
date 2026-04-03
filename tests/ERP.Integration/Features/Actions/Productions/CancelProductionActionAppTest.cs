@@ -1,7 +1,6 @@
 ﻿using AetherFire23.ERP.Domain.Entity;
 using AetherFire23.ERP.Domain.Features.Actions.Core;
 using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.WithTargets;
-using AetherFire23.ERP.Domain.Features.Actions.Productions;
 using AetherFire23.ERP.Domain.Features.Actions.Productions.Core.Entities;
 using AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.Initiation;
 using AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.Items;
@@ -73,7 +72,7 @@ public class CancelProductionActionAppTest : NorthwestIntegrationTestBase
 
     private async Task<ActionTarget> GetProductionTarget(Guid playerId)
     {
-        var cancelAction = await GetCancelProductionAction(playerId);
+        ActionDto? cancelAction = await GetCancelProductionAction(playerId);
         return cancelAction.Prompts.First().ValidTargets.First();
     }
 
@@ -102,6 +101,7 @@ public class CancelProductionActionAppTest : NorthwestIntegrationTestBase
         Assert.DoesNotContain(player.Room.Inventory.Items, x => x is ProductionItemBase);
     }
 
+    // TODO: Put as base methodo of northwestIntegrationTestBase
     private void RefreshScope()
     {
         _scope = RootServiceProvider.CreateScope();
@@ -114,7 +114,7 @@ public class CancelProductionActionAppTest : NorthwestIntegrationTestBase
             SpyglassProductionInitiationAction.REQUIRED_ROOM_SPYGLASS_START);
         return playerId;
     }
-
+    
     private async Task<Guid> TeleportPlayerTo(GameDataSeed gameDataSeed, RoomEnum roomenum)
     {
         Guid playerId = gameDataSeed.PlayerIds.First();

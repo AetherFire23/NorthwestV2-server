@@ -1,6 +1,5 @@
 ﻿using AetherFire23.ERP.Domain.Entity;
 using AetherFire23.ERP.Domain.Features.Actions.Core;
-using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.Instant;
 using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.WithTargets;
 using AetherFire23.ERP.Domain.Features.Actions.Productions;
 using NorthwestV2.Application.Features.Actions.Core.Bases;
@@ -43,8 +42,11 @@ public class CancelProductionActionApp : ActionWithTargetsBase
     {
         Player player = await _playerRepository.GetPlayer(request.PlayerId);
 
-        _cancelProductionAction.CancelProduction(player, ActionTargetsList.From(request.ActionTargets));
-
+        _cancelProductionAction.CancelProduction(player, player.Room, ActionTargetsList.From(request.ActionTargets));
+        
+        // TODO:
+        // itemrepository.DeleteItem();
+        
         await _unitOfWork.SaveChangesAsync();
     }
 }

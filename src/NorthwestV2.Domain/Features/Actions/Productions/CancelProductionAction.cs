@@ -10,7 +10,7 @@ public class CancelProductionAction
 {
     public ActionWithTargetsAvailability GetAvailability(Player player)
     {
-        RoomHasItemRequirement roomHasUnfinishedSpyglass = new(player.Room, ItemTypes.UnfinishedSpyglass);
+        ItemInRoomRequirement itemInRoomHasUnfinishedSpyglass = new(player.Room, ItemTypes.UnfinishedSpyglass);
 
         List<ItemBase> productionItemsInRoom =
             player.Room.Inventory.Items
@@ -24,21 +24,23 @@ public class CancelProductionAction
         {
             ActionName = ActionNames.CancelProduction,
             DisplayName = "Cancel Production",
-            ActionRequirements = [roomHasUnfinishedSpyglass],
+            ActionRequirements = [itemInRoomHasUnfinishedSpyglass],
             TargetSelectionPrompts = [promptOfProductionItems]
         };
 
         return instant;
     }
 
-    public ProductionItemBase CancelProduction(Player player,
-        ActionTargetsList actionTargets)
+    public ProductionItemBase CancelProduction(Player player, Room playersRoom, ActionTargetsList actionTargets)
     {
         ProductionItemBase productionItem = ExtractProductionItemFromTargets(player, actionTargets);
 
-        player.Room.Inventory.TakeOwnership(productionItem.LockedItems);
+        // The room of the player takes the locked items back into it
+        playersRoom.Inventory.TakeOwnership(productionItem.LockedItems);
 
-        player.Room.Inventory.Items.Remove(productionItem);
+        productionItem.UnlockAllLockedItems();
+
+        playersRoom.RemoveItem(productionItem);
 
         return productionItem;
     }

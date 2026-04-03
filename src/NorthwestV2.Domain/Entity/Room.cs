@@ -14,6 +14,21 @@ public class Room : EntityBase
 
     //TODO: One day make method to get 
 
+    public void RemoveItem(ItemBase item)
+    {
+        this.Inventory.Items.Remove(item);
+    }
+
+    /// <summary>
+    /// Takes items incoming from a list, add them to this current invenotry, then removes them from the list. 
+    /// </summary>
+    /// <param name="itemsToTake"></param>
+    public void TakeOwnership(List<ItemBase> itemsToTake)
+    {
+        this.Inventory.Items.AddRange(itemsToTake);
+        itemsToTake.Clear();
+    }
+
     public override string ToString()
     {
         return this.RoomEnum.ToString();
