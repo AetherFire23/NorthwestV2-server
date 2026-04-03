@@ -1,6 +1,8 @@
 ﻿using AetherFire23.ERP.Domain.Entity;
 using AetherFire23.ERP.Domain.Features.Actions.Core;
+using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.WithTargets;
 using AetherFire23.ERP.Domain.Features.Actions.Productions;
+using AetherFire23.ERP.Domain.Features.Actions.Productions.Core.Entities;
 using AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.Initiation;
 using AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.Items;
 using JetBrains.Annotations;
@@ -22,69 +24,87 @@ public class CancelProductionActionAppTest : NorthwestIntegrationTestBase
     }
 
     [Fact]
-    public async Task GivenUnfinishedSpyglassInRoom_WhenGettingAvailableActions_ThenIsCancelProductionAvailable()
+    public async Task GivenUnfinishedSpyglassInRoom_WhenGettingAvailableActions_ThenCanCancelProduction()
     {
-        Guid playerId = await SetupForSpyglassStartAction();
+        Guid playerId = await SetupForSpyglassProduction();
 
-        GetActionsResult actions = await Mediator.Send(new GetActionsRequest
-        {
-            PlayerId = playerId,
-        });
+        ActionDto cancelAction = await GetCancelProductionAction(playerId);
 
-        Assert.Contains(actions.Actions, x => x.Name == ActionNames.CancelProduction);
+        Assert.True(cancelAction.Requirements.All(x => x.IsFulfilled));
     }
 
     [Fact]
-    public async Task GivenUnfinishedSpyglassInRoom_WhenGettingAvailableActions_ThenCanCancelProduction()
+    public async Task GivenUnfinishedSpyglassInRoom_WhenGettingAvailableActions_ThenIsCancelProductionAvailable()
     {
-        Guid playerId = await SetupForSpyglassStartAction();
-        // Create the spyglass
-        await this.Mediator.Send(new ExecuteActionRequest
-        {
-            ActionName = ActionNames.SpyglassProductionStart,
-            PlayerId = playerId,
-            ActionTargets = []
-        });
+        Guid playerId = await SetupForSpyglassProduction();
 
-        GetActionsResult actions = await Mediator.Send(new GetActionsRequest
-        {
-            PlayerId = playerId,
-        });
+        ActionDto cancelAction = await GetCancelProductionAction(playerId);
 
-        ActionDto requirements = actions.Actions.First(x => x.Name == ActionNames.CancelProduction);
-        Assert.True(requirements.Requirements.All(x => x.IsFulfilled));
+        Assert.NotNull(cancelAction);
     }
 
     [Fact]
     public async Task GivenUnfinishedSpyglassInRoom_WhenCancellingProduction_ThenProductionItemIsDeleted()
     {
+        Guid playerId = await SetupForSpyglassProduction();
+        ActionTarget productionTarget = await GetProductionTarget(playerId);
+
+        await CancelProduction(playerId, productionTarget);
+
+        await AssertNoProductionItemsInRoom(playerId);
+    }
+
+    private async Task<Guid> SetupForSpyglassProduction()
+    {
         Guid playerId = await SetupForSpyglassStartAction();
-        // Create the spyglass
+        await StartSpyglassProduction(playerId);
+        return playerId;
+    }
+
+    private async Task StartSpyglassProduction(Guid playerId)
+    {
         await Mediator.Send(new ExecuteActionRequest
         {
             ActionName = ActionNames.SpyglassProductionStart,
             PlayerId = playerId,
             ActionTargets = []
         });
-        
-        // Cancel the unfinished item 
-        GetActionsResult actions = await Mediator.Send(new GetActionsRequest
-        {
-            PlayerId = playerId,
-        });
-        var akt = actions.Actions.First(x => x.Name == ActionNames.CancelProduction);
+    }
+
+    private async Task<ActionTarget> GetProductionTarget(Guid playerId)
+    {
+        var cancelAction = await GetCancelProductionAction(playerId);
+        return cancelAction.Prompts.First().ValidTargets.First();
+    }
+
+    private async Task<ActionDto?> GetCancelProductionAction(Guid playerId)
+    {
+        GetActionsResult actions = await Mediator.Send(new GetActionsRequest { PlayerId = playerId });
+        return actions.Actions.FirstOrDefault(x => x.Name == ActionNames.CancelProduction);
+    }
+
+    private async Task CancelProduction(Guid playerId, ActionTarget target)
+    {
         await Mediator.Send(new ExecuteActionRequest
         {
             ActionName = ActionNames.CancelProduction,
             PlayerId = playerId,
-            ActionTargets = [[akt.Prompts.First().ValidTargets.First()]]
+            ActionTargets = [[target]]
         });
+    }
 
+    private async Task AssertNoProductionItemsInRoom(Guid playerId)
+    {
+        RefreshScope();
+        Player player = await GetServiceFromScope<IPlayerRepository>()
+            .GetPlayerAndRoomAndInventoryAndGame(playerId);
 
-        this._scope = base.RootServiceProvider.CreateScope();
-        Player player2 = await GetServiceFromScope<IPlayerRepository>().GetPlayerAndRoomAndInventoryAndGame(playerId);
+        Assert.DoesNotContain(player.Room.Inventory.Items, x => x is ProductionItemBase);
+    }
 
-        Assert.True(!player2.Room.Inventory.Items.Any(x => x.ItemType == ItemTypes.UnfinishedSpyglass));
+    private void RefreshScope()
+    {
+        _scope = RootServiceProvider.CreateScope();
     }
 
     private async Task<Guid> SetupForSpyglassStartAction()
