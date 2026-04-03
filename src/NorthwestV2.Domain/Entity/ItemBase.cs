@@ -1,4 +1,6 @@
-﻿namespace AetherFire23.ERP.Domain.Entity;
+﻿using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.WithTargets;
+
+namespace AetherFire23.ERP.Domain.Entity;
 
 /// <summary>
 /// </summary>
@@ -18,5 +20,16 @@ public class ItemBase : EntityBase
     {
         ItemType = itemType;
         CarryValue = carryValue;
+    }
+
+    public ActionTarget ToTarget()
+    {
+        ActionTarget actionTarget = new ActionTarget()
+        {
+            Name = this.ItemType.ToString(),
+            TargetId = this.Id,
+        };
+
+        return actionTarget;
     }
 }

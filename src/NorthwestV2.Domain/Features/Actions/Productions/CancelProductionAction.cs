@@ -12,28 +12,45 @@ public class CancelProductionAction
     {
         RoomHasItemRequirement roomHasUnfinishedSpyglass = new(player.Room, ItemTypes.UnfinishedSpyglass);
 
-        List<ActionTarget> productionItemsInRoom =
+        List<ItemBase> productionItemsInRoom =
             player.Room.Inventory.Items
                 .OfType<ProductionItemBase>()
-                .Select(x => x.ToActionTarget())
+                .Cast<ItemBase>()
                 .ToList();
 
+        TargetSelectionPrompt promptOfProductionItems = TargetSelectionPrompt.FromItems(productionItemsInRoom);
 
         ActionWithTargetsAvailability instant = new()
         {
             ActionName = ActionNames.CancelProduction,
             DisplayName = "Cancel Production",
             ActionRequirements = [roomHasUnfinishedSpyglass],
-            TargetSelectionPrompts = [[]]
+            TargetSelectionPrompts = [promptOfProductionItems]
         };
 
         return instant;
     }
 
-    public void CancelProduction(Player player, List<List<ActionTarget>> actionTargets)
+    public ProductionItemBase CancelProduction(Player player,
+        ActionTargetsList actionTargets)
     {
-        ActionTarget production = actionTargets.First().Single();
+        ProductionItemBase productionItem = ExtractProductionItemFromTargets(player, actionTargets);
 
-        player.Room.Inventory.Items.First(x => x.Id == production.TargetId);
+        player.Room.Inventory.TakeOwnership(productionItem.LockedItems);
+
+        player.Room.Inventory.Items.Remove(productionItem);
+
+        return productionItem;
+    }
+
+    private static ProductionItemBase ExtractProductionItemFromTargets(Player player, ActionTargetsList actionTargets)
+    {
+        // Getting the only possible production targettable when cancelling a production. 
+        ActionTarget productionTarget = actionTargets.Single();
+
+        // Getting the production item from the targetId
+        ProductionItemBase productionItem =
+            (ProductionItemBase)player.Room.Inventory.FindById(productionTarget.TargetId.Value);
+        return productionItem;
     }
 }

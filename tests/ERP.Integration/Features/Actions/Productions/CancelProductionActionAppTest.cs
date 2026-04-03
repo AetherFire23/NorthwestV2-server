@@ -66,6 +66,7 @@ public class CancelProductionActionAppTest : NorthwestIntegrationTestBase
             PlayerId = playerId,
             ActionTargets = []
         });
+        
         // Cancel the unfinished item 
         GetActionsResult actions = await Mediator.Send(new GetActionsRequest
         {
@@ -80,9 +81,10 @@ public class CancelProductionActionAppTest : NorthwestIntegrationTestBase
         });
 
 
-        Player player = await GetServiceFromScope<IPlayerRepository>().GetPlayer(playerId);
+        this._scope = base.RootServiceProvider.CreateScope();
+        Player player2 = await GetServiceFromScope<IPlayerRepository>().GetPlayerAndRoomAndInventoryAndGame(playerId);
 
-        Assert.True(!player.Room.Inventory.Items.Any(x => x.ItemType == ItemTypes.UnfinishedSpyglass));
+        Assert.True(!player2.Room.Inventory.Items.Any(x => x.ItemType == ItemTypes.UnfinishedSpyglass));
     }
 
     private async Task<Guid> SetupForSpyglassStartAction()

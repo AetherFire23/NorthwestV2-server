@@ -12,6 +12,7 @@ public class Room : EntityBase
 
     public Inventory Inventory { get; set; }
 
+    //TODO: One day make method to get 
 
     public override string ToString()
     {
@@ -20,10 +21,10 @@ public class Room : EntityBase
 
     public ActionTarget ToTarget()
     {
-        var actionTarget = new ActionTarget()
+        ActionTarget actionTarget = new ActionTarget
         {
-            Name = this.RoomEnum.ToString(),
-            TargetId = this.Id,
+            Name = RoomEnum.ToString(),
+            TargetId = Id,
         };
 
         return actionTarget;

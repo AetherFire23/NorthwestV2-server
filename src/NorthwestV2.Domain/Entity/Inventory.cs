@@ -31,14 +31,36 @@ public class Inventory : EntityBase
         return (T)item;
     }
 
+    public ItemBase FindById(Guid id)
+    {
+        ItemBase first = Items.First(x => x.Id == id);
+
+        return first;
+    }
+
     public void Add(ItemBase itemBase)
     {
         this.Items.Add(itemBase);
     }
 
+    /// <summary>
+    /// Removes the item from the other inventory and adds it to the current inventory. 
+    /// </summary>
+    /// <param name="otherInventory"></param>
+    /// <param name="toTake"></param>
     public void TakeOwnership(Inventory otherInventory, ItemBase toTake)
     {
         otherInventory.Items.Remove(toTake);
         this.Items.Add(toTake);
+    }
+
+    /// <summary>
+    /// Takes items incoming from a list, add them to this current invenotry, then removes them from the list. 
+    /// </summary>
+    /// <param name="itemsToTake"></param>
+    public void TakeOwnership(List<ItemBase> itemsToTake)
+    {
+        this.Items.AddRange(itemsToTake);
+        itemsToTake.Clear();
     }
 }

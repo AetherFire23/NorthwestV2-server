@@ -58,10 +58,24 @@ public class TargetSelectionPrompt
     {
         List<ActionTarget> targets = rooms.Select(x => x.ToTarget()).ToList();
 
-        var prompt = new TargetSelectionPrompt
+        TargetSelectionPrompt prompt = new TargetSelectionPrompt
         {
             Description = "Choose required room(s)",
             ValidTargets = targets
+        };
+
+        return prompt;
+    }
+
+    public static TargetSelectionPrompt FromItems(List<ItemBase> items)
+    {
+        
+        List<ActionTarget> targets = items.Select(x => x.ToTarget()).ToList();
+
+        TargetSelectionPrompt prompt = new TargetSelectionPrompt
+        {
+            Description = "Selection a production to cancel. ",
+            ValidTargets = targets,
         };
 
         return prompt;

@@ -15,11 +15,15 @@ public class CancelProductionActionApp : ActionWithTargetsBase
     private readonly CancelProductionAction _cancelProductionAction;
     private readonly IPlayerRepository _playerRepository;
 
-    public CancelProductionActionApp(CancelProductionAction cancelProductionAction, IPlayerRepository playerRepository)
+    private IUnitOfWork _unitOfWork;
+
+    public CancelProductionActionApp(CancelProductionAction cancelProductionAction, IPlayerRepository playerRepository,
+        IUnitOfWork unitOfWork)
         : base(ActionNames.CancelProduction)
     {
         _cancelProductionAction = cancelProductionAction;
         _playerRepository = playerRepository;
+        _unitOfWork = unitOfWork;
     }
 
     public override async Task<ActionWithTargetsAvailability?> GetAvailabilityResult(GetActionsRequest request)
@@ -38,6 +42,9 @@ public class CancelProductionActionApp : ActionWithTargetsBase
     public override async Task Execute(ExecuteActionRequest request)
     {
         Player player = await _playerRepository.GetPlayer(request.PlayerId);
-        _cancelProductionAction.CancelProduction(player, request.ActionTargets);
+
+        _cancelProductionAction.CancelProduction(player, ActionTargetsList.From(request.ActionTargets));
+
+        await _unitOfWork.SaveChangesAsync();
     }
 }
