@@ -41,15 +41,14 @@ public class UnfinishedSpyglass : ProductionItemBase
     }
 
     // TODO: Maybe instead just return an ItemBase; and we can Clear the locked items automatically. and add the item to the room's inventory
-    
-    public override void OnProductionCompleted(Player player)
+
+    public override NormalItemBase CreateFinishedItem(Player player)
     {
-        // TODO: Might wanna abstract deletion behaviour after 
+        // TODO: Might wanna abstract deletion behaviour after. 
         Spyglass spyglass = new Spyglass();
 
-        player.Inventory.Add(spyglass);
 
-        // TODO: not actually deleted from DB, just cleared. 
-        LockedItems.Clear();
+
+        return spyglass;
     }
 }

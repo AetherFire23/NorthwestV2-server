@@ -13,12 +13,16 @@ public class UnfinishedHammer : ProductionItemBase
     {
     }
 
-    public override void OnProductionCompleted(Player player)
-    {
-    }
 
     public static UnfinishedHammer CreateFromItemsAndLock(Scrap scrap)
     {
-        return new UnfinishedHammer();
+        UnfinishedHammer unfinishedHammer = new UnfinishedHammer();
+        unfinishedHammer.LockForProduction(scrap);
+        return unfinishedHammer;
+    }
+
+    public override NormalItemBase CreateFinishedItem(Player player)
+    {
+        return new Hammer();
     }
 }

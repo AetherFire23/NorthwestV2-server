@@ -1,6 +1,5 @@
 ﻿using AetherFire23.ERP.Domain.Entity;
 using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.WithTargets;
-using AetherFire23.ERP.Domain.Role;
 
 namespace AetherFire23.ERP.Domain.Features.Actions.Productions.Core.Entities;
 
@@ -15,7 +14,7 @@ public abstract class ProductionItemBase : ItemBase
     public List<NormalItemBase> LockedItems { get; set; } = [];
 
     public StageContributionBase CurrentStageContribution { get; set; }
-    
+
     // TODO: Maybe check if we  
     public ProductionItemBase()
     {
@@ -80,8 +79,22 @@ public abstract class ProductionItemBase : ItemBase
         // TODO: Might wanna move this above so the caller handles deletion and completion completely. 
         if (this.CurrentStageContribution.IsProductionComplete)
         {
-            OnProductionCompleted(player);
+            CompleteProduction(player);
         }
+    }
+
+    public void CompleteProduction(Player player)
+    {
+        // Create the finised item
+        NormalItemBase finishedItem = CreateFinishedItem(player);
+        // I Verified, the item is picked up by the last player who provided the last TP. 
+        player.Inventory.Add(finishedItem);
+
+        // TODO: not actually deleted from DB, just cleared. 
+        LockedItems.Clear();
+        // Add it to the inventory
+        
+        
     }
 
     public void UnlockAllLockedItems()
@@ -92,8 +105,12 @@ public abstract class ProductionItemBase : ItemBase
         }
     }
 
-
-    public abstract void OnProductionCompleted(Player player);
+    /// <summary>
+    /// returns the created item. 
+    /// </summary>
+    /// <param name="player"></param>
+    /// <returns></returns>
+    public abstract NormalItemBase CreateFinishedItem(Player player);
 
     public ActionTarget ToActionTarget()
     {
