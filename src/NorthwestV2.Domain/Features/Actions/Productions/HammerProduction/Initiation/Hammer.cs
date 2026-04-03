@@ -2,7 +2,7 @@
 
 namespace AetherFire23.ERP.Domain.Features.Actions.Productions.HammerProduction.Initiation;
 
-public class Hammer : NormalItemBase
+public class Hammer : CommonItemBase
 {
     public Hammer() : base(ItemTypes.Hammer, 1)
     {

@@ -42,7 +42,7 @@ public class UnfinishedSpyglass : ProductionItemBase
 
     // TODO: Maybe instead just return an ItemBase; and we can Clear the locked items automatically. and add the item to the room's inventory
 
-    public override NormalItemBase CreateFinishedItem(Player player)
+    public override CommonItemBase CreateFinishedItem(Player player)
     {
         // TODO: Might wanna abstract deletion behaviour after. 
         Spyglass spyglass = new Spyglass();

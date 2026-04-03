@@ -11,7 +11,7 @@ namespace AetherFire23.ERP.Domain.Features.Actions.Productions.Core.Entities;
 public abstract class ProductionItemBase : ItemBase
 {
     // TODO: Include a Stage 
-    public List<NormalItemBase> LockedItems { get; set; } = [];
+    public List<CommonItemBase> LockedItems { get; set; } = [];
 
     public StageContributionBase CurrentStageContribution { get; set; }
 
@@ -26,7 +26,7 @@ public abstract class ProductionItemBase : ItemBase
         this.CurrentStageContribution = initialStageContribution;
     }
 
-    public void LockForProduction(NormalItemBase other)
+    public void LockForProduction(CommonItemBase other)
     {
         if (other.Inventory is null || other.Inventory.Items.Count == 0)
         {
@@ -86,20 +86,19 @@ public abstract class ProductionItemBase : ItemBase
     public void CompleteProduction(Player player)
     {
         // Create the finised item
-        NormalItemBase finishedItem = CreateFinishedItem(player);
+        CommonItemBase finishedItem = CreateFinishedItem(player);
         // I Verified, the item is picked up by the last player who provided the last TP. 
         player.Inventory.Add(finishedItem);
 
         // TODO: not actually deleted from DB, just cleared. 
         LockedItems.Clear();
+        
         // Add it to the inventory
-        
-        
     }
 
     public void UnlockAllLockedItems()
     {
-        foreach (NormalItemBase normalItemBase in this.LockedItems)
+        foreach (CommonItemBase normalItemBase in this.LockedItems)
         {
             normalItemBase.IsLocked = false;
         }
@@ -110,7 +109,7 @@ public abstract class ProductionItemBase : ItemBase
     /// </summary>
     /// <param name="player"></param>
     /// <returns></returns>
-    public abstract NormalItemBase CreateFinishedItem(Player player);
+    public abstract CommonItemBase CreateFinishedItem(Player player);
 
     public ActionTarget ToActionTarget()
     {

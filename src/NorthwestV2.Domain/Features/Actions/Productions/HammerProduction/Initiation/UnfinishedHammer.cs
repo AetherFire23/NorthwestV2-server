@@ -13,7 +13,6 @@ public class UnfinishedHammer : ProductionItemBase
     {
     }
 
-
     public static UnfinishedHammer CreateFromItemsAndLock(Scrap scrap)
     {
         UnfinishedHammer unfinishedHammer = new UnfinishedHammer();
@@ -21,7 +20,7 @@ public class UnfinishedHammer : ProductionItemBase
         return unfinishedHammer;
     }
 
-    public override NormalItemBase CreateFinishedItem(Player player)
+    public override CommonItemBase CreateFinishedItem(Player player)
     {
         return new Hammer();
     }

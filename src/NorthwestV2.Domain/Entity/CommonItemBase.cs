@@ -5,7 +5,7 @@ namespace AetherFire23.ERP.Domain.Entity;
 /// <summary>
 /// Normal components may be components for productions. 
 /// </summary>
-public class NormalItemBase : ItemBase
+public class CommonItemBase : ItemBase
 {
     /// <summary>
     /// A normal item is not always a component for a production. 
@@ -16,7 +16,7 @@ public class NormalItemBase : ItemBase
     public int TimePointsContributions { get; set; } = 0;
     public bool IsLocked { get; set; } = false;
 
-    public NormalItemBase(ItemTypes itemType, int carryValue) : base(itemType, carryValue)
+    public CommonItemBase(ItemTypes itemType, int carryValue) : base(itemType, carryValue)
     {
     }
 

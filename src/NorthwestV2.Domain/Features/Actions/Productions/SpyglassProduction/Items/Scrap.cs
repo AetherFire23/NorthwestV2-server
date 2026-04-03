@@ -2,7 +2,7 @@
 
 namespace AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.Items;
 
-public class Scrap : NormalItemBase
+public class Scrap : CommonItemBase
 {
     public Scrap() : base(ItemTypes.Scrap, 1)
     {

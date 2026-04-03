@@ -36,7 +36,7 @@ public class NorthwestContext : DbContext, IUnitOfWork
         modelBuilder.Entity<ItemBase>()
             .HasDiscriminator<string>("Discriminator")
             .HasValue<ItemBase>(nameof(ItemBase))
-            .HasValue<NormalItemBase>("NormalItemBase")
+            .HasValue<CommonItemBase>("NormalItemBase")
             .HasValue<ProductionItemBase>("ProductionItemBase")
             .HasValue<UnfinishedSpyglass>("UnfinishedSpyglass");
         
