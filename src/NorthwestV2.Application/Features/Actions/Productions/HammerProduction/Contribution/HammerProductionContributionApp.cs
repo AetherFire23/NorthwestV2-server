@@ -1,7 +1,9 @@
-﻿using AetherFire23.ERP.Domain.Features.Actions.Core;
+﻿using AetherFire23.ERP.Domain.Entity;
+using AetherFire23.ERP.Domain.Features.Actions.Core;
 using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.Instant;
 using AetherFire23.ERP.Domain.Features.Actions.Productions.HammerProduction.Contribution;
 using NorthwestV2.Application.Features.Actions.Core.Bases;
+using NorthwestV2.Application.Repositories;
 using NorthwestV2.Application.UseCases.GameActions.Command.ExecuteAction;
 using NorthwestV2.Application.UseCases.GameActions.Queries.GetActions;
 
@@ -11,25 +13,32 @@ public class HammerProductionContributionApp : InstantActionBase
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly HammerProductionContribution _hammerProductionContribution;
+    private readonly IPlayerRepository _playerRepository;
 
     public HammerProductionContributionApp(IUnitOfWork unitOfWork,
-        HammerProductionContribution hammerProductionContribution) : base(ActionNames.HammerProductionContribution)
+        HammerProductionContribution hammerProductionContribution, IPlayerRepository playerRepository) : base(
+        ActionNames.HammerProductionContribution)
     {
         _unitOfWork = unitOfWork;
         _hammerProductionContribution = hammerProductionContribution;
+        _playerRepository = playerRepository;
     }
 
     public override async Task<InstantActionAvailability?> GetAvailabilityResult(GetActionsRequest request)
     {
-        return new InstantActionAvailability()
-        {
-            ActionName = ActionNames.HammerProductionContribution,
-            DisplayName = "Contribute points to hammer production. "
-        };
+        Player player = await _playerRepository.GetPlayer(request.PlayerId);
+
+        InstantActionAvailability? instant = _hammerProductionContribution.DetermineAvailability(player);
+
+        return instant;
     }
 
     public override async Task Execute(ExecuteActionRequest request)
     {
-        throw new NotImplementedException();
+        Player player = await _playerRepository.GetPlayer(request.PlayerId);
+
+        _hammerProductionContribution.Execute(player);
+
+        await _unitOfWork.SaveChangesAsync();
     }
 }

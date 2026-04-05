@@ -44,7 +44,12 @@ public class Player : EntityBase
     public AttackerStances AttackerStance { get; set; } = AttackerStances.HitAndRun;
 
 
+    public bool Has<T>() where T : ItemBase
+    {
+        bool hasItem = Inventory.Has<T>();
 
+        return hasItem;
+    }
 
     /// <summary>
     /// Strength = Toughness + Weapon + Various Modifiers

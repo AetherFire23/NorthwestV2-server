@@ -63,6 +63,7 @@ public class HammerProductionInitiationAppTest : NorthwestIntegrationTestBase
 
         player.Room.Inventory.Items.Add(new Scrap());
 
+        await this.Context.SaveChangesAsync();
         return playerId;
     }
 }

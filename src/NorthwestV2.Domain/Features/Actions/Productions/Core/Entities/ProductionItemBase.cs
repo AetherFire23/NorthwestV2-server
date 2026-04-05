@@ -91,8 +91,14 @@ public abstract class ProductionItemBase : ItemBase
         player.Inventory.Add(finishedItem);
 
         // TODO: not actually deleted from DB, just cleared. 
+        
+        // Delete (unlink the locked items)
         LockedItems.Clear();
         
+        
+        ItemBase item = player.Room.Inventory.Items.First(x => x.ItemType == this.ItemType);
+        player.Room.Inventory.Items.Remove(item);
+
         // Add it to the inventory
     }
 

@@ -92,6 +92,10 @@ public class SpyglassProductionContributionAppTest : NorthwestIntegrationTestBas
         Assert.Equal(1, unfinishedSpyglass.CurrentStageContribution.Contributions);
     }
 
+
+    /*
+     *
+     */
     [Fact]
     public async Task GivenFirstStage_WhenContributingFullFirstStageLimit_ThenSecondStageDescriptionIsDisplayed()
     {
@@ -355,7 +359,48 @@ public class SpyglassProductionContributionAppTest : NorthwestIntegrationTestBas
     [Fact]
     public async Task GivenLastContribution_WhenCompleted_ThenIsUnfinishedItemAbsentFromRoomInventory()
     {
+        Guid playerId = await SetupForSpyglassStartAction();
+        Player player =
+            await this.GetServiceFromScope<IPlayerRepository>().GetPlayerAndRoomAndInventoryAndGame(playerId);
+        player.ActionPoints = 999999;
+        await this.Context.SaveChangesAsync();
+        await Mediator.Send(new ExecuteActionRequest
+        {
+            ActionName = ActionNames.SpyglassProductionStart,
+            PlayerId = playerId,
+        });
+
+        await ContributeUntillError(playerId);
+        await TeleportPlayerToRoom(playerId, SpyglassSecondStageContributionData.REQUIRED_ROOM);
+
+        await ContributeUntillError(playerId);
+        await TeleportPlayerToRoom(playerId, SpyglassProductionThirdStageContributionData.REQUIRED_ROOM);
         
+        await ContributeUntillError(playerId);
+        Player playerAfter =
+            await this.GetServiceFromScope<IPlayerRepository>().GetPlayerAndRoomAndInventoryAndGame(playerId);
+        
+        Assert.False(playerAfter.Room.Has<UnfinishedSpyglass>());
+    }
+
+    private async Task ContributeUntillError(Guid playerId)
+    {
+        Player pBefore =
+            await this.GetServiceFromScope<IPlayerRepository>().GetPlayerAndRoomAndInventoryAndGame(playerId);
+        try
+        {
+            while (!pBefore.Inventory.Has<Spyglass>())
+            {
+                await Mediator.Send(new ExecuteActionRequest
+                    { ActionName = ActionNames.SpyglassContribution, PlayerId = playerId });
+
+                pBefore =
+                    await this.GetServiceFromScope<IPlayerRepository>().GetPlayerAndRoomAndInventoryAndGame(playerId);
+            }
+        }
+        catch (Exception e)
+        {
+        }
     }
 
     [Fact]
@@ -363,7 +408,7 @@ public class SpyglassProductionContributionAppTest : NorthwestIntegrationTestBas
     {
         Guid playerId = await SetupForSpyglassStartAction();
         Player player = await Context.Players.FirstAsync(x => x.Id == playerId);
-        player.ActionPoints = 999;
+        player.ActionPoints = 999999;
         await Context.SaveChangesAsync();
 
         await Mediator.Send(new ExecuteActionRequest

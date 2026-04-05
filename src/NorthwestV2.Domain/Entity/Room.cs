@@ -24,7 +24,14 @@ public class Room : EntityBase
         bool hasItem = this.Inventory.Items.Any(x => x.ItemType == itemTypes);
         return hasItem;
     }
-    
+
+    public bool Has<T>() where T : ItemBase
+    {
+        bool anyItemIsOfType = Inventory.Items.Any(x => x is T);
+
+        return anyItemIsOfType;
+    }
+
     public void RemoveItem(ItemBase item)
     {
         this.Inventory.Items.Remove(item);

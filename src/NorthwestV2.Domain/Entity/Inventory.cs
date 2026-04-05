@@ -12,6 +12,14 @@ public class Inventory : EntityBase
     // public Room? Room { get; set; }
     public List<ItemBase> Items { get; set; } = [];
 
+
+    public bool Has<T>() where T : ItemBase
+    {
+        var hasItem = Items.Any(x => x is T);
+
+        return hasItem;
+    }
+
     public ItemBase Find(ItemTypes itemType)
     {
         var item = this.Items.First(x => x.ItemType == itemType);

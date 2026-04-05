@@ -17,7 +17,7 @@ public class ItemInRoomRequirement : ActionRequirement
     {
     }
 
-    public override string Description => $"Player must have this or these items : {String.Join(",", _requiredItems)}";
+    public override string Description => $"The current room must have this or these items : {String.Join(",", _requiredItems)}";
 
     public override bool IsFulfilled
     {
