@@ -19,14 +19,14 @@ public class NorthwestIntegrationTestBase //: PostgresTestContainer
     protected NorthwestContext Context => _scope.ServiceProvider.GetRequiredService<NorthwestContext>();
     public IServiceScope _scope;
     protected IServiceProvider RootServiceProvider;
-
+ 
     public NorthwestIntegrationTestBase(ITestOutputHelper output)
     {
         _output = output;
-        var instance =
+        PostgreSqlContainer? instance =
             new PostgreSqlBuilder("postgres:18")
                 .WithDatabase($"northwest-{Guid.NewGuid()}")
-                .WithReuse(false)
+                .WithReuse(true)
                 .Build();
 
         instance.StartAsync().Wait();
