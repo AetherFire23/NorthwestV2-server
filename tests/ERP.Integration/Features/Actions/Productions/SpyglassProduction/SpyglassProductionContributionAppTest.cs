@@ -88,7 +88,7 @@ public class SpyglassProductionContributionAppTest : TestBase2
             .ThenInclude(x => x.Items)
             .First(x => x.Id == playerAfter.RoomId);
         UnfinishedSpyglass unfinishedSpyglass = room.Inventory.Find(ItemTypes.UnfinishedSpyglass) as UnfinishedSpyglass;
-        Assert.Equal(1, unfinishedSpyglass.CurrentStageContribution.Contributions);
+        Assert.Equal(1, unfinishedSpyglass.CurrentStageContribution.RequiredContributions);
     }
 
 

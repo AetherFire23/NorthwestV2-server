@@ -22,9 +22,9 @@ namespace NorthwestV2.Features.Features.Actions.Productions.Core;
 public abstract record StageContributionBase
 {
     public string StageName { get; set; }
-    public int Contributions { get; set; }
-    public bool IsStageEnded => Contributions >= End;
-    public bool IsProductionComplete => this.Contributions == End && GetNextStage() is null;
+    public int RequiredContributions { get; set; }
+    public bool IsStageEnded => RequiredContributions >= End;
+    public bool IsProductionComplete => this.RequiredContributions == End && GetNextStage() is null;
 
     /// <summary>
     /// The required time points to end the current stage. 
@@ -39,10 +39,10 @@ public abstract record StageContributionBase
 
     /// <summary> Its the json sconstructor, do not use by default.  </summary>
     [JsonConstructor]
-    public StageContributionBase(string stageName, int contributions, int end, Roles requiredRole)
+    public StageContributionBase(string stageName, int requiredContributions, int end, Roles requiredRole)
     {
         StageName = stageName;
-        Contributions = contributions;
+        RequiredContributions = requiredContributions;
         End = end;
         this.RequiredRole = requiredRole;
     }
@@ -84,6 +84,10 @@ public abstract record StageContributionBase
         return nextStageContribution;
     }
 
+    /// <summary>
+    /// If left at null, it means there is not next stage. The base class's methods will handle that. 
+    /// </summary>
+    /// <returns></returns>
     protected virtual StageContributionBase? GetNextStage()
     {
         return null;

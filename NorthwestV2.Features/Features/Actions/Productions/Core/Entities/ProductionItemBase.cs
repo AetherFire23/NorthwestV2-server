@@ -25,8 +25,11 @@ public abstract class ProductionItemBase : ItemBase
     /// </summary>
     public StageContributionBase CurrentStageContribution { get; set; }
 
-    // TODO: Maybe check if we  
-    public ProductionItemBase()
+    /// <summary>
+    /// There is serialization-deserialization stuff happening.
+    /// We need constructors, but at least we can but them as protected / private
+    /// </summary>
+    protected ProductionItemBase()
     {
     }
 
@@ -89,7 +92,7 @@ public abstract class ProductionItemBase : ItemBase
         // Increment the current stage by 1 
         this.CurrentStageContribution = this.CurrentStageContribution with
         {
-            Contributions = this.CurrentStageContribution.Contributions + 1
+            RequiredContributions = this.CurrentStageContribution.RequiredContributions + 1
         };
 
         bool isCurrentStadedEndedButCurrentIsNotComplete =

@@ -8,7 +8,10 @@ public enum ItemTypes
     Spyglass,
     UnfinishedSpyglass,
     Scrap,
-    
+   
     UnfinishedHammer,
-    Hammer
+    Hammer,
+
+    UnfinishedFishingPole,
+    FishingPole,
 }

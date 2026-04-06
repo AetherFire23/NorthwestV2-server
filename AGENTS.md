@@ -1,20 +1,41 @@
 # AGENTS.md - NorthwestV2 Development Guide
 
-This file provides guidance for AI agents working in this codebase.
+This file provides guidance for AI agents working on the NorthwestV2 codebase.
 
 ## Project Overview
 
-NorthwestV2 is a .NET 10.0 game backend (ERP system). The solution uses:
-- **Framework**: .NET 10.0 with C#
-- **Architecture**: Clean Architecture (Domain → Application → Infrastructure → API)
-- **Pattern**: Mediator for CQRS, Entity Framework Core for data access
-- **Testing**: xUnit with coverage collection
+NorthwestV2 is a .NET 10 ASP.NET Core game application with a domain-driven design architecture. It uses PostgreSQL for data persistence and features a modular composition system for dependency injection.
+
+### Solution Structure
+
+```
+NorthwestV2.sln
+├── src/
+│   ├── NortwestV2.Api/           # Web API entry point (port 5272)
+│   ├── NorthwestV2.Application/ # Application layer
+│   ├── NorthwestV2.Domain/      # Domain entities and logic
+│   ├── NorthwestV2.Infrastructure/ # EF Core + PostgreSQL
+│   ├── NorthwestV2.Seed/        # Database seeding services
+│   └── NorthwestV2.Scenarios/   # Test scenario launcher
+├── NorthwestV2.Features/        # Use cases, handlers, domain services
+├── NorthwestV2.Compose/         # Composition root / DI installer
+└── tests/
+    ├── NorthwestV2.Unit/        # Unit tests (xUnit)
+    └── NorthwestV2.Integration/ # Integration tests
+```
+
+---
 
 ## Build & Test Commands
 
-### Build
+### Build Solution
 ```powershell
 dotnet build NorthwestV2.sln
+```
+
+### Build Specific Project
+```powershell
+dotnet build src/NortwestV2.Api/NortwestV2.Api.csproj
 ```
 
 ### Run Tests (All)
@@ -22,114 +43,156 @@ dotnet build NorthwestV2.sln
 dotnet test NorthwestV2.sln
 ```
 
-### Run Single Test (Unit Tests)
-```powershell
-# By test class name
-dotnet test tests/ERP.Unit/NorthwestV2.Unit.csproj --filter "FullyQualifiedName~PlayerFactoryTest"
-
-# By specific test method
-dotnet test tests/ERP.Unit/NorthwestV2.Unit.csproj --filter "FullyQualifiedName~PlayerFactoryTest.GivenPlayerFactory_WhenCreatePlayers_ThenPlayerCountIsCorrect"
-```
-
-### Run Single Test (Integration Tests)
-```powershell
-dotnet test tests/ERP.Integration/NorthwestV2.Integration.csproj --filter "FullyQualifiedName~TestClassName.TestMethodName"
-```
-
-### Run All Tests in a Project
+### Run Unit Tests Only
 ```powershell
 dotnet test tests/ERP.Unit/NorthwestV2.Unit.csproj
 ```
 
-## Solution Structure
-
+### Run Single Test (by method name)
+```powershell
+dotnet test tests/ERP.Unit/NorthwestV2.Unit.csproj --filter "FullyQualifiedName~PlayerFactoryTest.GivenPlayerFactory_WhenCreatePlayers_ThenPlayerCountIsCorrect"
 ```
-src/
-├── NorthwestV2.Domain/          # Core domain entities and logic
-├── NorthwestV2.Application/      # Application services, Mediator handlers
-├── NorthwestV2.Infrastructure/  # EF Core, external integrations
-├── NortwestV2.Api/              # ASP.NET Core Web API
-├── NorthwestV2.Seed/             # Database seeding
-└── commons/                      # Shared libraries (AetherFire23.*)
 
-tests/
-├── ERP.Unit/                    # Unit tests
-└── ERP.Integration/             # Integration tests
+### Run Single Test (by display name)
+```powershell
+dotnet test tests/ERP.Unit/NorthwestV2.Unit.csproj --filter "DisplayName=GivenPlayerFactory_WhenCreatePlayers_ThenPlayerCountIsCorrect"
 ```
+
+### Run with Verbose Output
+```powershell
+dotnet test NorthwestV2.sln --verbosity normal
+```
+
+### Run API in Development
+```powershell
+dotnet run --project src/NortwestV2.Api/NortwestV2.Api.csproj
+```
+
+### Add Migration
+```powershell
+dotnet ef migrations add InitialCreate --project src/NorthwestV2.Infrastructure --startup-project src/NortwestV2.Api
+```
+
+---
 
 ## Code Style Guidelines
 
-### Namespaces
-- **Convention**: `AetherFire23.ERP.Domain.*` (note: uses AetherFire23 prefix despite project name)
-- Example: `AetherFire23.ERP.Domain.Entity`, `AetherFire23.ERP.Domain.Features.Actions.General.Combat`
+### General Conventions
 
-### Classes & Types
-- Use `class` for entities and services
-- Use `record` for DTOs and value objects
-- Use `interface` for abstractions (e.g., `IRandomProvider`)
+- **.NET Version**: .NET 10.0
+- **Language**: C# 13+ (nullable reference types enabled, implicit usings enabled)
+- **Target Framework**: `net10.0`
 
-### Properties
-```csharp
-// Required properties with init
-public required User User { get; init; }
+### Project Configuration
 
-// Optional with default
-public int ActionPoints { get; set; } = 8;
-
-// Private setters when needed
-public Guid Id { get; private set; }
+Every `.csproj` should have:
+```xml
+<PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+</PropertyGroup>
 ```
 
-### Naming
-- **Classes/Methods**: PascalCase (`PlayerFactory`, `CreateFreshPlayersForGame`)
-- **Properties**: PascalCase (`UserId`, `HashedPassword`)
-- **Private fields**: (not commonly used - rely on local variables)
-- **Interfaces**: Prefix with `I` (`IRandomProvider`)
+### Naming Conventions
 
-### Nullable & Types
-- Enabled via `<Nullable>enable</Nullable>` in csproj
-- Use `string?` for nullable strings
-- Use `Guid` for identifiers (not int)
-- Collections: `List<T>`, `IEnumerable<T>`, `[T]` (collection expressions)
+| Element | Convention | Example |
+|---------|------------|---------|
+| Classes | PascalCase | `PlayerFactory`, `LoginHandler` |
+| Methods | PascalCase | `CreateFreshPlayersForGame` |
+| Properties | PascalCase | `UserId`, `ActionPoints` |
+| Private Fields | `_camelCase` | `_userRepository`, `_actionServices` |
+| Interfaces | `I` Prefix | `IUserRepository`, `IPlayerRepository` |
+| Constants | PascalCase | `INITIALIZATION_HEALTH = 100` |
+| Enums | PascalCase | `Roles`, `AttackTypes` |
+
+### File Organization
+
+- **One class per file** (unless tightly coupled small classes)
+- **Namespace matches folder path**: `NorthwestV2.Features.UseCases.Authentication.Login`
+- **Test file location**: Mirror source structure in `tests/` folder
+- **Test naming**: `<ClassName>Test` with methods like `Given<Condition>_When<Action>_Then<Expected>`
 
 ### Import Style
-- Use global using (ImplicitUsings enabled)
-- Explicit namespaces only when needed for disambiguation
 
-### Documentation
-- Use XML `<summary>` comments for public APIs
-- Include parameter descriptions in doc comments
-
-### Error Handling
-- Use `throw new Exception("message")` for domain logic errors
-- Validate inputs in constructors or factory methods
-
-### Constants
+Use explicit namespaces rather than rely on implicit usings for domain types:
 ```csharp
-public const int INITIALIZATION_HEALTH = 100;
-// Or
-public static class GameSettings
+using NorthwestV2.Features.Features.Shared.Entity;
+using NorthwestV2.Features.Repositories;
+using Mediator;
+```
+
+### Entity Base Class
+
+All entities inherit from `EntityBase` in `NorthwestV2.Features/Features/Shared/Entity/EntityBase.cs`:
+```csharp
+public class EntityBase
 {
-    public const int RequiredPlayerCountToStartGame = 12;
+    [Key] public Guid Id { get; set; } = Guid.Empty;
 }
 ```
 
-## Testing Conventions
+### Dependency Injection
 
-### Test Structure (xUnit)
+The project uses a custom composition system in `NorthwestV2.Compose/`. Install services via installers:
+```csharp
+public class DomainInstaller : IInstaller
+{
+    public void InstallServices(IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddScoped<PlayerFactory>();
+    }
+}
+```
+
+### Mediator Pattern (CQRS)
+
+Use Mediator for all use cases:
+- **Requests**: Implement `IRequest<TResponse>` or `IRequest`
+- **Handlers**: Implement `IRequestHandler<TRequest, TResponse>`
+- **Location**: `NorthwestV2.Features/UseCases/<Feature>/`
+
+```csharp
+public class LoginHandler : IRequestHandler<LoginRequest, LoginResult>
+{
+    public async ValueTask<LoginResult> Handle(LoginRequest request, CancellationToken ct)
+    {
+        // handler logic
+    }
+}
+```
+
+### Repository Pattern
+
+Define repository interfaces in `NorthwestV2.Features/ApplicationsStuff/Repositories/`:
+```csharp
+public interface IUserRepository
+{
+    ValueTask<User> GetByUserName(string username);
+}
+```
+
+Implement in `NorthwestV2.Infrastructure/Repositories/`.
+
+### Error Handling
+
+- Use custom exception classes for domain errors (e.g., `LoginException`)
+- Use `throw new Exception("message")` for critical failures in handlers
+- Validate inputs at the start of handlers
+
+### Testing
+
+- **Framework**: xUnit with `JetBrains.Annotations`
+- **Test base**: No custom base class - use `[TestSubject(typeof(T))]` attribute
+- **Assertions**: Use `Xunit.Assert` methods
+- **Test output**: Use `ITestOutputHelper` with `TestOutputLogger<T>`
+
 ```csharp
 [TestSubject(typeof(PlayerFactory))]
 public class PlayerFactoryTest
 {
-    private readonly ITestOutputHelper _outputHelper;
-
-    public PlayerFactoryTest(ITestOutputHelper outputHelper)
-    {
-        _outputHelper = outputHelper;
-    }
-
     [Fact]
-    public void TestName()
+    public void GivenPlayerFactory_WhenCreatePlayers_ThenPlayerCountIsCorrect()
     {
         // Arrange
         // Act
@@ -138,65 +201,47 @@ public class PlayerFactoryTest
 }
 ```
 
-### Test Helpers
-- Use `FakeRandom` for deterministic random testing
-- Use `TestOutputLogger<T>` for capturing logs in tests
+### XML Documentation
 
-### Project References in Tests
-```xml
-<ItemGroup>
-  <ProjectReference Include="..\..\src\NorthwestV2.Application\NorthwestV2.Application.csproj" />
-  <ProjectReference Include="..\..\src\NorthwestV2.Domain\NorthwestV2.Domain.csproj" />
-</ItemGroup>
-```
-
-## Common Patterns
-
-### Entity Base
+Include XML docs for public APIs (enabled in `.csproj`):
 ```csharp
-public class EntityBase
-{
-    [Key] public Guid Id { get; set; } = Guid.Empty;
-    // Equals/HashCode based on Id
-}
+/// <summary>
+/// Handles player login authentication.
+/// </summary>
+/// <remarks>
+/// Currently uses plain-text password comparison. Should use hashing.
+/// </remarks>
+public class LoginHandler : IRequestHandler<LoginRequest, LoginResult>
 ```
 
-### Domain Actions (Availability)
-```csharp
-public class CombatAction
-{
-    public ActionWithTargetsAvailability DetermineAvailability(Player caster, List<Player> otherPlayersInSameRoom)
-    {
-        // Return availability with requirements and prompts
-    }
-
-    public FightResult MakeTwoPlayerFightTogether(Player attackerPlayer, Player defenderPlayer)
-    {
-        // Execute the action
-    }
-}
-```
-
-### Role Initializers
-- Located in `src/NorthwestV2.Domain/GameStart/RoleInitializations/PlayerInitializers/`
-- Implement `RoleInitializer` abstract class
-- Auto-discovered via reflection in `DomainInstaller`
+---
 
 ## Database
 
-- Uses Entity Framework Core
-- Migrations managed via scripts in `scripts/migrations.ps1`
-- Uses PostgreSQL (see `scripts/docker postgres.ps1`)
+- **Provider**: PostgreSQL (via `Npgsql.EntityFrameworkCore.PostgreSQL`)
+- **ORM**: Entity Framework Core 10.0.2
+- **Context**: `NorthwestV2.Infrastructure/NorthwestContext.cs`
+- **Migrations**: Stored in `src/NorthwestV2.Infrastructure/Migrations/`
 
-## Key Files
+During development, the database is deleted and re-migrated on each startup in development mode.
 
-- `NorthwestV2.sln` - Solution file
-- `src/NorthwestV2.Domain/Entity/Player.cs` - Core player entity
-- `src/NorthwestV2.Domain/GameStart/PlayerFactory.cs` - Factory for creating players
-- `tests/ERP.Unit/PlayerFactoryTest.cs` - Example tests
+---
 
-## Notes
+## Frontend Integration
 
-- The project uses a subdomain naming convention (`AetherFire23`) that differs from the solution name (`NorthwestV2`)
-- Domain layer has no external dependencies (pure C#)
-- Application layer depends on Domain + Mediator + EF Core
+- **API URL**: `http://localhost:5272`
+- **Frontend URL**: `http://localhost:5173` (Vite)
+- **CORS**: Configured to allow credentials from frontend origins
+- **Session**: Uses in-memory distributed cache
+
+---
+
+## Key Packages
+
+| Package | Version | Purpose |
+|---------|---------|---------|
+| Microsoft.NET.Test.Sdk | 17.14.1 | Test runner |
+| xUnit | 2.9.3 | Testing framework |
+| Microsoft.EntityFrameworkCore | 10.0.2 | ORM |
+| Npgsql.EntityFrameworkCore.PostgreSQL | 10.0.0 | PostgreSQL provider |
+| Mediator | Latest | CQRS mediator |
