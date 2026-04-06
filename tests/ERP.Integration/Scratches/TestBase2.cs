@@ -63,7 +63,7 @@ public class TestBase2 : IAsyncLifetime
         AppComposer.ComposeApplication(services, config);
 
         RootServiceProvider = services.BuildServiceProvider();
-        AppComposer.Initialize(RootServiceProvider);
+        await AppComposer.Initialize(RootServiceProvider);
 
         Scope = RootServiceProvider.CreateScope();
     }

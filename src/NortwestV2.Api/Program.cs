@@ -91,7 +91,7 @@ public partial class Program
         app.MapControllers();
         
         // TODO: baby TeBeCo the sugar cane guy told me to do async for reasonz
-         AppComposer.Initialize(app.Services);
+         // await AppComposer.Initialize(app.Services);
 
         app.MapSwagger();
 

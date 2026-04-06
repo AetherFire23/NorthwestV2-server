@@ -19,20 +19,20 @@ public static class NorthwestContextInstaller
         serviceCollection.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<NorthwestContext>());
     }
 
-    public static void Initialize(IServiceProvider serviceProvider)
+    public static async Task Initialize(IServiceProvider serviceProvider)
     {
         /*
          * DisposeAsync vs normal dispoe
          * proprely handles IO when reaching end of scope for stuff like seeding
          * all-the-way-clean
          */
-        using IServiceScope scope = serviceProvider.CreateScope();
+        using IServiceScope scope = serviceProvider.CreateAsyncScope();
 
         NorthwestContext db = scope.ServiceProvider.GetRequiredService<NorthwestContext>();
 
         // No need to do EnsureDeleted because it will always be a clean-slate test container by default.
         // Method is virtual, override as needed. 
-        db.Database.Migrate();
+        await db.Database.MigrateAsync();
     }
 
 
