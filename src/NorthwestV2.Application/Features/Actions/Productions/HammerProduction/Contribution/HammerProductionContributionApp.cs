@@ -9,6 +9,10 @@ using NorthwestV2.Application.UseCases.GameActions.Queries.GetActions;
 
 namespace NorthwestV2.Application.Features.Actions.Productions.HammerProduction.Contribution;
 
+/// <summary>
+/// Application service for contributing Time Points (TP) to a Hammer production.
+/// Players can contribute TP to help complete a Hammer through its various stages.
+/// </summary>
 public class HammerProductionContributionApp : InstantActionBase
 {
     private readonly IUnitOfWork _unitOfWork;

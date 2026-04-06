@@ -46,10 +46,5 @@ public class SpyglassProductionContributionAction
     {
         UnfinishedSpyglass unfinishedSpyglass = player.Room.Inventory.Find<UnfinishedSpyglass>();
         unfinishedSpyglass.Contribute(player);
-
-        if (unfinishedSpyglass.IsProductionComplete)
-        {
-            player.Inventory.Items.Remove(unfinishedSpyglass);
-        }
     }
 }

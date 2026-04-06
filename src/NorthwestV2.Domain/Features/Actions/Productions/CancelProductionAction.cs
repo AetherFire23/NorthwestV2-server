@@ -1,5 +1,6 @@
 ﻿using AetherFire23.ERP.Domain.Entity;
 using AetherFire23.ERP.Domain.Features.Actions.Core;
+using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.Instant;
 using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.Requirements;
 using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.WithTargets;
 using AetherFire23.ERP.Domain.Features.Actions.Productions.Core.Entities;
@@ -10,13 +11,17 @@ public class CancelProductionAction
 {
     public ActionWithTargetsAvailability GetAvailability(Player player)
     {
-        ItemInRoomRequirement itemInRoomHasUnfinishedSpyglass = new(player.Room, ItemTypes.UnfinishedSpyglass);
-
         List<ItemBase> productionItemsInRoom =
             player.Room.Inventory.Items
                 .OfType<ProductionItemBase>()
                 .Cast<ItemBase>()
                 .ToList();
+
+        ActionRequirement actionRequirement = new()
+        {
+            IsFulfilled = productionItemsInRoom.Count > 0,
+            Description = "A production item exists in the current room."
+        };
 
         TargetSelectionPrompt promptOfProductionItems = TargetSelectionPrompt.FromItems(productionItemsInRoom);
 
@@ -24,7 +29,7 @@ public class CancelProductionAction
         {
             ActionName = ActionNames.CancelProduction,
             DisplayName = "Cancel Production",
-            ActionRequirements = [itemInRoomHasUnfinishedSpyglass],
+            ActionRequirements = [actionRequirement],
             TargetSelectionPrompts = [promptOfProductionItems]
         };
 

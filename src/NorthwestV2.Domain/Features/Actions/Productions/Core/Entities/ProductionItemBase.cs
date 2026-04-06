@@ -4,15 +4,25 @@ using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.WithTargets;
 namespace AetherFire23.ERP.Domain.Features.Actions.Productions.Core.Entities;
 
 /// <summary>
-/// Unfinished items behave like normal items, they can be picked up, carried away, and left in other rooms.
-/// They have the accumulated Time points.
-/// Programmatically: they are unfinished items and contain at least a stage. 
+/// Base class for unfinished production items.
+/// Unfinished items behave like normal items: they can be picked up, carried away, and left in other rooms.
+/// They store both the locked items used to start the production and the accumulated Technical Points (TP) contributions.
+/// Each production is divided into stages, each with its own TP quota and room requirement.
+/// When all stages are complete, the production resolves and the finished item is given to the last TP contributor.
 /// </summary>
 public abstract class ProductionItemBase : ItemBase
 {
     // TODO: Include a Stage 
+    /// <summary>
+    /// Items that were used to start the production and are now locked inside the unfinished item.
+    /// These items are removed from the room's inventory and cannot be used until the production is cancelled or completed.
+    /// </summary>
     public List<CommonItemBase> LockedItems { get; set; } = [];
 
+    /// <summary>
+    /// Tracks the current stage progress and accumulated Technical Points (TP) for this production.
+    /// Contains the contributions count, stage requirements, and whether the production is complete.
+    /// </summary>
     public StageContributionBase CurrentStageContribution { get; set; }
 
     // TODO: Maybe check if we  
@@ -26,6 +36,12 @@ public abstract class ProductionItemBase : ItemBase
         this.CurrentStageContribution = initialStageContribution;
     }
 
+    /// <summary>
+    /// Locks an item for use in the production, removing it from the room's inventory.
+    /// The item becomes unavailable for other uses until the production is cancelled or completed.
+    /// </summary>
+    /// <param name="other">The item to lock for production.</param>
+    /// <exception cref="Exception">Thrown when the item cannot be locked (not in inventory or already locked).</exception>
     public void LockForProduction(CommonItemBase other)
     {
         if (other.Inventory is null || other.Inventory.Items.Count == 0)
@@ -50,6 +66,15 @@ public abstract class ProductionItemBase : ItemBase
      * The feature is kinda awkward because the points *coints* are tripled. So basically the requirement is dynamic :
      * If not of the given role; then the cost is 3. ( but it would just be increased by 1 ) to not disruptt the logic
      */
+    /// <summary>
+    /// Allows a player to contribute Time Points (TP) to advance the production.
+    /// The player spends action points based on their role specialization (non-specialists pay 3x, Quartermaster pays 2x).
+    /// Contributions are permanent - TP spent remains bound to the production until the game ends.
+    /// If the current stage is completed, automatically advances to the next stage.
+    /// If all stages are complete, the production is finalized and the finished item is given to this player.
+    /// </summary>
+    /// <param name="player">The player contributing TP.</param>
+    /// <exception cref="Exception">Thrown when the player does not have enough action points.</exception>
     public void Contribute(Player player)
     {
         bool wouldHitPointsFallBelowZero = player.ActionPoints - 1 == -1;
@@ -83,7 +108,12 @@ public abstract class ProductionItemBase : ItemBase
         }
     }
 
-    public void CompleteProduction(Player player)
+    /// <summary>
+    /// Completes the production by creating the finished item and giving it to the player who provided the last TP.
+    /// The locked items are consumed, the unfinished item is removed from the room, and the finished item is added to the player's inventory.
+    /// </summary>
+    /// <param name="player">The player who receives the finished item (the last TP contributor).</param>
+    private void CompleteProduction(Player player)
     {
         // Create the finised item
         CommonItemBase finishedItem = CreateFinishedItem(player);
@@ -91,17 +121,21 @@ public abstract class ProductionItemBase : ItemBase
         player.Inventory.Add(finishedItem);
 
         // TODO: not actually deleted from DB, just cleared. 
-        
+
         // Delete (unlink the locked items)
         LockedItems.Clear();
-        
-        
+
+
         ItemBase item = player.Room.Inventory.Items.First(x => x.ItemType == this.ItemType);
         player.Room.Inventory.Items.Remove(item);
 
         // Add it to the inventory
     }
 
+    /// <summary>
+    /// Unlocks all locked items, returning them to the room's inventory.
+    /// Called when a production is cancelled, releasing the items back for other uses.
+    /// </summary>
     public void UnlockAllLockedItems()
     {
         foreach (CommonItemBase normalItemBase in this.LockedItems)
@@ -111,12 +145,16 @@ public abstract class ProductionItemBase : ItemBase
     }
 
     /// <summary>
-    /// returns the created item. 
+    /// Creates the finished production item to be given to the player upon completion.
     /// </summary>
-    /// <param name="player"></param>
-    /// <returns></returns>
-    public abstract CommonItemBase CreateFinishedItem(Player player);
+    /// <param name="player">The player who receives the finished item.</param>
+    /// <returns>The finished item created from this production.</returns>
+    protected abstract CommonItemBase CreateFinishedItem(Player player);
 
+    /// <summary>
+    /// Converts this production item to an ActionTarget for use in action selection UI.
+    /// </summary>
+    /// <returns>An ActionTarget representing this unfinished production item.</returns>
     public ActionTarget ToActionTarget()
     {
         ActionTarget actionTarget = new ActionTarget()

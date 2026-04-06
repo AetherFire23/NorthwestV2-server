@@ -23,7 +23,7 @@ public class ActionServices
     {
         _serviceProvider = serviceProvider;
     }
-
+    
     public async Task<List<InstantActionAvailability>> GetInstantActionAvailabilityResults(GetActionsRequest request)
     {
         IEnumerable<InstantActionBase> services = GetInstantActions();

@@ -20,7 +20,7 @@ public class UnfinishedHammer : ProductionItemBase
         return unfinishedHammer;
     }
 
-    public override CommonItemBase CreateFinishedItem(Player player)
+    protected override CommonItemBase CreateFinishedItem(Player player)
     {
         return new Hammer();
     }
