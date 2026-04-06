@@ -1,12 +1,11 @@
-﻿using AetherFire23.ERP.Domain.Entity;
-using AetherFire23.ERP.Domain.Features.Actions.Core;
-using AetherFire23.ERP.Domain.Features.Actions.Productions.HammerProduction.Initiation;
-using AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.Items;
-using JetBrains.Annotations;
-using NorthwestV2.Application.Features.Actions.Productions.HammerProduction.Initiation;
-using NorthwestV2.Application.Repositories;
-using NorthwestV2.Application.UseCases.GameActions.Command.ExecuteAction;
-using NorthwestV2.Application.UseCases.GameActions.Queries.GetActions;
+﻿using JetBrains.Annotations;
+using NorthwestV2.Features.Features.Actions.Domain.Core;
+using NorthwestV2.Features.Features.Actions.Productions.HammerProduction.Initiation;
+using NorthwestV2.Features.Features.Actions.Productions.SpyglassProduction.Items;
+using NorthwestV2.Features.Features.Shared.Entity;
+using NorthwestV2.Features.Repositories;
+using NorthwestV2.Features.UseCases.GameActions.Command.ExecuteAction;
+using NorthwestV2.Features.UseCases.GameActions.Queries.GetActions;
 using NorthwestV2.Integration.Scratches;
 using Xunit.Abstractions;
 

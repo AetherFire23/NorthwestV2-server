@@ -1,7 +1,7 @@
 using AetherFire23.Commons.Seeding;
 using Mediator;
-using NorthwestV2.Application.UseCases.Authentication.Register;
-using NorthwestV2.Application.UseCases.GameStart;
+using NorthwestV2.Features.UseCases.Authentication.Register;
+using NorthwestV2.Features.UseCases.GameStart;
 
 namespace NorthwestV2.Seed;
 

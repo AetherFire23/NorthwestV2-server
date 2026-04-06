@@ -1,10 +1,10 @@
 ﻿using System.Text.Json;
-using AetherFire23.ERP.Domain.Entity;
-using AetherFire23.ERP.Domain.Features.Actions.Productions.Core;
-using AetherFire23.ERP.Domain.Features.Actions.Productions.Core.Entities;
-using AetherFire23.ERP.Domain.Features.Actions.Productions.SpyglassProduction.Items;
 using Microsoft.EntityFrameworkCore;
-using NorthwestV2.Application;
+using NorthwestV2.Features;
+using NorthwestV2.Features.Features.Actions.Productions.Core;
+using NorthwestV2.Features.Features.Actions.Productions.Core.Entities;
+using NorthwestV2.Features.Features.Actions.Productions.SpyglassProduction.Items;
+using NorthwestV2.Features.Features.Shared.Entity;
 
 namespace NorthwestV2.Infrastructure;
 

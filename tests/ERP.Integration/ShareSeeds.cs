@@ -1,7 +1,8 @@
-﻿using AetherFire23.ERP.Domain;
-using Mediator;
-using NorthwestV2.Application.UseCases.Authentication.Register;
-using NorthwestV2.Application.UseCases.GameStart;
+﻿using Mediator;
+using NorthwestV2.Features;
+using NorthwestV2.Features.Features;
+using NorthwestV2.Features.UseCases.Authentication.Register;
+using NorthwestV2.Features.UseCases.GameStart;
 using NorthwestV2.Infrastructure;
 
 namespace NorthwestV2.Integration;

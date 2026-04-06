@@ -6,11 +6,12 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\NorthwestV2.Features\NorthwestV2.Features.csproj" />
       <ProjectReference Include="..\commons\AetherFire23.Commons.Seeding\AetherFire23.Commons.Seeding.csproj" />
-      <ProjectReference Include="..\NorthwestV2.Application\NorthwestV2.Application.csproj" />
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="Mediator.Abstractions" Version="3.0.2" />
         <PackageReference Include="Microsoft.Playwright" Version="1.58.0" />
     </ItemGroup>
 </Project>

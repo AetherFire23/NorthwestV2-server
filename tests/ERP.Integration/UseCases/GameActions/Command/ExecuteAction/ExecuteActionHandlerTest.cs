@@ -1,12 +1,13 @@
-﻿using AetherFire23.ERP.Domain;
-using AetherFire23.ERP.Domain.Entity;
-using AetherFire23.ERP.Domain.Features.Actions.Core;
-using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.WithTargets;
-using JetBrains.Annotations;
-using NorthwestV2.Application.EfCoreExtensions;
-using NorthwestV2.Application.UseCases.Authentication.Register;
-using NorthwestV2.Application.UseCases.GameActions.Command.ExecuteAction;
-using NorthwestV2.Application.UseCases.GameStart;
+﻿using JetBrains.Annotations;
+using NorthwestV2.Features;
+using NorthwestV2.Features.EfCoreExtensions;
+using NorthwestV2.Features.Features;
+using NorthwestV2.Features.Features.Actions.Domain.Core;
+using NorthwestV2.Features.Features.Actions.Domain.Core.Availability.WithTargets;
+using NorthwestV2.Features.Features.Shared.Entity;
+using NorthwestV2.Features.UseCases.Authentication.Register;
+using NorthwestV2.Features.UseCases.GameActions.Command.ExecuteAction;
+using NorthwestV2.Features.UseCases.GameStart;
 using NorthwestV2.Integration.Scratches;
 using Xunit.Abstractions;
 

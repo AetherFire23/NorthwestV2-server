@@ -1,10 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.WithTargets;
 using Mediator;
 using Microsoft.AspNetCore.Mvc;
-using NorthwestV2.Application.UseCases.GameActions.Command.ExecuteAction;
-using NorthwestV2.Application.UseCases.GameActions.Queries.GetActions;
-using NorthwestV2.Application.UseCases.OtherPlayers.Queries;
+using NorthwestV2.Features.Features.Actions.Domain.Core.Availability.WithTargets;
+using NorthwestV2.Features.UseCases.GameActions.Command.ExecuteAction;
+using NorthwestV2.Features.UseCases.GameActions.Queries.GetActions;
+using NorthwestV2.Features.UseCases.OtherPlayers.Queries;
 using NorthwestV2.Infrastructure;
 using NorthwestV2.Practical;
 

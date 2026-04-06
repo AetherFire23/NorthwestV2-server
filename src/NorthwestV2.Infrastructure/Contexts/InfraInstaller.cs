@@ -1,6 +1,5 @@
-﻿using AetherFire23.ERP.Domain.Entity;
-using Microsoft.Extensions.DependencyInjection;
-using NorthwestV2.Application.Repositories;
+﻿using Microsoft.Extensions.DependencyInjection;
+using NorthwestV2.Features.Repositories;
 using NorthwestV2.Infrastructure.Repositories;
 using NorthwestV2.Practical;
 

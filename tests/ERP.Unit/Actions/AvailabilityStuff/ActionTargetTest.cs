@@ -1,5 +1,5 @@
-﻿using AetherFire23.ERP.Domain.Features.Actions.Core.Availability.WithTargets;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
+using NorthwestV2.Features.Features.Actions.Domain.Core.Availability.WithTargets;
 
 namespace ERP.Testing.Domain.Actions.AvailabilityStuff;
 

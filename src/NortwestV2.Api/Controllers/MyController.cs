@@ -1,11 +1,6 @@
-﻿using AetherFire23.ERP.Domain.Entity;
-using Mediator;
+﻿using Mediator;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using NorthwestV2.Application.UseCases.Authentication.Login;
-using NorthwestV2.Application.UseCases.Authentication.Register;
-using NorthwestV2.Application.UseCases.GameActions.Command.ExecuteAction;
-using NorthwestV2.Application.UseCases.GameActions.Queries.GetActions;
 using NorthwestV2.Infrastructure;
 using NorthwestV2.Practical;
 

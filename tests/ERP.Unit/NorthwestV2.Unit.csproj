@@ -21,8 +21,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\NorthwestV2.Application\NorthwestV2.Application.csproj" />
-      <ProjectReference Include="..\..\src\NorthwestV2.Domain\NorthwestV2.Domain.csproj" />
       <ProjectReference Include="..\ERP.Integration\NorthwestV2.Integration.csproj" />
     </ItemGroup>
 

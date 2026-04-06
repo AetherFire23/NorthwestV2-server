@@ -1,6 +1,5 @@
-﻿using AetherFire23.ERP.Domain.Features.Actions.Productions.Core.Entities;
-using Microsoft.EntityFrameworkCore;
-using NorthwestV2.Application.Repositories;
+﻿using Microsoft.EntityFrameworkCore;
+using NorthwestV2.Features.Repositories;
 
 namespace NorthwestV2.Infrastructure.Repositories;
 

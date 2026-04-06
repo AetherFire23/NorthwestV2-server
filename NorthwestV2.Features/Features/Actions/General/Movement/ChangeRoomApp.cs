@@ -1,0 +1,46 @@
+﻿using NorthwestV2.Features.Features.Actions.Core.Application.Bases;
+using NorthwestV2.Features.Features.Actions.Domain.Core;
+using NorthwestV2.Features.Features.Actions.Domain.Core.Availability.WithTargets;
+using NorthwestV2.Features.Features.Actions.Domain.General.Movement;
+using NorthwestV2.Features.Features.Shared.Entity;
+using NorthwestV2.Features.Repositories;
+using NorthwestV2.Features.UseCases.GameActions.Command.ExecuteAction;
+using NorthwestV2.Features.UseCases.GameActions.Queries.GetActions;
+
+namespace NorthwestV2.Features.Features.Actions.General.Movement;
+
+public class ChangeRoomApp : ActionWithTargetsBase
+{
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IRoomRepository _roomRepository;
+
+    private readonly ChangeRoomAction _changeRoomAction;
+
+    // TODO: Import changeroom domain action. 
+    public ChangeRoomApp(IUnitOfWork unitOfWork, IRoomRepository roomRepository, ChangeRoomAction changeRoomAction) :
+        base(ActionNames.ChangeRoom)
+    {
+        _unitOfWork = unitOfWork;
+        _roomRepository = roomRepository;
+        _changeRoomAction = changeRoomAction;
+    }
+
+    public override async Task<ActionWithTargetsAvailability> GetAvailabilityResult(GetActionsRequest request)
+    {
+        // TODO: Get the current player's adjacent rooms.
+
+        List<Room> adjacentRooms = await _roomRepository.GetAdjacentRoomsOfPlayer(request.PlayerId);
+
+        ActionWithTargetsAvailability changeRoomAvailability =
+            _changeRoomAction.CreateActionFromAvailableRooms(adjacentRooms);
+
+        // TODO: Eventually check if the requested room exists. 
+
+        return changeRoomAvailability;
+    }
+
+    public override Task Execute(ExecuteActionRequest request)
+    {
+        throw new NotImplementedException();
+    }
+}

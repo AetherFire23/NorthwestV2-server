@@ -1,7 +1,7 @@
-﻿using AetherFire23.ERP.Domain;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using NorthwestV2.Application.Installation;
+using NorthwestV2.Features;
+using NorthwestV2.Features.Installation;
 using NorthwestV2.Infrastructure.Contexts;
 
 namespace NorthwestV2.Compose;

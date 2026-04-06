@@ -1,9 +1,10 @@
-﻿using AetherFire23.ERP.Domain;
-using AetherFire23.ERP.Domain.Entity;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
-using NorthwestV2.Application.UseCases.Authentication.Register;
-using NorthwestV2.Application.UseCases.GameStart;
+using NorthwestV2.Features;
+using NorthwestV2.Features.Features;
+using NorthwestV2.Features.Features.Shared.Entity;
+using NorthwestV2.Features.UseCases.Authentication.Register;
+using NorthwestV2.Features.UseCases.GameStart;
 using NorthwestV2.Integration.Scratches;
 using Xunit.Abstractions;
 

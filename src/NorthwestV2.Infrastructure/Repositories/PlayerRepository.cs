@@ -1,8 +1,8 @@
 ﻿using System.Linq.Expressions;
-using AetherFire23.ERP.Domain.Entity;
 using Microsoft.EntityFrameworkCore;
-using NorthwestV2.Application.EfCoreExtensions;
-using NorthwestV2.Application.Repositories;
+using NorthwestV2.Features.EfCoreExtensions;
+using NorthwestV2.Features.Features.Shared.Entity;
+using NorthwestV2.Features.Repositories;
 
 namespace NorthwestV2.Infrastructure.Repositories;
 

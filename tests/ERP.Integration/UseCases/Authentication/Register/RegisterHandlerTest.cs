@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
-using NorthwestV2.Application.UseCases.Authentication.Register;
+using NorthwestV2.Features.UseCases.Authentication.Register;
 using NorthwestV2.Infrastructure;
 using NorthwestV2.Integration.Scratches;
 using Xunit.Abstractions;

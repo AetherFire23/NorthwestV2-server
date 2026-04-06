@@ -1,7 +1,4 @@
-﻿using AetherFire23.ERP.Domain.Entity;
-using AetherFire23.ERP.Domain.GameStart.RoleInitializations;
-using AetherFire23.ERP.Domain.GameStart.RoleInitializations.PlayerInitializers;
-using AetherFire23.ERP.Domain.Role;
+﻿using NorthwestV2.Features.Features.Shared.Entity;
 
 namespace ERP.Testing.Domain.Dummies;
 

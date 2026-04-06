@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using NorthwestV2.Application;
+using NorthwestV2.Features;
 
 namespace NorthwestV2.Infrastructure.Contexts;
 
