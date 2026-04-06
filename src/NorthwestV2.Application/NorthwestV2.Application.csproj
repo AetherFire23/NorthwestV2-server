@@ -25,6 +25,7 @@
     <ItemGroup>
       <Folder Include="Features\Actions\ByRoles\" />
       <Folder Include="Features\Actions\General\TransferItems\" />
+      <Folder Include="Features\Actions\Productions\FishingPole\" />
     </ItemGroup>
 
 </Project>

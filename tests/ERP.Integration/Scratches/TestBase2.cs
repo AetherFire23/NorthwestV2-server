@@ -27,6 +27,9 @@ public class TestBase2 : IAsyncLifetime
         _output = output;
     }
 
+    /// <summary>
+    /// Runs after constructor. its prety nice. 
+    /// </summary>
     public async Task InitializeAsync()
     {
         //  Get shared container
@@ -91,8 +94,7 @@ public class TestBase2 : IAsyncLifetime
 
         await using NpgsqlConnection conn = new NpgsqlConnection(container.GetConnectionString());
         await conn.OpenAsync();
-        
-        
+
 
         // Force disconnect all sessions except the one killing the sessions
         await using (NpgsqlCommand terminate = conn.CreateCommand())
@@ -112,7 +114,7 @@ public class TestBase2 : IAsyncLifetime
 
     protected T GetServiceFromScope<T>() where T : notnull
     {
-        T service = this.Scope.ServiceProvider.GetRequiredService<T>();
+        T service = Scope.ServiceProvider.GetRequiredService<T>();
 
         return service;
     }
