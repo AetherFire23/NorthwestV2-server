@@ -3,12 +3,13 @@ using JetBrains.Annotations;
 using NorthwestV2.Application.UseCases.Authentication.Register;
 using NorthwestV2.Application.UseCases.GameActions.Queries.GetActions;
 using NorthwestV2.Application.UseCases.GameStart;
+using NorthwestV2.Integration.Scratches;
 using Xunit.Abstractions;
 
 namespace NorthwestV2.Integration.UseCases.GameActions.Queries.GetActions;
 
 [TestSubject(typeof(GetActionsHandler))]
-public class GetActionsHandlerTest : NorthwestIntegrationTestBase
+public class GetActionsHandlerTest : TestBase2
 {
     public GetActionsHandlerTest(ITestOutputHelper output) : base(output)
     {

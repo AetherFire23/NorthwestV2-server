@@ -11,12 +11,13 @@ using NorthwestV2.Application.Features.Actions.Productions;
 using NorthwestV2.Application.Repositories;
 using NorthwestV2.Application.UseCases.GameActions.Command.ExecuteAction;
 using NorthwestV2.Application.UseCases.GameActions.Queries.GetActions;
+using NorthwestV2.Integration.Scratches;
 using Xunit.Abstractions;
 
 namespace NorthwestV2.Integration.Features.Actions.Productions;
 
 [TestSubject(typeof(CancelProductionActionApp))]
-public class CancelProductionActionAppTest : NorthwestIntegrationTestBase
+public class CancelProductionActionAppTest : TestBase2
 {
     public CancelProductionActionAppTest(ITestOutputHelper output) : base(output)
     {
@@ -104,7 +105,7 @@ public class CancelProductionActionAppTest : NorthwestIntegrationTestBase
     // TODO: Put as base methodo of northwestIntegrationTestBase
     private void RefreshScope()
     {
-        _scope = RootServiceProvider.CreateScope();
+        Scope = RootServiceProvider.CreateScope();
     }
 
     private async Task<Guid> SetupForSpyglassStartAction()
@@ -118,7 +119,7 @@ public class CancelProductionActionAppTest : NorthwestIntegrationTestBase
     private async Task<Guid> TeleportPlayerTo(GameDataSeed gameDataSeed, RoomEnum roomenum)
     {
         Guid playerId = gameDataSeed.PlayerIds.First();
-        Player player = await _scope.ServiceProvider.GetRequiredService<IPlayerRepository>()
+        Player player = await Scope.ServiceProvider.GetRequiredService<IPlayerRepository>()
             .GetPlayerAndRoomAndInventoryAndGame(playerId);
         player.Inventory.Items.Add(new Scrap());
         Room room = await Context.Rooms.Where(x => x.GameId == player.GameId)

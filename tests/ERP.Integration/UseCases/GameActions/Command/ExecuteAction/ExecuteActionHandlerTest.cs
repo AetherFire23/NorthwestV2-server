@@ -7,12 +7,13 @@ using NorthwestV2.Application.EfCoreExtensions;
 using NorthwestV2.Application.UseCases.Authentication.Register;
 using NorthwestV2.Application.UseCases.GameActions.Command.ExecuteAction;
 using NorthwestV2.Application.UseCases.GameStart;
+using NorthwestV2.Integration.Scratches;
 using Xunit.Abstractions;
 
 namespace NorthwestV2.Integration.UseCases.GameActions.Command.ExecuteAction;
 
 [TestSubject(typeof(ExecuteActionHandler))]
-public class ExecuteActionHandlerTest : NorthwestIntegrationTestBase
+public class ExecuteActionHandlerTest : TestBase2
 {
     public ExecuteActionHandlerTest(ITestOutputHelper output) : base(output)
     {

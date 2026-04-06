@@ -11,12 +11,13 @@ using NorthwestV2.Application.Features.Actions.Productions.SpyglassProduction.St
 using NorthwestV2.Application.Repositories;
 using NorthwestV2.Application.UseCases.GameActions.Command.ExecuteAction;
 using NorthwestV2.Application.UseCases.GameActions.Queries.GetActions;
+using NorthwestV2.Integration.Scratches;
 using Xunit.Abstractions;
 
 namespace NorthwestV2.Integration.Features.Actions.Productions.SpyglassProduction;
 
 [TestSubject(typeof(SpyglassProductionInitiationActionApp))]
-public class SpyglassProductionContributionAppTest : NorthwestIntegrationTestBase
+public class SpyglassProductionContributionAppTest : TestBase2
 {
     public SpyglassProductionContributionAppTest(ITestOutputHelper output) : base(output)
     {
@@ -68,7 +69,7 @@ public class SpyglassProductionContributionAppTest : NorthwestIntegrationTestBas
         Player player = await Context.Players.FirstAsync(x => x.Id == playerId);
         player.ActionPoints = 99;
         await Context.SaveChangesAsync();
-        Player pp = await this._scope.ServiceProvider.GetRequiredService<IPlayerRepository>()
+        Player pp = await this.Scope.ServiceProvider.GetRequiredService<IPlayerRepository>()
             .GetPlayerAndRoomAndInventoryAndGame(playerId);
         await Mediator.Send(new ExecuteActionRequest
         {
@@ -82,7 +83,7 @@ public class SpyglassProductionContributionAppTest : NorthwestIntegrationTestBas
             PlayerId = playerId,
         });
 
-        this._scope = this.RootServiceProvider.CreateScope();
+        this.Scope = this.RootServiceProvider.CreateScope();
         Player playerAfter = Context.Players.First(x => x.Id == playerId);
         Room room = Context.Rooms
             .Include(x => x.Inventory)
@@ -163,7 +164,7 @@ public class SpyglassProductionContributionAppTest : NorthwestIntegrationTestBas
 
         await TeleportPlayerToRoom(playerId, SpyglassProductionThirdStageContributionData.REQUIRED_ROOM);
 
-        this._scope = this.RootServiceProvider.CreateScope();
+        this.Scope = this.RootServiceProvider.CreateScope();
         Player playerAfter = Context.Players.First(x => x.Id == playerId);
         Room room = Context.Rooms
             .Include(x => x.Inventory)
@@ -260,7 +261,7 @@ public class SpyglassProductionContributionAppTest : NorthwestIntegrationTestBas
                 { ActionName = ActionNames.SpyglassContribution, PlayerId = playerId });
         }
 
-        this._scope = this.RootServiceProvider.CreateScope();
+        this.Scope = this.RootServiceProvider.CreateScope();
         Player playerAfter = Context.Players
             .Include(x => x.Inventory)
             .ThenInclude(x => x.Items)
@@ -284,7 +285,7 @@ public class SpyglassProductionContributionAppTest : NorthwestIntegrationTestBas
 
         await ContributePointsUntilCompletion(playerId);
 
-        this._scope = this.RootServiceProvider.CreateScope();
+        this.Scope = this.RootServiceProvider.CreateScope();
         Player playerAfter = Context.Players
             .Include(x => x.Inventory)
             .ThenInclude(x => x.Items)
@@ -415,7 +416,7 @@ public class SpyglassProductionContributionAppTest : NorthwestIntegrationTestBas
                 { ActionName = ActionNames.SpyglassContribution, PlayerId = playerId });
         }
 
-        this._scope = this.RootServiceProvider.CreateScope();
+        this.Scope = this.RootServiceProvider.CreateScope();
         Player playerAfter = Context.Players
             .Include(x => x.Inventory)
             .ThenInclude(x => x.Items)
@@ -459,7 +460,7 @@ public class SpyglassProductionContributionAppTest : NorthwestIntegrationTestBas
     private async Task<Guid> TeleportPlayerTo(GameDataSeed gameDataSeed, RoomEnum roomenum)
     {
         Guid playerId = gameDataSeed.PlayerIds.First();
-        Player player = await _scope.ServiceProvider.GetRequiredService<IPlayerRepository>()
+        Player player = await Scope.ServiceProvider.GetRequiredService<IPlayerRepository>()
             .GetPlayerAndRoomAndInventoryAndGame(playerId);
         player.Inventory.Items.Add(new Scrap());
         Room room = await Context.Rooms.Where(x => x.GameId == player.GameId)

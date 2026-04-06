@@ -7,12 +7,13 @@ using NorthwestV2.Application.Features.Actions.Productions.HammerProduction.Init
 using NorthwestV2.Application.Repositories;
 using NorthwestV2.Application.UseCases.GameActions.Command.ExecuteAction;
 using NorthwestV2.Application.UseCases.GameActions.Queries.GetActions;
+using NorthwestV2.Integration.Scratches;
 using Xunit.Abstractions;
 
 namespace NorthwestV2.Integration.Features.Actions.Productions.HammerProduction.Initiation;
 
 [TestSubject(typeof(HammerProductionInitiationApp))]
-public class HammerProductionInitiationAppTest : NorthwestIntegrationTestBase
+public class HammerProductionInitiationAppTest : TestBase2
 {
     /*
      * Hammer
@@ -55,7 +56,7 @@ public class HammerProductionInitiationAppTest : NorthwestIntegrationTestBase
     private async Task<Guid> SetupForHammerProduction()
     {
         GameDataSeed gameDataSeed = await ShareSeeds.ArrangeUntilGameCreation(this.Mediator, this.Context);
-        Guid playerId = await PlayerHelper.TeleportPlayerTo(this._scope, Context, gameDataSeed,
+        Guid playerId = await PlayerHelper.TeleportPlayerTo(this.Scope, Context, gameDataSeed,
             HammerProductionInitiation.REQUIRED_ROOM);
 
         Player player = await base.GetServiceFromScope<IPlayerRepository>()

@@ -5,12 +5,13 @@ using NorthwestV2.Application.Features.Actions.General.Movement;
 using NorthwestV2.Application.UseCases.Authentication.Register;
 using NorthwestV2.Application.UseCases.GameActions.Queries.GetActions;
 using NorthwestV2.Application.UseCases.GameStart;
+using NorthwestV2.Integration.Scratches;
 using Xunit.Abstractions;
 
 namespace NorthwestV2.Integration.Features.Actions.General.Movement;
 
 [TestSubject(typeof(ChangeRoomApp))]
-public class ChangeRoomAppTest : NorthwestIntegrationTestBase
+public class ChangeRoomAppTest : TestBase2
 {
     public ChangeRoomAppTest(ITestOutputHelper output) : base(output)
     {

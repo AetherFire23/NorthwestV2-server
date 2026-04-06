@@ -3,13 +3,14 @@ using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 using NorthwestV2.Application.UseCases.MainMenu.Lobbies.Commands.CreateLobby;
 using NorthwestV2.Application.UseCases.MainMenu.Lobbies.Commands.JoinLobby;
+using NorthwestV2.Integration.Scratches;
 using NorthwestV2.Integration.UseCases.Authentication.Register;
 using Xunit.Abstractions;
 
 namespace NorthwestV2.Integration.UseCases.Lobbies.Commands.JoinLobby;
 
 [TestSubject(typeof(JoinLobbyHandler))]
-public class JoinLobbyHandlerTest : NorthwestIntegrationTestBase
+public class JoinLobbyHandlerTest : TestBase2
 {
     public JoinLobbyHandlerTest(ITestOutputHelper output) : base(output)
     {

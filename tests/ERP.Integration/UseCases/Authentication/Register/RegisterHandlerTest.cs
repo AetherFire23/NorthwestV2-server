@@ -2,12 +2,14 @@
 using Microsoft.Extensions.DependencyInjection;
 using NorthwestV2.Application.UseCases.Authentication.Register;
 using NorthwestV2.Infrastructure;
+using NorthwestV2.Integration.Scratches;
 using Xunit.Abstractions;
+using Xunit.Sdk;
 
 namespace NorthwestV2.Integration.UseCases.Authentication.Register;
 
 [TestSubject(typeof(RegisterHandler))]
-public class RegisterHandlerTest : NorthwestIntegrationTestBase
+public class RegisterHandlerTest : TestBase2
 {
     public RegisterHandlerTest(ITestOutputHelper output) : base(output)
     {
@@ -24,7 +26,7 @@ public class RegisterHandlerTest : NorthwestIntegrationTestBase
 
         await Mediator.Send(registerRequest);
         
-        base._scope.Dispose();
+        base.Scope.Dispose();
 
         var users = base.RootServiceProvider.CreateScope().ServiceProvider.GetRequiredService<NorthwestContext>();
         Assert.NotEmpty(users.Users);

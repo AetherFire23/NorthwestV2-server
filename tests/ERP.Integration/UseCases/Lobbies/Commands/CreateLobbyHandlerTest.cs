@@ -3,6 +3,7 @@ using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 using NorthwestV2.Application.UseCases.Authentication.Login;
 using NorthwestV2.Application.UseCases.MainMenu.Lobbies.Commands.CreateLobby;
+using NorthwestV2.Integration.Scratches;
 using NorthwestV2.Integration.UseCases.Authentication.Login;
 using NorthwestV2.Integration.UseCases.Authentication.Register;
 using Xunit.Abstractions;
@@ -10,7 +11,7 @@ using Xunit.Abstractions;
 namespace NorthwestV2.Integration.UseCases.Lobbies.Commands;
 
 [TestSubject(typeof(CreateLobbyHandler))]
-public class CreateLobbyHandlerTest : NorthwestIntegrationTestBase
+public class CreateLobbyHandlerTest : TestBase2
 {
     public CreateLobbyHandlerTest(ITestOutputHelper output) : base(output)
     {

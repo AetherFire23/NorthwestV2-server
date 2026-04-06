@@ -2,12 +2,13 @@
 using JetBrains.Annotations;
 using NorthwestV2.Application.Features.Actions.General.Combat;
 using NorthwestV2.Application.UseCases.GameActions.Queries.GetActions;
+using NorthwestV2.Integration.Scratches;
 using Xunit.Abstractions;
 
 namespace NorthwestV2.Integration.Features.Actions.General.Combat;
 
 [TestSubject(typeof(CombatActionApp))]
-public class CombatActionAppTest : NorthwestIntegrationTestBase
+public class CombatActionAppTest : TestBase2
 {
     public CombatActionAppTest(ITestOutputHelper output) : base(output)
     {

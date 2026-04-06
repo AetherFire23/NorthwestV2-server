@@ -11,12 +11,13 @@ using NorthwestV2.Application.Features.Actions.Productions.SpyglassProduction.St
 using NorthwestV2.Application.Repositories;
 using NorthwestV2.Application.UseCases.GameActions.Command.ExecuteAction;
 using NorthwestV2.Application.UseCases.GameActions.Queries.GetActions;
+using NorthwestV2.Integration.Scratches;
 using Xunit.Abstractions;
 
 namespace NorthwestV2.Integration.Features.Actions.Productions.SpyglassProduction;
 
 [TestSubject(typeof(SpyglassProductionInitiationActionApp))]
-public class SpyglassProductionInitiationAppTest : NorthwestIntegrationTestBase
+public class SpyglassProductionInitiationAppTest : TestBase2
 {
     public SpyglassProductionInitiationAppTest(ITestOutputHelper output) : base(output)
     {
@@ -49,7 +50,7 @@ public class SpyglassProductionInitiationAppTest : NorthwestIntegrationTestBase
             PlayerId = playerId,
         });
 
-        this._scope = this.RootServiceProvider.CreateScope();
+        this.Scope = this.RootServiceProvider.CreateScope();
         Player player = Context.Players.Include(x => x.Inventory).ThenInclude(x => x.Items)
             .First(x => x.Id == playerId);
         Room room = Context.Rooms
@@ -73,7 +74,7 @@ public class SpyglassProductionInitiationAppTest : NorthwestIntegrationTestBase
             PlayerId = playerId,
         });
 
-        this._scope = this.RootServiceProvider.CreateScope();
+        this.Scope = this.RootServiceProvider.CreateScope();
         Player player = Context.Players.First(x => x.Id == playerId);
         Room room = Context.Rooms
             .Include(x => x.Inventory)
@@ -94,7 +95,7 @@ public class SpyglassProductionInitiationAppTest : NorthwestIntegrationTestBase
             PlayerId = playerId,
         });
 
-        this._scope = this.RootServiceProvider.CreateScope();
+        this.Scope = this.RootServiceProvider.CreateScope();
         Player player = Context.Players.First(x => x.Id == playerId);
         Room room = Context.Rooms
             .Include(x => x.Inventory)
@@ -116,7 +117,7 @@ public class SpyglassProductionInitiationAppTest : NorthwestIntegrationTestBase
     private async Task<Guid> TeleportPlayerTo(GameDataSeed gameDataSeed, RoomEnum roomenum)
     {
         Guid playerId = gameDataSeed.PlayerIds.First();
-        Player player = await _scope.ServiceProvider.GetRequiredService<IPlayerRepository>()
+        Player player = await Scope.ServiceProvider.GetRequiredService<IPlayerRepository>()
             .GetPlayerAndRoomAndInventoryAndGame(playerId);
         player.Inventory.Items.Add(new Scrap());
         var room = await Context.Rooms.Where(x => x.GameId == player.GameId)

@@ -1,12 +1,13 @@
 ﻿using JetBrains.Annotations;
 using NorthwestV2.Application.UseCases.Authentication.Login;
 using NorthwestV2.Application.UseCases.Authentication.Register;
+using NorthwestV2.Integration.Scratches;
 using Xunit.Abstractions;
 
 namespace NorthwestV2.Integration.UseCases.Authentication.Login;
 
 [TestSubject(typeof(LoginHandler))]
-public class LoginHandlerTest : NorthwestIntegrationTestBase
+public class LoginHandlerTest : TestBase2
 {
     public LoginHandlerTest(ITestOutputHelper output) : base(output)
     {
