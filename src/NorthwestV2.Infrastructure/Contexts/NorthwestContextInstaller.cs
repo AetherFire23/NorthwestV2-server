@@ -22,24 +22,22 @@ public static class NorthwestContextInstaller
     public static void Initialize(IServiceProvider serviceProvider)
     {
         /*
-         * TeBeCo the white angel: 
          * DisposeAsync vs normal dispoe
          * proprely handles IO when reaching end of scope for stuff like seeding
          * all-the-way-clean
          */
-         using var scope = serviceProvider.CreateScope();
+        using IServiceScope scope = serviceProvider.CreateScope();
 
-        var db = scope.ServiceProvider.GetRequiredService<NorthwestContext>();
+        NorthwestContext db = scope.ServiceProvider.GetRequiredService<NorthwestContext>();
 
         // No need to do EnsureDeleted because it will always be a clean-slate test container by default.
         // Method is virtual, override as needed. 
-         db.Database.Migrate();
+        db.Database.Migrate();
     }
 
 
     /// <summary>
     /// convention : databaseName + Key
-    /// 
     /// </summary>
     /// <param name="configuration"></param>
     /// <returns></returns>
@@ -48,9 +46,9 @@ public static class NorthwestContextInstaller
     {
         string connectionStringKey = $"northwestConnectionString";
 
-        var connectionString = configuration.GetSection(connectionStringKey).Value
-                               ?? throw new Exception(
-                                   $"Connection string with key {connectionStringKey} not found in Configuration");
+        string connectionString = configuration.GetSection(connectionStringKey).Value
+                                  ?? throw new Exception(
+                                      $"Connection string with key {connectionStringKey} not found in Configuration");
 
         return connectionString;
     }

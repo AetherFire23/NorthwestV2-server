@@ -20,39 +20,45 @@ public class HammerProductionContributionAppTest : NorthwestIntegrationTestBase
     }
 
     [Fact]
-    public async Task GivenWorkshopAndScrap_WhenContributingEnoughTimes_ThenHammerIsInRoomsInventory()
+    public async Task GivenWorkshopAndScrap_WhenContributingUntilCompleted_ThenHammerIsInPlayerInventory()
     {
         Guid playerId = await SetupUntilUnfinishedHammerCreated();
 
+        // await ContributeUntilHammerCompletedAsync(playerId);
 
-        /*
-         * Try contributing until an exception is thrown.
-         */
+        await ContributeUntilItemInInventoryAsync(
+            playerId,
+            ActionNames.HammerProductionContribution,
+            x => x.Room.Has<Hammer>()
+        );
+
+        Player player = await _playerRepository.GetPlayerAndRoomAndInventoryAndGame(playerId);
+        Assert.True(player.Has<Hammer>());
+    }
+
+    private async Task ContributeUntilItemInInventoryAsync(
+        Guid playerId,
+        string actionName,
+        Func<Player, bool> itemCheck)
+    {
         try
         {
             Player p = await _playerRepository.GetPlayerAndRoomAndInventoryAndGame(playerId);
-            while (!p.Room.Has<Hammer>())
+            while (!itemCheck(p))
             {
                 await Mediator.Send(new ExecuteActionRequest
                 {
-                    ActionName = ActionNames.HammerProductionContribution,
+                    ActionName = actionName,
                     PlayerId = playerId,
                     ActionTargets = [],
                 });
-
                 p = await _playerRepository.GetPlayerAndRoomAndInventoryAndGame(playerId);
             }
         }
         catch (Exception e)
         {
         }
-
-
-        Player p2 = await _playerRepository.GetPlayerAndRoomAndInventoryAndGame(playerId);
-
-        Assert.True(p2.Has<Hammer>());
     }
-
 
     private async Task<Guid> SetupUntilUnfinishedHammerCreated()
     {
@@ -85,5 +91,27 @@ public class HammerProductionContributionAppTest : NorthwestIntegrationTestBase
         await Context.SaveChangesAsync();
 
         return playerId;
+    }
+
+    private async Task ContributeUntilHammerCompletedAsync(Guid playerId)
+    {
+        try
+        {
+            Player p = await _playerRepository.GetPlayerAndRoomAndInventoryAndGame(playerId);
+            while (!p.Room.Has<Hammer>())
+            {
+                await Mediator.Send(new ExecuteActionRequest
+                {
+                    ActionName = ActionNames.HammerProductionContribution,
+                    PlayerId = playerId,
+                    ActionTargets = [],
+                });
+
+                p = await _playerRepository.GetPlayerAndRoomAndInventoryAndGame(playerId);
+            }
+        }
+        catch (Exception e)
+        {
+        }
     }
 }
