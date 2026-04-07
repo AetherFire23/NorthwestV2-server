@@ -46,13 +46,32 @@ public class CombatActionAppTest : TestBase2
             PlayerId = playerId
         });
 
-
         bool isAttackerStanceCountAvailableAsTargets =
             combtatAction.Actions.First(x => x.Name == ActionNames.CombatAction).Prompts[1].ValidTargets.Count ==
             Enum.GetValues<AttackerStances>().Length;
 
         Assert.True(isAttackerStanceCountAvailableAsTargets);
     }
-
-    // TODO: Doesn't really have tests for real combat haha
+    
+    /*
+     * Tests for attacking
+     * TODO: consider making more setup logic to put the defender and attacker into the same room. 
+    */
+    //
+    // [Fact]
+    // public async Task GivenPlayerInRoom_WhenGettingCombatAction_ThenCanChooseDefensiveStance()
+    // {
+    //     GameDataSeed gameDataSeed = await ShareSeeds.ArrangeUntilGameCreation(Mediator, Context);
+    //     Guid playerId = gameDataSeed.PlayerIds.First();
+    //     GetActionsResult combtatAction = await Mediator.Send(new GetActionsRequest()
+    //     {
+    //         PlayerId = playerId
+    //     });
+    //
+    //     bool isAttackerStanceCountAvailableAsTargets =
+    //         combtatAction.Actions.First(x => x.Name == ActionNames.CombatAction).Prompts[1].ValidTargets.Count ==
+    //         Enum.GetValues<AttackerStances>().Length;
+    //
+    //     Assert.True(isAttackerStanceCountAvailableAsTargets);
+    // }
 }

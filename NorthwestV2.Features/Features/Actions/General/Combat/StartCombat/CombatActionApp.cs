@@ -13,12 +13,14 @@ public class CombatActionApp : ActionWithTargetsBase
 {
     private readonly IPlayerRepository _playerRepository;
     private readonly CombatAction _combatAction;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public CombatActionApp(IPlayerRepository playerRepository, CombatAction combatAction) :
+    public CombatActionApp(IPlayerRepository playerRepository, CombatAction combatAction, IUnitOfWork unitOfWork) :
         base(ActionNames.CombatAction)
     {
         _playerRepository = playerRepository;
         _combatAction = combatAction;
+        _unitOfWork = unitOfWork;
     }
 
     /// <summary>
@@ -38,9 +40,22 @@ public class CombatActionApp : ActionWithTargetsBase
         return combatActionAvailability;
     }
 
-
     public override async Task Execute(ExecuteActionRequest request)
     {
-        throw new NotImplementedException();
+        // Get attacker
+        Player attackerPlayer = await _playerRepository.GetPlayer(request.PlayerId);
+
+
+        // get defender
+        Guid defenderPlayerId = _combatAction.DetermineDefenderPlayer(request.ActionTargets);
+        Player player = await _playerRepository.GetPlayer(defenderPlayerId);
+
+        // Determine AttackerStance 
+
+        AttackerStances attackerStance = _combatAction.DetermineAttackerStance(request.ActionTargets);
+
+        _combatAction.MakeTwoPlayerFightTogether(attackerPlayer, player, attackerStance);
+
+        await _unitOfWork.SaveChangesAsync();
     }
 }

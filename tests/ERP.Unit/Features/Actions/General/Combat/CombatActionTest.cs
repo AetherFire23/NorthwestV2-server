@@ -44,9 +44,8 @@ public class CombatActionTest
             TestPlayers.CreateTestPlayer(ToughnessInitializationConstants.NORMAL, Roles.QuarterMaster, room, game);
         // Setting base toughness to 1 so it's always losing 
         caster.BaseToughness = 1;
-        caster.AttackerStance = AttackerStances.ToTheEnd;
 
-        FightResult action = _combatAction.MakeTwoPlayerFightTogether(caster, target);
+        FightResult action = _combatAction.MakeTwoPlayerFightTogether(caster, target, AttackerStances.ToTheEnd);
 
         // TODO: the real assertion 
         Assert.True(action.IsWinner(target));
@@ -65,7 +64,7 @@ public class CombatActionTest
         // Increase toughness so caster most decidedly wins
         caster.BaseToughness += 2;
 
-        FightResult action = _combatAction.MakeTwoPlayerFightTogether(caster, target);
+        FightResult action = _combatAction.MakeTwoPlayerFightTogether(caster, target, AttackerStances.ToTheEnd);
 
         // TODO: the real assertion 
         Assert.True(Equals(action.Winner, caster));
@@ -81,11 +80,10 @@ public class CombatActionTest
             TestPlayers.CreateTestPlayer(ToughnessInitializationConstants.NORMAL, Roles.Engineer, room, game);
         Player target =
             TestPlayers.CreateTestPlayer(ToughnessInitializationConstants.NORMAL, Roles.QuarterMaster, room, game);
-        caster.AttackerStance = AttackerStances.HitAndRun;
         // Increase toughness so caster most decidedly wins
         caster.BaseToughness = 1;
 
-        FightResult action = _combatAction.MakeTwoPlayerFightTogether(caster, target);
+        FightResult action = _combatAction.MakeTwoPlayerFightTogether(caster, target, AttackerStances.HitAndRun);
 
         // TODO: the real assertion 
         Assert.True(action.FightExitType == FightExitType.EarlyExittedBecauseOfHitAndRun);
@@ -102,14 +100,12 @@ public class CombatActionTest
         Player target =
             TestPlayers.CreateTestPlayer(ToughnessInitializationConstants.NORMAL, Roles.QuarterMaster, room, game);
         caster.BaseToughness = 3;
-        caster.AttackerStance = AttackerStances.PushHard;
-        
-        FightResult action = _combatAction.MakeTwoPlayerFightTogether(caster, target);
-        
+
+        FightResult action = _combatAction.MakeTwoPlayerFightTogether(caster, target, AttackerStances.PushHard);
+
         Assert.Equal(FightExitType.ExittedBecauseOfPushHard, action.FightExitType);
     }
-    
+
     // TODO:
     // Cend conditions
-    
 }

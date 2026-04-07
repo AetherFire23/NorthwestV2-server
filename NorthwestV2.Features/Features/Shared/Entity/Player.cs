@@ -12,7 +12,7 @@ public class Player : EntityBase
 
     public Guid UserId { get; set; }
 
-    public virtual  required  User User { get; set; }
+    public virtual required User User { get; set; }
 
     public required Roles Role { get; set; }
 
@@ -39,8 +39,6 @@ public class Player : EntityBase
 
     public AttackTypes AttackTypes { get; set; } = AttackTypes.Kill;
 
-    public AttackerStances AttackerStance { get; set; } = AttackerStances.HitAndRun;
-
 
     public bool Has<T>() where T : ItemBase
     {
@@ -55,7 +53,7 @@ public class Player : EntityBase
     /// + Stance bonus ( ToTheEnd ) 
     /// </summary>
     /// <returns></returns>
-    public int CalculateStrength(bool isAttacker)
+    public int CalculateStrength(bool isAttacker, AttackerStances attackerStance)
     {
         // TODO: Clarify at what Threshold the sanity weakness applies
         // initial strength is base toughness. 
@@ -67,7 +65,7 @@ public class Player : EntityBase
             strength = Math.Max(1, strength - 1); // -1 replace by constant for sanity decrease
         }
 
-        if (this.AttackerStance == AttackerStances.ToTheEnd && isAttacker)
+        if (attackerStance == AttackerStances.ToTheEnd && isAttacker)
         {
             strength += 1;
         }
@@ -86,13 +84,12 @@ public class Player : EntityBase
         return actionTarget;
     }
 
-
     // May add services 
-    public PlayerTempFightStats GetPlayerTempFightStats(bool isAttacker)
+    public PlayerTempFightStats GetPlayerTempFightStats(bool isAttacker, AttackerStances attackerStance)
     {
         PlayerTempFightStats player1Strength =
-            new PlayerTempFightStats(this.CalculateStrength(isAttacker), this.BaseToughness, this.Health,
-                this.BaseToughness, this.AttackerStance);
+            new PlayerTempFightStats(this.CalculateStrength(isAttacker, attackerStance), this.BaseToughness, this.Health,
+                this.BaseToughness, attackerStance);
 
         return player1Strength;
     }

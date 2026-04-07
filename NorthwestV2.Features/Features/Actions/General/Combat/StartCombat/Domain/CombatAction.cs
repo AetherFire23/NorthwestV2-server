@@ -7,6 +7,10 @@ namespace NorthwestV2.Features.Features.Actions.General.Combat.StartCombat.Domai
 
 public class CombatAction
 {
+    public const int PLAYER_PROMPT_INDEX = 0;
+
+    public const int ATTACKERSTANCE_PROMPT_INDEX = 1;
+
     /*
      * Attack types
      *  - Kill
@@ -79,13 +83,20 @@ public class CombatAction
     /// - Special stance logic (PushHard premature exit, ToTheEnd refusal to flee)  
     /// - Determination of death, victory, and post‑fight effects  
     /// </summary>
-    public FightResult MakeTwoPlayerFightTogether(Player attackerPlayer, Player defenderPlayer)
+    public FightResult MakeTwoPlayerFightTogether(
+        Player attackerPlayer,
+        Player defenderPlayer, AttackerStances attackerStance)
     {
+        /*
+         * Extract the attacker's stance
+         */
+
+
         // TODO: Ask waht "vigilance" means. I don't see anything anywhere. 
         // Build temporary combat stats for both players.
         // 'true' marks the attacker so stance logic so that Strength modifier can be calculated correctly. (ToTheEnd) 
-        PlayerTempFightStats attackerStats = attackerPlayer.GetPlayerTempFightStats(true);
-        PlayerTempFightStats defenderStats = defenderPlayer.GetPlayerTempFightStats(false);
+        PlayerTempFightStats attackerStats = attackerPlayer.GetPlayerTempFightStats(true, attackerStance);
+        PlayerTempFightStats defenderStats = defenderPlayer.GetPlayerTempFightStats(false, attackerStance);
 
         // Check if the attacker should immediately disengage due to Hit‑and‑Run rules.
         // If so, return the early‑exit result without entering the fight loop.
@@ -233,5 +244,23 @@ public class CombatAction
         }
 
         return FightExitType.Ongoing;
+    }
+
+    public Guid DetermineDefenderPlayer(List<List<ActionTarget>> requestActionTargets)
+    {
+        Guid attackerPlayerId = requestActionTargets[PLAYER_PROMPT_INDEX].First().TargetId ??
+                                throw new Exception("target it cannot be null.");
+
+        return attackerPlayerId;
+    }
+
+    public AttackerStances DetermineAttackerStance(List<List<ActionTarget>> requestActionTargets)
+    {
+        string attackerStanceValue = requestActionTargets[ATTACKERSTANCE_PROMPT_INDEX].First().Value ??
+                                     throw new Exception("Must select an attackerstance ");
+
+        AttackerStances attackerStance = Enum.Parse<AttackerStances>(attackerStanceValue);
+
+        return attackerStance;
     }
 }
