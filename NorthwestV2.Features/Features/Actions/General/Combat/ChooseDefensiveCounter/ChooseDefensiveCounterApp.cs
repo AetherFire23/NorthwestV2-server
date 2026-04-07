@@ -20,8 +20,7 @@ public class ChooseDefensiveCounterApp : ActionWithTargetsBase
 
     public ChooseDefensiveCounterApp(ChooseDefensiveCounter chooseDefensiveCounter, IUnitOfWork unitOfWork,
         IPlayerRepository playerRepository, ChooseDefensiveCounter chooseDefensiveCounter1) : base(
-        ActionNames
-            .PickDefensiveStance)
+        ActionNames.ChooseDefensiveStance)
     {
         _chooseDefensiveCounter = chooseDefensiveCounter;
         _unitOfWork = unitOfWork;
@@ -32,33 +31,10 @@ public class ChooseDefensiveCounterApp : ActionWithTargetsBase
     // TODO: Doing too much; move to domain layer plz 
     public override async Task<ActionWithTargetsAvailability?> GetAvailabilityResult(GetActionsRequest request)
     {
-        Player player = await _playerRepository.GetPlayer(request.PlayerId);
+        ActionWithTargetsAvailability availability = _chooseDefensiveCounter.DetermineAvailability();
 
-        // Always only the defensive counters enum transformed into a target. 
-        TargetSelectionPrompt targetSelectionPrompt = _chooseDefensiveCounter.CreatePromptOfDefensiveCounters();
-
-        ActionWithTargetsAvailability stuff = new ActionWithTargetsAvailability
-        {
-            ActionName = ActionName,
-            TargetSelectionPrompts = [targetSelectionPrompt],
-            ActionRequirements =
-            [
-                new ActionRequirement()
-                {
-                    Description = "Allo",
-                    IsFulfilled = true
-                }
-            ],
-            DisplayName = this.ActionName
-        };
-
-        return stuff;
+        return availability;
     }
-
-
-    /*
-     * Execution part
-     */
 
     public override async Task Execute(ExecuteActionRequest request)
     {

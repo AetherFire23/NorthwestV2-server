@@ -2,9 +2,13 @@
 using NorthwestV2.Features;
 using NorthwestV2.Features.Features;
 using NorthwestV2.Features.Features.Actions.Core.Domain;
+using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.WithTargets;
 using NorthwestV2.Features.Features.Actions.General.Combat;
 using NorthwestV2.Features.Features.Actions.General.Combat.ChooseDefensiveCounter;
+using NorthwestV2.Features.Features.Actions.General.Combat.StartCombat.Domain;
+using NorthwestV2.Features.Features.Shared.Entity;
 using NorthwestV2.Features.UseCases.Authentication.Register;
+using NorthwestV2.Features.UseCases.GameActions.Command.ExecuteAction;
 using NorthwestV2.Features.UseCases.GameActions.Queries.GetActions;
 using NorthwestV2.Features.UseCases.GameStart;
 using NorthwestV2.Integration.Scratches;
@@ -32,10 +36,41 @@ public class ChooseDefensiveCounterAppTest : TestBase2
 
         // Only 2 stances, won't do a complex algorithm to test that. 
 
-        var availableStances = getActionsResult.Actions
-            .First(x => x.Name == ActionNames.PickDefensiveStance);
+        ActionDto availableStances = getActionsResult.Actions
+            .First(x => x.Name == ActionNames.ChooseDefensiveStance);
         Assert.Equal(2, availableStances.Prompts.First().ValidTargets.Count);
     }
+
+
+    /*
+     * Execution tests
+     */
+    [Fact]
+    public async Task GivenAnyDefensiveStance_WhenChoosingStanceAction_ThenPickedDefensiveStanceSelected()
+    {
+        CreateGameSeedData data = await ArrangeUntilGameCreation();
+        Guid playerId = data.PlayerIds.First();
+        GetActionsResult getActionsResult = await Mediator.Send(new GetActionsRequest()
+        {
+            PlayerId = playerId,
+        });
+
+        ActionDto availableStances = getActionsResult.Actions
+            .First(x => x.Name == ActionNames.ChooseDefensiveStance);
+        ActionTarget stance = availableStances.Prompts.First().ValidTargets
+            .First(x => x.Value == DefensiveCounters.Override.ToString());
+        await Mediator.Send(new ExecuteActionRequest()
+        {
+            ActionName = ActionNames.ChooseDefensiveStance,
+            PlayerId = playerId,
+            ActionTargets = [[stance]]
+        });
+
+        // Only 2 stances, won't do a complex algorithm to test that. 
+        Player player = await PlayerRepository.GetPlayer(playerId);
+        Assert.Equal(DefensiveCounters.Override, player.DefensiveCounter);
+    }
+
 
     private async Task<CreateGameSeedData> ArrangeUntilGameCreation()
     {

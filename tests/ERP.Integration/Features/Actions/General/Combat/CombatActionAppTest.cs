@@ -13,6 +13,7 @@ public class CombatActionAppTest : TestBase2
 {
     public CombatActionAppTest(ITestOutputHelper output) : base(output)
     {
+        
     }
 
     [Fact]
@@ -26,8 +27,6 @@ public class CombatActionAppTest : TestBase2
             PlayerId = gameDataSeed.PlayerIds[0]
         });
 
-
-        int i = 0;
         // TODO; write assert
 
         bool hasTarget = act.Actions.First(x => x.Name == ActionNames.CombatAction)

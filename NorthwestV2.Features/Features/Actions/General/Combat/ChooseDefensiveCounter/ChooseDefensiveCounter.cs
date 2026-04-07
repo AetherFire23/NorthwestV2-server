@@ -1,4 +1,5 @@
-﻿using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.WithTargets;
+﻿using NorthwestV2.Features.Features.Actions.Core.Domain;
+using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.WithTargets;
 using NorthwestV2.Features.Features.Actions.General.Combat.StartCombat.Domain;
 using NorthwestV2.Features.Features.Shared.Entity;
 
@@ -6,15 +7,20 @@ namespace NorthwestV2.Features.Features.Actions.General.Combat.ChooseDefensiveCo
 
 public class ChooseDefensiveCounter
 {
-
-    /// <summary>
-    /// Sets defensive counter on the player 
-    /// </summary>
-    public void Execute(Player player, DefensiveCounters defensiveCounters)
+    public ActionWithTargetsAvailability DetermineAvailability()
     {
-        player.DefensiveCounter = defensiveCounters;
-    }
+        TargetSelectionPrompt promptOfDefensiveCounters = CreatePromptOfDefensiveCounters();
 
+        ActionWithTargetsAvailability targets = new()
+        {
+            ActionName = ActionNames.ChooseDefensiveStance,
+            DisplayName = "Choose a defensive stance",
+            TargetSelectionPrompts = [promptOfDefensiveCounters],
+            // No requirements ! always available for now. 
+        };
+
+        return targets;
+    }
 
     public TargetSelectionPrompt CreatePromptOfDefensiveCounters()
     {
@@ -34,5 +40,13 @@ public class ChooseDefensiveCounter
         };
 
         return promptOfDefensiveCounterTypes;
+    }
+
+    /// <summary>
+    /// Sets defensive counter on the player 
+    /// </summary>
+    public void Execute(Player player, DefensiveCounters defensiveCounters)
+    {
+        player.DefensiveCounter = defensiveCounters;
     }
 }

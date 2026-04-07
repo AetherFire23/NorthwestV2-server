@@ -10,7 +10,6 @@ public static class ActionNames
 {
     public const string InstantHeal = "Instant Heal";
     public const string DebugWithTargets = "Debug action with targets";
-    public const string PickDefensiveStance = "Choose defensive stance";
     public const string CombatAction = "Combat";
     public const string ChangeRoom = "Change Room";
 
@@ -23,7 +22,8 @@ public static class ActionNames
     public static string CancelProduction => "Cancel a production";
     public const string HammerProductionContribution = "HammerProductionContribution";
 
-    
+    public const string ChooseDefensiveStance = nameof(ChooseDefensiveStance);
+
     /*
      * Fishing pole
      */
