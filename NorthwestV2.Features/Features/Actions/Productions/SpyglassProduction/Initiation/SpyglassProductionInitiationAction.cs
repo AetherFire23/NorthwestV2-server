@@ -1,5 +1,5 @@
-﻿using NorthwestV2.Features.Features.Actions.Domain.Core;
-using NorthwestV2.Features.Features.Actions.Domain.Core.Availability.Instant;
+﻿using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.Instant;
+using NorthwestV2.Features.Features.Actions.Domain.Core;
 using NorthwestV2.Features.Features.Actions.Domain.Core.Availability.Requirements;
 using NorthwestV2.Features.Features.Actions.Productions.SpyglassProduction.Items;
 using NorthwestV2.Features.Features.Shared.Entity;

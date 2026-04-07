@@ -1,4 +1,4 @@
-﻿using NorthwestV2.Features.Features.Actions.Domain.Core.Availability.Instant;
+﻿using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.Instant;
 using NorthwestV2.Features.UseCases.GameActions.Queries.GetActions;
 
 namespace NorthwestV2.Features.Features.Actions.Core.Application.Bases;

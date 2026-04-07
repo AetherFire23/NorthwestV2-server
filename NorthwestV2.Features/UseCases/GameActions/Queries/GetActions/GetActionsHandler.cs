@@ -1,6 +1,6 @@
 ﻿using Mediator;
 using NorthwestV2.Features.Features.Actions.Core.Application;
-using NorthwestV2.Features.Features.Actions.Domain.Core.Availability.Instant;
+using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.Instant;
 using NorthwestV2.Features.Features.Actions.Domain.Core.Availability.WithTargets;
 
 namespace NorthwestV2.Features.UseCases.GameActions.Queries.GetActions;

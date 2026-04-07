@@ -13,7 +13,10 @@ public static class NorthwestContextInstaller
         serviceCollection.AddDbContext<NorthwestContext>(action =>
         {
             // Use the derived class's definition of ConfigureAddDbContext
-            action.UseNpgsql(GetConnectionStringInConfiguration(configuration), c => { });
+            action.UseNpgsql(GetConnectionStringInConfiguration(configuration), c =>
+            {
+                
+            }).UseLazyLoadingProxies();
         });
 
         serviceCollection.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<NorthwestContext>());

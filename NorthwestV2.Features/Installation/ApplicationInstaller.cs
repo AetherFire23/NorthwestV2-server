@@ -6,6 +6,7 @@ using NorthwestV2.Features.Features.Actions.General.Combat;
 using NorthwestV2.Features.Features.Actions.General.Combat.StartCombat;
 using NorthwestV2.Features.Features.Actions.General.Movement;
 using NorthwestV2.Features.Features.Actions.Productions;
+using NorthwestV2.Features.Features.Actions.Productions.FishingPole.Initiation;
 using NorthwestV2.Features.Features.Actions.Productions.HammerProduction.Contribution;
 using NorthwestV2.Features.Features.Actions.Productions.HammerProduction.Initiation;
 using NorthwestV2.Features.Features.Actions.Productions.SpyglassProduction.ContributionToStages;
@@ -31,5 +32,7 @@ public class ApplicationInstaller
         serviceCollection.AddScoped<HammerProductionContributionApp>();
 
         serviceCollection.AddScoped<HammerProductionInitiationApp>();
+        
+        serviceCollection.AddScoped<FishingPoleApp>();
     }
 }

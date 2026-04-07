@@ -2,7 +2,7 @@
 
 public class Lobby : EntityBase
 {
-    public ICollection<User> Users { get; set; } = [];
+    public virtual ICollection<User> Users { get; set; } = [];
     
     public static Lobby Create(User creator)
     {

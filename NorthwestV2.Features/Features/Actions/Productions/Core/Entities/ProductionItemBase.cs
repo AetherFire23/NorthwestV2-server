@@ -17,13 +17,13 @@ public abstract class ProductionItemBase : ItemBase
     /// Items that were used to start the production and are now locked inside the unfinished item.
     /// These items are removed from the room's inventory and cannot be used until the production is cancelled or completed.
     /// </summary>
-    public List<CommonItemBase> LockedItems { get; set; } = [];
+    public virtual List<CommonItemBase> LockedItems { get; set; } = [];
 
     /// <summary>
     /// Tracks the current stage progress and accumulated Technical Points (TP) for this production.
     /// Contains the contributions count, stage requirements, and whether the production is complete.
     /// </summary>
-    public StageContributionBase CurrentStageContribution { get; set; }
+    public virtual StageContributionBase CurrentStageContribution { get; set; }
 
     /// <summary>
     /// There is serialization-deserialization stuff happening.

@@ -5,12 +5,12 @@ namespace NorthwestV2.Features.Features.Shared.Entity;
 public class Room : EntityBase
 {
     public Guid GameId { get; set; }
-    public required Game Game { get; set; }
+    public required virtual Game Game { get; set; }
     public required RoomEnum RoomEnum { get; set; }
 
-    public List<Room> AdjacentRooms { get; set; } = [];
+    public virtual List<Room> AdjacentRooms { get; set; } = [];
 
-    public Inventory Inventory { get; set; }
+    public virtual Inventory Inventory { get; set; }
 
     //TODO: One day make method to get 
 

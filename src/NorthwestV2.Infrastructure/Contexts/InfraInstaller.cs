@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using NorthwestV2.Features.ApplicationsStuff.Repositories;
 using NorthwestV2.Features.Repositories;
 using NorthwestV2.Infrastructure.Repositories;
 using NorthwestV2.Practical;

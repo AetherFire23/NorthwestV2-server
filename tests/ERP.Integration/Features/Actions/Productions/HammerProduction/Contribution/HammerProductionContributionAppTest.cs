@@ -1,4 +1,5 @@
 ﻿using JetBrains.Annotations;
+using NorthwestV2.Features.ApplicationsStuff.Repositories;
 using NorthwestV2.Features.Features.Actions.Domain.Core;
 using NorthwestV2.Features.Features.Actions.Productions.HammerProduction;
 using NorthwestV2.Features.Features.Actions.Productions.HammerProduction.Contribution;

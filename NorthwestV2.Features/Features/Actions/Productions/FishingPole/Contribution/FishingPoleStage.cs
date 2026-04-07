@@ -6,14 +6,19 @@ namespace NorthwestV2.Features.Features.Actions.Productions.FishingPole.Contribu
 
 public record FishingPoleStage : StageContributionBase
 {
-    public FishingPoleStage() : base(15, "end", Roles.Captain)
+    public const Roles SPECIALIZED_ROLE = Roles.Sentry;
+    public const int CONTRIBUTION_LIMIT = 15;
+    public const string STAGE_NAME = "Contribution to fishing pole";
+    public const RoomEnum REQUIRED_ROOM = RoomEnum.Workshop;
+    
+    
+
+    public FishingPoleStage() : base(CONTRIBUTION_LIMIT, STAGE_NAME, SPECIALIZED_ROLE)
     {
     }
 
     public override List<ActionRequirement> GetRequirements(Player player)
     {
-        // Has the required 
-
 
         return [];
     }

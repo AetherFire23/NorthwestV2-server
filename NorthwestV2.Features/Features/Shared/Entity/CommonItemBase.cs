@@ -12,7 +12,7 @@ public class CommonItemBase : ItemBase
     /// </summary>
     public Guid? ProductionItemId { get; set; }
 
-    public ProductionItemBase? ProductionItem { get; set; }
+    public virtual ProductionItemBase? ProductionItem { get; set; }
     public int TimePointsContributions { get; set; } = 0;
     public bool IsLocked { get; set; } = false;
 

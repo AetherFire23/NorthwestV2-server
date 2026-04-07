@@ -1,5 +1,5 @@
 ﻿using NorthwestV2.Features.Features.Actions.Core.Application.Bases;
-using NorthwestV2.Features.Features.Actions.Domain.Core.Availability.Instant;
+using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.Instant;
 using NorthwestV2.Features.Features.Actions.Domain.Core.Availability.Requirements;
 using NorthwestV2.Features.Features.Actions.Domain.Core.Availability.WithTargets;
 

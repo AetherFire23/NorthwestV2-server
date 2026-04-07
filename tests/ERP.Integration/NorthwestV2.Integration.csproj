@@ -29,6 +29,9 @@
         
     
       <ProjectReference Include="..\..\NorthwestV2.Compose\NorthwestV2.Compose.csproj" />
+        
+    
+      <ProjectReference Include="..\..\NorthwestV2.Features\NorthwestV2.Features.csproj" />
       <ProjectReference Include="..\..\src\NorthwestV2.Infrastructure\NorthwestV2.Infrastructure.csproj" />
         
         

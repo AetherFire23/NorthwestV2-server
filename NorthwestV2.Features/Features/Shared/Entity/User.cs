@@ -6,7 +6,7 @@ public class User : EntityBase
     public required string HashedPassword { get; set; }
 
     public Guid? LobbyId { get; set; }
-    public Lobby? Lobby { get; set; }
+    public virtual Lobby? Lobby { get; set; }
 
-    public Player? Player { get; set; }
+    public virtual Player? Player { get; set; }
 }

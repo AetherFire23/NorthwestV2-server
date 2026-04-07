@@ -12,17 +12,17 @@ public class Player : EntityBase
 
     public Guid UserId { get; set; }
 
-    public required User User { get; set; }
+    public virtual  required  User User { get; set; }
 
     public required Roles Role { get; set; }
 
     public Guid GameId { get; set; }
-    public required Game Game { get; set; }
+    public required virtual Game Game { get; set; }
 
     public Guid RoomId { get; set; }
-    public required Room Room { get; set; }
+    public required virtual Room Room { get; set; }
 
-    public Inventory Inventory { get; set; }
+    public virtual Inventory Inventory { get; set; }
 
     public int ActionPoints { get; set; } = 8; // default 8
 

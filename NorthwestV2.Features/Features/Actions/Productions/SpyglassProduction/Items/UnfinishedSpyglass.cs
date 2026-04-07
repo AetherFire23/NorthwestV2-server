@@ -7,7 +7,7 @@ namespace NorthwestV2.Features.Features.Actions.Productions.SpyglassProduction.I
 
 public class UnfinishedSpyglass : ProductionItemBase
 {
-    private UnfinishedSpyglass()
+    public UnfinishedSpyglass()
     {
     }
 

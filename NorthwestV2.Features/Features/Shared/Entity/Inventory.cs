@@ -10,7 +10,7 @@ public class Inventory : EntityBase
     //
     // public Guid? RoomId { get; set; }
     // public Room? Room { get; set; }
-    public List<ItemBase> Items { get; set; } = [];
+    public virtual List<ItemBase> Items { get; set; } = [];
 
 
     public bool Has<T>() where T : ItemBase

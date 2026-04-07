@@ -15,7 +15,7 @@ public class ItemBase : EntityBase
     /// <summary>
     /// The inventory that contains this item (may be a player's inventory or a room's inventory).
     /// </summary>
-    public Inventory? Inventory { get; set; }
+    public virtual Inventory? Inventory { get; set; }
 
     /// <summary>
     /// The type of this item (e.g., Hammer, Flour, Key), determining what it is and how it can be used.
