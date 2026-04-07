@@ -36,12 +36,16 @@ public class ChangeRoomAppTest : TestBase2
         Assert.True(anyOtheRoomIsAvailableToMoveTo);
     }
 
+    /*
+     * The only other room connected to crow's nest is Main Deck, whhichi makes it the best ideal candiate to test for
+     * room changes. 
+     */
     [Fact]
     public async Task GivenPlayerInAnyRoom_WhenChangingRoom_ThenPlayerIsInDifferentRoom()
     {
         CreateGameSeedData gameData = await ArrangeUntilGameCreation();
         Guid playerId = gameData.PlayerIds.First();
-        await this.TeleportPlayerTo(playerId, RoomEnum.MainDeck);
+        await this.TeleportPlayerTo(playerId, RoomEnum.CrowsNest);
         GetActionsResult roms = await Mediator.Send(new GetActionsRequest
         {
             PlayerId = playerId,
@@ -56,8 +60,7 @@ public class ChangeRoomAppTest : TestBase2
 
         Player player = await PlayerRepository.GetPlayer(playerId);
 
-        var rom = player.Room.RoomEnum == RoomEnum.MainDeck;
-        Assert.True(rom);
+        Assert.Equal(RoomEnum.MainDeck, player.Room.RoomEnum);
     }
 
     // TODO: More tests for when I will add requirements. 

@@ -1,7 +1,8 @@
 ﻿using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.WithTargets;
+using NorthwestV2.Features.Features.Actions.General.Combat.StartCombat.Domain;
 using NorthwestV2.Features.Features.Shared.Entity;
 
-namespace NorthwestV2.Features.Features.Actions.General.Combat.StartCombat.Domain;
+namespace NorthwestV2.Features.Features.Actions.General.Combat.ChooseDefensiveCounter;
 
 public class ChooseDefensiveCounter
 {

@@ -44,10 +44,20 @@ public class ChangeRoomAction
     }
 
 
-    public void ChangeRoom(Player player, Room room)
+    public void ChangeRoom(Player player, List<List<ActionTarget>> roomTargetCandidate)
     {
-        //TODO: verify if they really are adjacent here. 
-
+        // TODO: May need to consider to add includes inside repositories. 
+        Room room = ExtractRoomFromActionTargets(player.Game.Rooms, roomTargetCandidate);
+        
         player.Room = room;
+    }
+
+    public Room ExtractRoomFromActionTargets(List<Room> allRooms, List<List<ActionTarget>> roomTargetCandidate)
+    {
+        ActionTarget actionTarget = roomTargetCandidate.First().First();
+        
+        Room room = allRooms.First(x => x.Id == actionTarget.TargetId);
+
+        return room;
     }
 }

@@ -12,14 +12,14 @@ namespace NorthwestV2.Features.Features.Actions.General.Combat.ChooseDefensiveCo
 
 public class ChooseDefensiveCounterApp : ActionWithTargetsBase
 {
-    private readonly StartCombat.Domain.ChooseDefensiveCounter _chooseDefensiveCounter;
+    private readonly ChooseDefensiveCounter _chooseDefensiveCounter;
 
     private readonly IUnitOfWork _unitOfWork;
     private readonly IPlayerRepository _playerRepository;
-    private readonly StartCombat.Domain.ChooseDefensiveCounter chooseDefensiveCounter1;
+    private readonly ChooseDefensiveCounter chooseDefensiveCounter1;
 
-    public ChooseDefensiveCounterApp(StartCombat.Domain.ChooseDefensiveCounter chooseDefensiveCounter, IUnitOfWork unitOfWork,
-        IPlayerRepository playerRepository, StartCombat.Domain.ChooseDefensiveCounter chooseDefensiveCounter1) : base(
+    public ChooseDefensiveCounterApp(ChooseDefensiveCounter chooseDefensiveCounter, IUnitOfWork unitOfWork,
+        IPlayerRepository playerRepository, ChooseDefensiveCounter chooseDefensiveCounter1) : base(
         ActionNames
             .PickDefensiveStance)
     {
@@ -30,7 +30,7 @@ public class ChooseDefensiveCounterApp : ActionWithTargetsBase
     }
 
     // TODO: Doing too much; move to domain layer plz 
-    public override async Task<ActionWithTargetsAvailability> GetAvailabilityResult(GetActionsRequest request)
+    public override async Task<ActionWithTargetsAvailability?> GetAvailabilityResult(GetActionsRequest request)
     {
         Player player = await _playerRepository.GetPlayer(request.PlayerId);
 
