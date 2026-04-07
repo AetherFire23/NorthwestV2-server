@@ -41,7 +41,6 @@ public class ChooseDefensiveCounterAppTest : TestBase2
         Assert.Equal(2, availableStances.Prompts.First().ValidTargets.Count);
     }
 
-
     /*
      * Execution tests
      */
@@ -74,7 +73,7 @@ public class ChooseDefensiveCounterAppTest : TestBase2
 
     private async Task<CreateGameSeedData> ArrangeUntilGameCreation()
     {
-        List<Guid> ids = new List<Guid>();
+        List<Guid> ids = [];
 
         for (int i = 0; i < GameSettings.RequiredPlayerCountToStartGame; i++)
         {

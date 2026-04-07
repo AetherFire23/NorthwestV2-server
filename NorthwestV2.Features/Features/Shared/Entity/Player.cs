@@ -88,7 +88,8 @@ public class Player : EntityBase
     public PlayerTempFightStats GetPlayerTempFightStats(bool isAttacker, AttackerStances attackerStance)
     {
         PlayerTempFightStats player1Strength =
-            new PlayerTempFightStats(this.CalculateStrength(isAttacker, attackerStance), this.BaseToughness, this.Health,
+            new PlayerTempFightStats(this.CalculateStrength(isAttacker, attackerStance), this.BaseToughness,
+                this.Health,
                 this.BaseToughness, attackerStance);
 
         return player1Strength;

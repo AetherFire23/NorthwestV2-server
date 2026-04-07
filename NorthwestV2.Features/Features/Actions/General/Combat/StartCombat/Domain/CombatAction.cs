@@ -145,12 +145,13 @@ public class CombatAction
             ? defenderPlayer
             : attackerPlayer;
 
-        // TODO: remember to apply death effect / create a domain Event 
+        // TODO: remember to apply death effect / create a domain Event
 
         FightResult endFightResult = new FightResult()
         {
             Winner = winner,
             Loser = loser,
+            
         };
         return endFightResult;
     }
@@ -262,5 +263,9 @@ public class CombatAction
         AttackerStances attackerStance = Enum.Parse<AttackerStances>(attackerStanceValue);
 
         return attackerStance;
+    }
+
+    public void HandleEndFightConditions(FightResult fightResult)
+    {
     }
 }

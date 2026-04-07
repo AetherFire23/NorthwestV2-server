@@ -54,7 +54,9 @@ public class CombatActionApp : ActionWithTargetsBase
 
         AttackerStances attackerStance = _combatAction.DetermineAttackerStance(request.ActionTargets);
 
-        _combatAction.MakeTwoPlayerFightTogether(attackerPlayer, player, attackerStance);
+        FightResult fightResult = _combatAction.MakeTwoPlayerFightTogether(attackerPlayer, player, attackerStance);
+        
+        
 
         await _unitOfWork.SaveChangesAsync();
     }
