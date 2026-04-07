@@ -5,7 +5,6 @@ using NorthwestV2.Features.Features.Actions.General.Combat.StartCombat.Domain;
 
 namespace NorthwestV2.Features.Features.Shared.Entity;
 
-// TODO: Consider using a base class for this 
 public class Player : EntityBase
 {
     [NotMapped] [NonSerialized] public const int INITIALIZATION_HEALTH = 100;
@@ -90,7 +89,10 @@ public class Player : EntityBase
         PlayerTempFightStats player1Strength =
             new PlayerTempFightStats(this.CalculateStrength(isAttacker, attackerStance), this.BaseToughness,
                 this.Health,
-                this.BaseToughness, attackerStance);
+                this.BaseToughness, attackerStance)
+            {
+                Player = this
+            };
 
         return player1Strength;
     }

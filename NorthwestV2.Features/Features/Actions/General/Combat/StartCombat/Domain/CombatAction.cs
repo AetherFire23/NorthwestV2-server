@@ -127,32 +127,36 @@ public class CombatAction
         // In this scenario, the attacker always loses.
         if (fightExitType == FightExitType.ExittedBecauseOfPushHard)
         {
-            return new FightResult
+            FightResult fightResult = new FightResult
             {
-                Winner = defenderPlayer,
-                Loser = attackerPlayer,
+                // Winner = defenderPlayer,
+                // Loser = attackerPlayer,
+                AttackerFightStats = attackerStats,
+                DefenderFightStats = defenderStats,
                 FightExitType = fightExitType,
             };
+
+            return fightResult;
         }
 
         // If we reach this point, someone has died—no other exit conditions remain.
         // Determine winner/loser based on remaining health.
-        Player winner = attackerStats.CurrentHealth >= 0
-            ? attackerPlayer
-            : defenderPlayer;
+        PlayerTempFightStats winner = attackerStats.CurrentHealth >= 0
+            ? attackerStats
+            : defenderStats;
 
-        Player loser = attackerStats.CurrentHealth >= 0
-            ? defenderPlayer
-            : attackerPlayer;
+        PlayerTempFightStats loser = attackerStats.CurrentHealth >= 0
+            ? defenderStats
+            : attackerStats;
 
         // TODO: remember to apply death effect / create a domain Event
 
-        FightResult endFightResult = new FightResult()
+        FightResult endFightResult = new()
         {
-            Winner = winner,
-            Loser = loser,
-            
+            SurvivingPlayer = winner,
         };
+
+        ApplyEndFightConditions(endFightResult);
         return endFightResult;
     }
 
@@ -265,7 +269,8 @@ public class CombatAction
         return attackerStance;
     }
 
-    public void HandleEndFightConditions(FightResult fightResult)
+    public void ApplyEndFightConditions(FightResult fightResult)
     {
+        Console.WriteLine("End of fight conditions not implemented yet ");
     }
 }

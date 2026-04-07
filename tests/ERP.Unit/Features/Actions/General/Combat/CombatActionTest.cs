@@ -11,8 +11,9 @@ namespace ERP.Testing.Domain.Features.Actions.General.Combat;
 [TestSubject(typeof(CombatAction))]
 public class CombatActionTest
 {
+    private const int ANY_LOW_TOUGHNESS = 3;
+    
     private readonly CombatAction _combatAction;
-
     public CombatActionTest()
     {
         _combatAction = new CombatAction();
@@ -67,7 +68,7 @@ public class CombatActionTest
         FightResult action = _combatAction.MakeTwoPlayerFightTogether(caster, target, AttackerStances.ToTheEnd);
 
         // TODO: the real assertion 
-        Assert.True(Equals(action.Winner, caster));
+        Assert.True(Equals(action.SurvivingPlayer.Player, caster));
     }
 
     [Fact]
@@ -99,7 +100,7 @@ public class CombatActionTest
             TestPlayers.CreateTestPlayer(ToughnessInitializationConstants.NORMAL, Roles.Engineer, room, game);
         Player target =
             TestPlayers.CreateTestPlayer(ToughnessInitializationConstants.NORMAL, Roles.QuarterMaster, room, game);
-        caster.BaseToughness = 3;
+        caster.BaseToughness = ANY_LOW_TOUGHNESS;
 
         FightResult action = _combatAction.MakeTwoPlayerFightTogether(caster, target, AttackerStances.PushHard);
 
@@ -107,5 +108,5 @@ public class CombatActionTest
     }
 
     // TODO:
-    // Cend conditions
+    // End conditions of the fight ! 
 }
