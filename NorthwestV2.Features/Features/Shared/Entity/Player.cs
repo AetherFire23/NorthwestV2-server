@@ -38,12 +38,26 @@ public class Player : EntityBase
 
     public AttackTypes AttackTypes { get; set; } = AttackTypes.Kill;
 
-
     public bool Has<T>() where T : ItemBase
     {
         bool hasItem = Inventory.Has<T>();
 
         return hasItem;
+    }
+
+    // TODO: Test ! 
+    public void HandleItemTransfer(ItemBase item)
+    {
+        bool isPlayerTheOwner = this.Inventory == item.Inventory;
+
+        if (isPlayerTheOwner)
+        {
+            this.Room.Inventory.TakeOwnership(item);
+        }
+        else
+        {
+            this.Inventory.TakeOwnership(item);
+        }
     }
 
     /// <summary>

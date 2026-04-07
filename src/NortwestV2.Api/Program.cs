@@ -48,9 +48,10 @@ public partial class Program
             c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 
             // Must include all assemblies for which types exist
-            var domainDocumentation = $"{typeof(ActionWithTargetsAvailability).Assembly.GetName().Name}.xml";
+            var domainDocumentation = "NorthwestV2.Features.xml";
             c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, domainDocumentation));
 
+            
             // c.SchemaFilter<RemoveNullableSchemaFilter>();
         });
         builder.Services.AddLogging();
@@ -118,6 +119,7 @@ public partial class Program
         }
         if (args.Contains("--seed") && args.Contains("--scenario"))
         {
+            Console.WriteLine("Seeding database ! ");
             app.Services.ExecuteSeedFromSeedName(args.ElementAt(args.IndexOf("--seed") + 1));
             // Leave as fire-and-forget async call. 
             // app.Services.LaunchScenarioBrowser(args[args.IndexOf("--scenario") + 1]);

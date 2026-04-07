@@ -17,7 +17,7 @@ public class EntityBase
         return false;
     }
 
-    protected bool Equals(EntityBase other)
+    public bool Equals(EntityBase other)
     {
         return Id.Equals(other.Id);
     }

@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using NorthwestV2.Features;
 using NorthwestV2.Features.Features.Actions.Productions.Core;
 using NorthwestV2.Features.Features.Actions.Productions.Core.Entities;
+using NorthwestV2.Features.Features.Actions.Productions.FishingPole;
+using NorthwestV2.Features.Features.Actions.Productions.HammerProduction;
 using NorthwestV2.Features.Features.Actions.Productions.SpyglassProduction.Items;
 using NorthwestV2.Features.Features.Shared.Entity;
 
@@ -25,7 +27,7 @@ public class NorthwestContext : DbContext, IUnitOfWork
     public DbSet<Log> Logs { get; set; }
     public DbSet<Inventory> Inventories { get; set; }
 
-    
+
     public NorthwestContext(DbContextOptions<NorthwestContext> options) : base(options)
     {
     }
@@ -36,10 +38,14 @@ public class NorthwestContext : DbContext, IUnitOfWork
         modelBuilder.Entity<ItemBase>()
             .HasDiscriminator<string>("Discriminator")
             .HasValue<ItemBase>(nameof(ItemBase))
-            .HasValue<CommonItemBase>("NormalItemBase")
-            .HasValue<ProductionItemBase>("ProductionItemBase")
-            .HasValue<UnfinishedSpyglass>("UnfinishedSpyglass");
-        
+            .HasValue<CommonItemBase>(nameof(CommonItemBase))
+            .HasValue<ProductionItemBase>(nameof(ProductionItemBase))
+            .HasValue<UnfinishedSpyglass>(nameof(UnfinishedSpyglass))
+            .HasValue<UnfinishedFishingPole>(nameof(UnfinishedFishingPole))
+            .HasValue<Hammer>(nameof(Hammer))
+            .HasValue<Spyglass>(nameof(Spyglass))
+            .HasValue<UnfinishedHammer>(nameof(UnfinishedHammer));
+
         modelBuilder.Entity<ProductionItemBase>(x =>
         {
             x.Property(x => x.CurrentStageContribution)

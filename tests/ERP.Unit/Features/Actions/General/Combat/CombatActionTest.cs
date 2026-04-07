@@ -48,7 +48,6 @@ public class CombatActionTest
 
         FightResult action = _combatAction.MakeTwoPlayerFightTogether(caster, target, AttackerStances.ToTheEnd);
 
-        // TODO: the real assertion 
         Assert.True(action.IsWinner(target));
     }
 

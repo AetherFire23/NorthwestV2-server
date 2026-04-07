@@ -77,6 +77,12 @@ public class Inventory : EntityBase
         itemsToTake.Clear();
     }
 
+    public void TakeOwnership(ItemBase item)
+    {
+        item.Inventory.Items.Remove(item);
+        this.Items.Add(item);
+    }
+
     /// <summary>
     /// Takes items incoming from a list, add them to this current invenotry, then removes them from the list. 
     /// </summary>
