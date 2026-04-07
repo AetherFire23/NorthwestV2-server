@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NorthwestV2.Compose;
+using NorthwestV2.Features.ApplicationsStuff.Repositories;
 using NorthwestV2.Infrastructure;
 using Npgsql;
 using Testcontainers.PostgreSql;
@@ -15,11 +16,12 @@ public class TestBase2 : IAsyncLifetime
     private readonly ITestOutputHelper _output;
 
     protected IServiceProvider RootServiceProvider;
-    protected IServiceScope Scope;
+    public IServiceScope Scope;
 
     protected IMediator Mediator => Scope.ServiceProvider.GetRequiredService<IMediator>();
-    protected NorthwestContext Context => Scope.ServiceProvider.GetRequiredService<NorthwestContext>();
+    public NorthwestContext Context => Scope.ServiceProvider.GetRequiredService<NorthwestContext>();
 
+    public IPlayerRepository PlayerRepository => Scope.ServiceProvider.GetRequiredService<IPlayerRepository>();
     private string _currentDbName;
 
     protected TestBase2(ITestOutputHelper output)

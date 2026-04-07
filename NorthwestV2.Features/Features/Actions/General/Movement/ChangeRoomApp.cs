@@ -38,8 +38,7 @@ public class ChangeRoomApp : ActionWithTargetsBase
         return changeRoomAvailability;
     }
 
-    public override Task Execute(ExecuteActionRequest request)
+    public override async Task Execute(ExecuteActionRequest request)
     {
-        throw new NotImplementedException();
     }
 }

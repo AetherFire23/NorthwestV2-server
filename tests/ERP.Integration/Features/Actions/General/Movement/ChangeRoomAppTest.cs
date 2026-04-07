@@ -1,11 +1,13 @@
 ﻿using JetBrains.Annotations;
-using NorthwestV2.Features;
 using NorthwestV2.Features.Features;
 using NorthwestV2.Features.Features.Actions.Core.Domain;
 using NorthwestV2.Features.Features.Actions.General.Movement;
+using NorthwestV2.Features.Features.Shared.Entity;
 using NorthwestV2.Features.UseCases.Authentication.Register;
+using NorthwestV2.Features.UseCases.GameActions.Command.ExecuteAction;
 using NorthwestV2.Features.UseCases.GameActions.Queries.GetActions;
 using NorthwestV2.Features.UseCases.GameStart;
+using NorthwestV2.Integration.Helpers;
 using NorthwestV2.Integration.Scratches;
 using Xunit.Abstractions;
 
@@ -19,22 +21,46 @@ public class ChangeRoomAppTest : TestBase2
     }
 
     [Fact]
-    public async Task Given_When_Then()
+    public async Task GivenPlayerInAnyRoom_WhenGettingChangeRoomAction_ThenChangeRoomActionIsAvailable()
     {
         CreateGameSeedData gameData = await ArrangeUntilGameCreation();
         Guid playerId = gameData.PlayerIds.First();
-        var roms = await Mediator.Send(new GetActionsRequest()
+
+        GetActionsResult roms = await Mediator.Send(new GetActionsRequest
         {
             PlayerId = playerId,
         });
-        // await Mediator.Send(new ExecuteActionRequest()
-        // {
-        //     ActionName = ActionNames.ChangeRoom,
-        //     PlayerId = playerId
-        // });
-        
-        Assert.NotEmpty(roms.Actions.First(x=> x.Name == ActionNames.ChangeRoom).Prompts.First().ValidTargets);
+
+        ActionDto action = roms.Actions.First(x => x.Name == ActionNames.ChangeRoom);
+        bool anyOtheRoomIsAvailableToMoveTo = action.Prompts.First().ValidTargets.Any();
+        Assert.True(anyOtheRoomIsAvailableToMoveTo);
     }
+
+    [Fact]
+    public async Task GivenPlayerInAnyRoom_WhenChangingRoom_ThenPlayerIsInDifferentRoom()
+    {
+        CreateGameSeedData gameData = await ArrangeUntilGameCreation();
+        Guid playerId = gameData.PlayerIds.First();
+        await this.TeleportPlayerTo(playerId, RoomEnum.MainDeck);
+        GetActionsResult roms = await Mediator.Send(new GetActionsRequest
+        {
+            PlayerId = playerId,
+        });
+        ActionDto action = roms.Actions.First(x => x.Name == ActionNames.ChangeRoom);
+        await Mediator.Send(new ExecuteActionRequest()
+        {
+            ActionName = ActionNames.ChangeRoom,
+            PlayerId = playerId,
+            ActionTargets = [[action.Prompts.First().ValidTargets.First()]]
+        });
+
+        Player player = await PlayerRepository.GetPlayer(playerId);
+
+        var rom = player.Room.RoomEnum == RoomEnum.MainDeck;
+        Assert.True(rom);
+    }
+
+    // TODO: More tests for when I will add requirements. 
 
     private async Task<CreateGameSeedData> ArrangeUntilGameCreation()
     {
