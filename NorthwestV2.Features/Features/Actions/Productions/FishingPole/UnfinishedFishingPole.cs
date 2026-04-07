@@ -6,7 +6,11 @@ namespace NorthwestV2.Features.Features.Actions.Productions.FishingPole;
 
 public class UnfinishedFishingPole : ProductionItemBase
 {
-    public UnfinishedFishingPole() : base(ItemTypes.UnfinishedFishingPole, 1, new FishingPoleStage())
+    public const ItemTypes ITEM_TYPE = ItemTypes.UnfinishedFishingPole;
+    public const int CARRY_VALUE = 1;
+
+    
+    public UnfinishedFishingPole() : base(ITEM_TYPE, CARRY_VALUE, new FishingPoleStage())
     {
     }
 

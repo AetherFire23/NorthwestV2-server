@@ -16,4 +16,12 @@ public class FishingPoleInitiation
 
         return availability;
     }
+
+    public void Execute(Player player)
+    {
+        // Create the unfinished fishing pole
+        UnfinishedFishingPole fishingPole = new UnfinishedFishingPole();
+
+        player.Room.Inventory.Add(fishingPole);
+    }
 }

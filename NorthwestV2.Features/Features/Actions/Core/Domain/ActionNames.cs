@@ -23,5 +23,10 @@ public static class ActionNames
     public static string CancelProduction => "Cancel a production";
     public const string HammerProductionContribution = "HammerProductionContribution";
 
+    
+    /*
+     * Fishing pole
+     */
     public const string InitiateFishingPoleProduction = nameof(InitiateFishingPoleProduction);
+    public const string ContributeFishingPoleProduction = nameof(ContributeFishingPoleProduction);
 }

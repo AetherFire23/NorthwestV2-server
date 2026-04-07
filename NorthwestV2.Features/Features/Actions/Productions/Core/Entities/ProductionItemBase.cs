@@ -100,7 +100,10 @@ public abstract class ProductionItemBase : ItemBase
             !CurrentStageContribution.IsProductionComplete;
         if (isCurrentStadedEndedButCurrentIsNotComplete)
         {
-            var nextStage = CurrentStageContribution.GetNextStageIfStageEnded();
+            /*
+             * Is handled automatically by ef core.
+             */
+            StageContributionBase nextStage = CurrentStageContribution.GetNextStageIfStageEnded();
             this.CurrentStageContribution = nextStage;
         }
 

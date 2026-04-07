@@ -1,4 +1,5 @@
-﻿using NorthwestV2.Features.Features.Actions.Domain.Core.Availability.Requirements;
+﻿using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.Requirements;
+using NorthwestV2.Features.Features.Actions.Domain.Core.Availability.Requirements;
 using NorthwestV2.Features.Features.Actions.Productions.Core;
 using NorthwestV2.Features.Features.Shared.Entity;
 
@@ -10,8 +11,6 @@ public record FishingPoleStage : StageContributionBase
     public const int CONTRIBUTION_LIMIT = 15;
     public const string STAGE_NAME = "Contribution to fishing pole";
     public const RoomEnum REQUIRED_ROOM = RoomEnum.Workshop;
-    
-    
 
     public FishingPoleStage() : base(CONTRIBUTION_LIMIT, STAGE_NAME, SPECIALIZED_ROLE)
     {
@@ -19,7 +18,15 @@ public record FishingPoleStage : StageContributionBase
 
     public override List<ActionRequirement> GetRequirements(Player player)
     {
+        PlayerInRoomRequirement playerInWorkshop = new(player, RoomEnum.Workshop);
 
-        return [];
+        ItemInRoomRequirement isIn = new(player.Room, ItemTypes.UnfinishedFishingPole);
+
+
+        int cost = this.CalculateCostForContribution(player);
+
+        PlayerHasTimePointsRequirement hasOneTp = PlayerHasTimePointsRequirement.Create(player, cost);
+
+        return [playerInWorkshop, isIn, hasOneTp];
     }
 }

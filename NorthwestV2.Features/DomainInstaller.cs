@@ -7,6 +7,7 @@ using NorthwestV2.Features.Features.Actions.Domain.Core;
 using NorthwestV2.Features.Features.Actions.Domain.General.Combat;
 using NorthwestV2.Features.Features.Actions.Domain.General.Movement;
 using NorthwestV2.Features.Features.Actions.Productions;
+using NorthwestV2.Features.Features.Actions.Productions.FishingPole.Contribution;
 using NorthwestV2.Features.Features.Actions.Productions.FishingPole.Initiation;
 using NorthwestV2.Features.Features.Actions.Productions.HammerProduction.Contribution;
 using NorthwestV2.Features.Features.Actions.Productions.HammerProduction.Initiation;
@@ -35,6 +36,7 @@ public static class DomainInstaller
         serviceCollection.AddScoped<SpyglassProductionContributionAction>();
         serviceCollection.AddScoped<CancelProductionAction>();
         serviceCollection.AddScoped<FishingPoleInitiation>();
+        serviceCollection.AddScoped<FishingPoleContribution>();
 
         /*
          * Hammer production

@@ -42,7 +42,6 @@ public class UnfinishedSpyglass : ProductionItemBase
 
     protected override CommonItemBase CreateFinishedItem(Player player)
     {
-        // TODO: Might wanna abstract deletion behaviour after. 
         Spyglass spyglass = new Spyglass();
         return spyglass;
     }

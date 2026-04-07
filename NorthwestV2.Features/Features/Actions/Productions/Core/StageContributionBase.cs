@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
 using NorthwestV2.Features.Features.Actions.Domain.Core.Availability.Requirements;
+using NorthwestV2.Features.Features.Actions.Productions.FishingPole.Contribution;
 using NorthwestV2.Features.Features.Actions.Productions.HammerProduction;
 using NorthwestV2.Features.Features.Actions.Productions.SpyglassProduction.ContributionToStages.Stages;
 using NorthwestV2.Features.Features.Shared.Entity;
@@ -19,6 +20,7 @@ namespace NorthwestV2.Features.Features.Actions.Productions.Core;
 [JsonDerivedType(typeof(SpyglassSecondStageContributionData), "spyglass_second_stage")]
 [JsonDerivedType(typeof(SpyglassProductionThirdStageContributionData), "spyglass_third_stage")]
 [JsonDerivedType(typeof(HammerProductionFirstStage), "hammer_first_stage")]
+[JsonDerivedType(typeof(FishingPoleStage), nameof(FishingPoleStage))]
 public abstract record StageContributionBase
 {
     public string StageName { get; set; }

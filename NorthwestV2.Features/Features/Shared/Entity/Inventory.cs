@@ -34,7 +34,12 @@ public class Inventory : EntityBase
     /// <returns></returns>
     public T Find<T>() where T : ItemBase
     {
-        var item = this.Items.First(x => x is T);
+        var item = this.Items.FirstOrDefault(x => x is T);
+
+        if (item is null)
+        {
+            throw new Exception($"Item is not found - {typeof(T)}");
+        }
 
         return (T)item;
     }
