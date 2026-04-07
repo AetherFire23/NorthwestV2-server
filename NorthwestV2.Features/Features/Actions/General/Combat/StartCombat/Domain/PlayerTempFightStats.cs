@@ -12,7 +12,6 @@ public class PlayerTempFightStats
     public int CurrentHealth { get; set; }
     public AttackerStances AttackerStance { get; set; }
 
-
     public PlayerTempFightStats(int strength, int currentToughness, int currentHealth, int baseToughness,
         AttackerStances attackerStance)
     {

@@ -8,6 +8,7 @@
     <ItemGroup>
       <ProjectReference Include="..\..\NorthwestV2.Features\NorthwestV2.Features.csproj" />
       <ProjectReference Include="..\commons\AetherFire23.Commons.Seeding\AetherFire23.Commons.Seeding.csproj" />
+      <ProjectReference Include="..\NorthwestV2.Infrastructure\NorthwestV2.Infrastructure.csproj" />
     </ItemGroup>
 
     <ItemGroup>

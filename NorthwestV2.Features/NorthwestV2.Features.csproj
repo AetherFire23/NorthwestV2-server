@@ -10,6 +10,7 @@
     <ItemGroup>
       <Folder Include="ApplicationsStuff\" />
       <Folder Include="Features\Shared\" />
+      <Folder Include="UseCases\GetAvailableItems\" />
     </ItemGroup>
 
     <ItemGroup>
