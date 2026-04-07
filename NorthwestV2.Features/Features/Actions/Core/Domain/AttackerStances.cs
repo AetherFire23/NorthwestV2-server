@@ -1,4 +1,4 @@
-﻿namespace NorthwestV2.Features.Features.Actions.Domain.Core;
+﻿namespace NorthwestV2.Features.Features.Actions.Core.Domain;
 
 public enum AttackerStances
 {

@@ -1,6 +1,6 @@
 ﻿using NorthwestV2.Features.Features.Shared.Entity;
 
-namespace NorthwestV2.Features.Features.GameStart.RoleInitializations;
+namespace NorthwestV2.Features.Features.GameStart.Domain.RoleInitializations;
 
 public abstract class RoleInitializer
 {

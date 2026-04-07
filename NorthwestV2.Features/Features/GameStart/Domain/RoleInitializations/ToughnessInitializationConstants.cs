@@ -1,4 +1,4 @@
-﻿namespace NorthwestV2.Features.Features.GameStart.RoleInitializations;
+﻿namespace NorthwestV2.Features.Features.GameStart.Domain.RoleInitializations;
 
 public class ToughnessInitializationConstants
 {

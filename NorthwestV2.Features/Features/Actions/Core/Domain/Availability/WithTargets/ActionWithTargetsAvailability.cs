@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using NorthwestV2.Features.Features.Actions.Domain.Core.Availability.Requirements;
+using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.Requirements;
 
-namespace NorthwestV2.Features.Features.Actions.Domain.Core.Availability.WithTargets;
+namespace NorthwestV2.Features.Features.Actions.Core.Domain.Availability.WithTargets;
 
 /// <summary>
 /// Allo am I seen 

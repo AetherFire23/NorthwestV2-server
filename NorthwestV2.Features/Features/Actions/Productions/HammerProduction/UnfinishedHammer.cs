@@ -1,4 +1,5 @@
 ﻿using NorthwestV2.Features.Features.Actions.Productions.Core.Entities;
+using NorthwestV2.Features.Features.Actions.Productions.HammerProduction.Contribution.Stages;
 using NorthwestV2.Features.Features.Actions.Productions.SpyglassProduction.Items;
 using NorthwestV2.Features.Features.Shared.Entity;
 

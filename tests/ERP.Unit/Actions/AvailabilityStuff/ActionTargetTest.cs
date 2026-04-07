@@ -1,5 +1,5 @@
 ﻿using JetBrains.Annotations;
-using NorthwestV2.Features.Features.Actions.Domain.Core.Availability.WithTargets;
+using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.WithTargets;
 
 namespace ERP.Testing.Domain.Actions.AvailabilityStuff;
 

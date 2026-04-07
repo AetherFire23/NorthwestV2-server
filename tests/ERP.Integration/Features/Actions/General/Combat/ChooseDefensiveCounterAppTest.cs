@@ -1,8 +1,9 @@
 ﻿using JetBrains.Annotations;
 using NorthwestV2.Features;
 using NorthwestV2.Features.Features;
-using NorthwestV2.Features.Features.Actions.Domain.Core;
+using NorthwestV2.Features.Features.Actions.Core.Domain;
 using NorthwestV2.Features.Features.Actions.General.Combat;
+using NorthwestV2.Features.Features.Actions.General.Combat.ChooseDefensiveCounter;
 using NorthwestV2.Features.UseCases.Authentication.Register;
 using NorthwestV2.Features.UseCases.GameActions.Queries.GetActions;
 using NorthwestV2.Features.UseCases.GameStart;

@@ -1,5 +1,5 @@
 ﻿using Mediator;
-using NorthwestV2.Features.Features.Actions.Domain.Core.Availability.WithTargets;
+using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.WithTargets;
 
 namespace NorthwestV2.Features.UseCases.GameActions.Command.ExecuteAction;
 

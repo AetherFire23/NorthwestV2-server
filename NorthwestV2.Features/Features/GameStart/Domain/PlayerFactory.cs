@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
-using NorthwestV2.Features.Features.GameStart.RoleInitializations;
+using NorthwestV2.Features.Features.GameStart.Domain.RoleInitializations;
 using NorthwestV2.Features.Features.Shared.Entity;
 
 namespace NorthwestV2.Features.Features.GameStart.Domain;

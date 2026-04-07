@@ -1,10 +1,9 @@
 ﻿using NorthwestV2.Features.ApplicationsStuff.Repositories;
 using NorthwestV2.Features.Features.Actions.Core.Application.Bases;
-using NorthwestV2.Features.Features.Actions.Domain.Core;
-using NorthwestV2.Features.Features.Actions.Domain.Core.Availability.WithTargets;
-using NorthwestV2.Features.Features.Actions.Domain.General.Combat;
+using NorthwestV2.Features.Features.Actions.Core.Domain;
+using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.WithTargets;
+using NorthwestV2.Features.Features.Actions.General.Combat.StartCombat.Domain;
 using NorthwestV2.Features.Features.Shared.Entity;
-using NorthwestV2.Features.Repositories;
 using NorthwestV2.Features.UseCases.GameActions.Command.ExecuteAction;
 using NorthwestV2.Features.UseCases.GameActions.Queries.GetActions;
 

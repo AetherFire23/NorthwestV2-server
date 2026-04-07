@@ -1,6 +1,6 @@
-﻿using NorthwestV2.Features.Features.Actions.Domain.Core.Availability.WithTargets;
+﻿using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.WithTargets;
 
-namespace NorthwestV2.Features.Features.Actions.Domain.Core;
+namespace NorthwestV2.Features.Features.Actions.Core.Domain;
 
 //TODO: Test this class very important 
 public class GameActionsWithTargetsValidator

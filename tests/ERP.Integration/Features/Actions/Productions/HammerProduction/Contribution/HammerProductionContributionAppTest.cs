@@ -1,12 +1,11 @@
 ﻿using JetBrains.Annotations;
 using NorthwestV2.Features.ApplicationsStuff.Repositories;
-using NorthwestV2.Features.Features.Actions.Domain.Core;
+using NorthwestV2.Features.Features.Actions.Core.Domain;
 using NorthwestV2.Features.Features.Actions.Productions.HammerProduction;
 using NorthwestV2.Features.Features.Actions.Productions.HammerProduction.Contribution;
 using NorthwestV2.Features.Features.Actions.Productions.HammerProduction.Initiation;
 using NorthwestV2.Features.Features.Actions.Productions.SpyglassProduction.Items;
 using NorthwestV2.Features.Features.Shared.Entity;
-using NorthwestV2.Features.Repositories;
 using NorthwestV2.Features.UseCases.GameActions.Command.ExecuteAction;
 using NorthwestV2.Integration.Scratches;
 using Xunit.Abstractions;

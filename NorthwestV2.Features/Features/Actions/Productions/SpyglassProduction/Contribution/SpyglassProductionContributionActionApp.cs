@@ -1,13 +1,12 @@
 using NorthwestV2.Features.ApplicationsStuff.Repositories;
 using NorthwestV2.Features.Features.Actions.Core.Application.Bases;
+using NorthwestV2.Features.Features.Actions.Core.Domain;
 using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.Instant;
-using NorthwestV2.Features.Features.Actions.Domain.Core;
 using NorthwestV2.Features.Features.Shared.Entity;
-using NorthwestV2.Features.Repositories;
 using NorthwestV2.Features.UseCases.GameActions.Command.ExecuteAction;
 using NorthwestV2.Features.UseCases.GameActions.Queries.GetActions;
 
-namespace NorthwestV2.Features.Features.Actions.Productions.SpyglassProduction.ContributionToStages;
+namespace NorthwestV2.Features.Features.Actions.Productions.SpyglassProduction.Contribution;
 
 public class SpyglassProductionContributionActionApp : InstantActionBase
 {

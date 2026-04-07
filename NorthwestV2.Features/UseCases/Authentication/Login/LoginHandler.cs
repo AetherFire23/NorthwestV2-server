@@ -1,6 +1,6 @@
 ﻿using Mediator;
+using NorthwestV2.Features.ApplicationsStuff.Repositories;
 using NorthwestV2.Features.Features.Shared.Entity;
-using NorthwestV2.Features.Repositories;
 using NorthwestV2.Features.UseCases.Authentication.Login.Tokens;
 
 namespace NorthwestV2.Features.UseCases.Authentication.Login;

@@ -1,6 +1,6 @@
 ﻿using NorthwestV2.Features.Features.Shared.Entity;
 
-namespace NorthwestV2.Features.Features.GameStart;
+namespace NorthwestV2.Features.Features.GameStart.Domain;
 
 public class RoomFactory
 {

@@ -1,4 +1,4 @@
-﻿namespace NorthwestV2.Features.Features.Actions.Domain.General.Combat;
+﻿namespace NorthwestV2.Features.Features.Actions.General.Combat.StartCombat.Domain;
 
 /// <summary>
 /// I Remember I had an issue with the naming of this once. It's more an AttackStance or AttackOutcome

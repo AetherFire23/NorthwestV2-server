@@ -1,5 +1,5 @@
 ﻿using JetBrains.Annotations;
-using NorthwestV2.Features.Features.Actions.Domain.Core;
+using NorthwestV2.Features.Features.Actions.Core.Domain;
 using NorthwestV2.Features.Features.Actions.General.Combat;
 using NorthwestV2.Features.Features.Actions.General.Combat.StartCombat;
 using NorthwestV2.Features.UseCases.GameActions.Queries.GetActions;

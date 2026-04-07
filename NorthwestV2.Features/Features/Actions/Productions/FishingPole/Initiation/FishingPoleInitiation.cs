@@ -1,5 +1,5 @@
-﻿using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.Instant;
-using NorthwestV2.Features.Features.Actions.Domain.Core;
+﻿using NorthwestV2.Features.Features.Actions.Core.Domain;
+using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.Instant;
 using NorthwestV2.Features.Features.Shared.Entity;
 
 namespace NorthwestV2.Features.Features.Actions.Productions.FishingPole.Initiation;

@@ -1,4 +1,4 @@
-﻿namespace NorthwestV2.Features.Features.Actions.Domain.Core.Availability.WithTargets;
+﻿namespace NorthwestV2.Features.Features.Actions.Core.Domain.Availability.WithTargets;
 
 /// <summary>
 /// Represents a target for an action, which may be identified either by a

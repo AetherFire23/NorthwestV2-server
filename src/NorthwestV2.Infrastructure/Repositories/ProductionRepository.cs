@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using NorthwestV2.Features.Repositories;
+using NorthwestV2.Features.ApplicationsStuff.Repositories;
 
 namespace NorthwestV2.Infrastructure.Repositories;
 

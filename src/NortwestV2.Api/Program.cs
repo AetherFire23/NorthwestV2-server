@@ -4,7 +4,7 @@ using AetherFire23.Commons.Scenarios;
 using AetherFire23.Commons.Seeding;
 using Microsoft.EntityFrameworkCore;
 using NorthwestV2.Compose;
-using NorthwestV2.Features.Features.Actions.Domain.Core.Availability.WithTargets;
+using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.WithTargets;
 using NorthwestV2.Infrastructure;
 using NorthwestV2.Infrastructure.Contexts;
 using NorthwestV2.Seed;

@@ -1,4 +1,4 @@
-﻿namespace NorthwestV2.Features.Repositories;
+﻿namespace NorthwestV2.Features.ApplicationsStuff.Repositories;
 
 public interface IProductionRepository
 {

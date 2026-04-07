@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 using NorthwestV2.Features.ApplicationsStuff.Repositories;
-using NorthwestV2.Features.Features.Actions.Domain.Core;
+using NorthwestV2.Features.Features.Actions.Core.Domain;
 using NorthwestV2.Features.Features.Actions.Productions.FishingPole;
 using NorthwestV2.Features.Features.Actions.Productions.FishingPole.Contribution;
 using NorthwestV2.Features.Features.Actions.Productions.FishingPole.Initiation;

@@ -4,7 +4,7 @@ using NorthwestV2.Features;
 using NorthwestV2.Features.Features;
 using NorthwestV2.Features.Features.GameStart;
 using NorthwestV2.Features.Features.GameStart.Domain;
-using NorthwestV2.Features.Features.GameStart.RoleInitializations;
+using NorthwestV2.Features.Features.GameStart.Domain.RoleInitializations;
 using NorthwestV2.Features.Features.Shared.Entity;
 using NorthwestV2.Integration;
 using Xunit.Abstractions;

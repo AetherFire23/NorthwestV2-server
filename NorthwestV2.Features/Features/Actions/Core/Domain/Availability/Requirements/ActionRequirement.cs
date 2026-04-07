@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using NorthwestV2.Features.Features.Shared.Entity;
 
-namespace NorthwestV2.Features.Features.Actions.Domain.Core.Availability.Requirements;
+namespace NorthwestV2.Features.Features.Actions.Core.Domain.Availability.Requirements;
 
 /// <summary>
 /// Represents a single requirement that must be satisfied for an action

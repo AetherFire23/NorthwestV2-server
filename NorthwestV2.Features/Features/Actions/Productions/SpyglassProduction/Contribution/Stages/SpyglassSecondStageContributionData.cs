@@ -1,9 +1,8 @@
 using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.Requirements;
-using NorthwestV2.Features.Features.Actions.Domain.Core.Availability.Requirements;
 using NorthwestV2.Features.Features.Actions.Productions.Core;
 using NorthwestV2.Features.Features.Shared.Entity;
 
-namespace NorthwestV2.Features.Features.Actions.Productions.SpyglassProduction.ContributionToStages.Stages;
+namespace NorthwestV2.Features.Features.Actions.Productions.SpyglassProduction.Contribution.Stages;
 
 public record SpyglassSecondStageContributionData : StageContributionBase
 {

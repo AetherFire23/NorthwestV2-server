@@ -1,4 +1,4 @@
-namespace NorthwestV2.Features.Features.Actions.Domain.Core.Availability.Requirements;
+namespace NorthwestV2.Features.Features.Actions.Core.Domain.Availability.Requirements;
 
 public class Test
 {

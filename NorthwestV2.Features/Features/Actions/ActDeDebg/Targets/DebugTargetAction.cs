@@ -1,6 +1,6 @@
-﻿using NorthwestV2.Features.Features.Actions.Domain.Core;
-using NorthwestV2.Features.Features.Actions.Domain.Core.Availability.Requirements;
-using NorthwestV2.Features.Features.Actions.Domain.Core.Availability.WithTargets;
+﻿using NorthwestV2.Features.Features.Actions.Core.Domain;
+using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.Requirements;
+using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.WithTargets;
 using NorthwestV2.Features.Features.Shared.Entity;
 
 namespace NorthwestV2.Features.Features.Actions.ActDeDebg.Targets;

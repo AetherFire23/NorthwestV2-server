@@ -1,27 +1,25 @@
 ﻿using NorthwestV2.Features.ApplicationsStuff.Repositories;
 using NorthwestV2.Features.Features.Actions.Core.Application.Bases;
-using NorthwestV2.Features.Features.Actions.Domain.Core;
-using NorthwestV2.Features.Features.Actions.Domain.Core.Availability.Requirements;
-using NorthwestV2.Features.Features.Actions.Domain.Core.Availability.WithTargets;
-using NorthwestV2.Features.Features.Actions.Domain.General.Combat;
+using NorthwestV2.Features.Features.Actions.Core.Domain;
+using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.Requirements;
+using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.WithTargets;
 using NorthwestV2.Features.Features.Actions.General.Combat.StartCombat.Domain;
 using NorthwestV2.Features.Features.Shared.Entity;
-using NorthwestV2.Features.Repositories;
 using NorthwestV2.Features.UseCases.GameActions.Command.ExecuteAction;
 using NorthwestV2.Features.UseCases.GameActions.Queries.GetActions;
 
-namespace NorthwestV2.Features.Features.Actions.General.Combat;
+namespace NorthwestV2.Features.Features.Actions.General.Combat.ChooseDefensiveCounter;
 
 public class ChooseDefensiveCounterApp : ActionWithTargetsBase
 {
-    private readonly ChooseDefensiveCounter _chooseDefensiveCounter;
+    private readonly StartCombat.Domain.ChooseDefensiveCounter _chooseDefensiveCounter;
 
     private readonly IUnitOfWork _unitOfWork;
     private readonly IPlayerRepository _playerRepository;
-    private readonly ChooseDefensiveCounter chooseDefensiveCounter1;
+    private readonly StartCombat.Domain.ChooseDefensiveCounter chooseDefensiveCounter1;
 
-    public ChooseDefensiveCounterApp(ChooseDefensiveCounter chooseDefensiveCounter, IUnitOfWork unitOfWork,
-        IPlayerRepository playerRepository, ChooseDefensiveCounter chooseDefensiveCounter1) : base(
+    public ChooseDefensiveCounterApp(StartCombat.Domain.ChooseDefensiveCounter chooseDefensiveCounter, IUnitOfWork unitOfWork,
+        IPlayerRepository playerRepository, StartCombat.Domain.ChooseDefensiveCounter chooseDefensiveCounter1) : base(
         ActionNames
             .PickDefensiveStance)
     {
