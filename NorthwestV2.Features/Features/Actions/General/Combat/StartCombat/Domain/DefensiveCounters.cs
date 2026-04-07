@@ -1,4 +1,4 @@
-﻿namespace NorthwestV2.Features.Features.Actions.Domain.General.Combat;
+﻿namespace NorthwestV2.Features.Features.Actions.General.Combat.StartCombat.Domain;
 
 public enum DefensiveCounters
 {

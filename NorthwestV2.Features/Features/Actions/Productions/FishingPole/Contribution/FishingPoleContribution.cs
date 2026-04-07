@@ -9,16 +9,14 @@ public class FishingPoleContribution
 {
     public InstantActionAvailability DetermineAvailability(Player player)
     {
-        // TODO: Cleanup
-        var unf = player.Room.Inventory.Items
-            .FirstOrDefault(x => x is UnfinishedFishingPole) as UnfinishedFishingPole;
-
-        if (unf is null)
+        if (!player.Room.Has<UnfinishedFishingPole>())
         {
             return null;
         }
 
-        List<ActionRequirement> requirements = unf.CurrentStageContribution.GetRequirements(player);
+        UnfinishedFishingPole unfinishedFishingPole = player.Room.Inventory.Find<UnfinishedFishingPole>();
+
+        List<ActionRequirement> requirements = unfinishedFishingPole.CurrentStageContribution.GetRequirements(player);
 
         InstantActionAvailability instantActionAvailability = new InstantActionAvailability()
         {
