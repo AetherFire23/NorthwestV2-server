@@ -28,6 +28,9 @@ public class CombatAction
             throw new Exception("The caster cannot target himself.");
         }
 
+        /*
+         * I don't know the real requirements yet....
+         */
         List<ActionRequirement> requiresAnyPlayerInTheSameRoom = DetermineRequirements(caster, otherPlayersInSameRoom);
 
         List<TargetSelectionPrompt> promptWithSingleScreenOfJustPlayers = CreatePrompts(otherPlayersInSameRoom);
@@ -48,17 +51,18 @@ public class CombatAction
         ActionRequirement playersInSameRoomRequirement =
             ActionRequirement.CreateAnyOtherPlayerExistsInRoomRequirement(caster, otherPlayersInSameRoom);
 
-
         return [playersInSameRoomRequirement];
     }
 
     private List<TargetSelectionPrompt> CreatePrompts(List<Player> otherPlayersInSameRoom)
     {
         TargetSelectionPrompt targetSelection = TargetSelectionPrompt.FromPlayers(otherPlayersInSameRoom);
+        TargetSelectionPrompt selectAttackerStance = TargetSelectionPrompt.FromEnum<AttackerStances>(
+            "Pick your attacker stance"
+        );
 
-        return [targetSelection];
+        return [targetSelection, selectAttackerStance];
     }
-
 
     /// <summary>
     /// Represents a single offensive action initiated by a player during combat.

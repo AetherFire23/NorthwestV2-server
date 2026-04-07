@@ -68,7 +68,6 @@ public class TargetSelectionPrompt
 
     public static TargetSelectionPrompt FromItems(List<ItemBase> items)
     {
-        
         List<ActionTarget> targets = items.Select(x => x.ToTarget()).ToList();
 
         TargetSelectionPrompt prompt = new TargetSelectionPrompt
@@ -78,5 +77,27 @@ public class TargetSelectionPrompt
         };
 
         return prompt;
+    }
+
+    public static TargetSelectionPrompt FromEnum<T>(string description, int min = 1, int max = 1)
+        where T : struct, Enum
+    {
+        IEnumerable<ActionTarget> enumAsTargets = Enum.GetValues<T>()
+            .Select(x => new ActionTarget()
+            {
+                Name = x.ToString(),
+                Value = x.ToString(),
+                TargetId = Guid.Empty,
+            });
+
+        TargetSelectionPrompt targetPromptOfEnum = new()
+        {
+            ValidTargets = enumAsTargets.ToList(),
+            Description = description,
+            Min = min,
+            Max = max,
+        };
+
+        return targetPromptOfEnum;
     }
 }
