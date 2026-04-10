@@ -1,4 +1,5 @@
 ﻿using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.WithTargets;
+using NorthwestV2.Features.UseCases.Items;
 
 namespace NorthwestV2.Features.Features.Shared.Entity;
 
@@ -9,7 +10,6 @@ namespace NorthwestV2.Features.Features.Shared.Entity;
 /// </summary>
 public class ItemBase : EntityBase
 {
-
     public Guid? InventoryId { get; set; }
 
     /// <summary>
@@ -50,5 +50,22 @@ public class ItemBase : EntityBase
         };
 
         return actionTarget;
+    }
+
+    public ItemDto ToDto()
+    {
+        if (Inventory is null)
+        {
+            throw new Exception($"The inventory cannoit be null {this.Id} {this.ItemType}");
+        }
+
+        ItemDto itemDto = new()
+        {
+            Id = Id,
+            ItemTypes = ItemType,
+            InventoryId = this.Inventory.Id,
+        };
+
+        return itemDto;
     }
 }
