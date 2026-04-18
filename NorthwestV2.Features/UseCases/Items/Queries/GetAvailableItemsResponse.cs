@@ -1,6 +1,4 @@
-﻿using NorthwestV2.Features.Features.Shared.Entity;
-
-namespace NorthwestV2.Features.UseCases.Items.Queries;
+﻿namespace NorthwestV2.Features.UseCases.Items.Queries;
 
 public class GetAvailableItemsResponse
 {

@@ -5,7 +5,7 @@ using NorthwestV2.Features.Features.Shared.Entity;
 namespace NorthwestV2.Features.UseCases.Items.Queries;
 
 /// <summary>
-/// Returns the Item Dtos of the current room and the current room (of the player). 
+/// Returns the Item Dtos of the player and the current room of the player. 
 /// </summary>
 public class GetAvailableItemsHandler : IRequestHandler<GetAvailableItemsRequest, GetAvailableItemsResponse>
 {
@@ -23,8 +23,13 @@ public class GetAvailableItemsHandler : IRequestHandler<GetAvailableItemsRequest
     {
         Player player = await _playerRepository.GetPlayerWithRoomAndInventory(request.PlayerId);
 
-        GetAvailableItemsResponse response = new GetAvailableItemsResponse()
+        List<ItemDto> playerItems = player.Inventory.Items.Select(x => x.ToDto()).ToList();
+        List<ItemDto> roomItems = player.Room.Inventory.Items.Select(x => x.ToDto()).ToList();
+
+        GetAvailableItemsResponse response = new GetAvailableItemsResponse
         {
+            PlayerItems = playerItems,
+            RoomItems = roomItems,
         };
         return response;
     }
