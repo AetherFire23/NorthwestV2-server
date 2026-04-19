@@ -9,7 +9,7 @@ public class FishingPoleContribution
 {
     public InstantActionAvailability DetermineAvailability(Player player)
     {
-        if (!player.Room.Has<UnfinishedFishingPole>())
+        if (!player.Room.HasItemOfType<UnfinishedFishingPole>())
         {
             return null;
         }

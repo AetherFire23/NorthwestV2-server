@@ -19,13 +19,14 @@ public class Room : EntityBase
     /// </summary>
     /// <param name="itemTypes"></param>
     /// <returns></returns>
-    public bool Has(ItemTypes itemTypes)
+    public bool HasItemOfType(ItemTypes itemTypes)
     {
         bool hasItem = this.Inventory.Items.Any(x => x.ItemType == itemTypes);
         return hasItem;
     }
 
-    public bool Has<T>() where T : ItemBase
+
+    public bool HasItemOfType<T>() where T : ItemBase
     {
         bool anyItemIsOfType = Inventory.Items.Any(x => x is T);
 
@@ -41,7 +42,7 @@ public class Room : EntityBase
     /// Takes items incoming from a list, add them to this current invenotry, then removes them from the list. 
     /// </summary>
     /// <param name="itemsToTake"></param>
-    public void TakeOwnership(List<ItemBase> itemsToTake)
+    public void TakeOwnershipAndRemoveFromPreviousOwner(List<ItemBase> itemsToTake)
     {
         this.Inventory.Items.AddRange(itemsToTake);
         itemsToTake.Clear();

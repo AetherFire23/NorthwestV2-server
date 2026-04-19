@@ -20,6 +20,13 @@ public class Inventory : EntityBase
         return hasItem;
     }
 
+    public bool HasItem(ItemBase itemBase)
+    {
+        var hasItem = Items.Contains(itemBase);
+
+        return hasItem;
+    }
+
     public ItemBase Find(ItemTypes itemType)
     {
         var item = this.Items.First(x => x.ItemType == itemType);
@@ -77,7 +84,7 @@ public class Inventory : EntityBase
         itemsToTake.Clear();
     }
 
-    public void TakeOwnership(ItemBase item)
+    public void TakeOwnershipAndRemoveFromPreviousOwner(ItemBase item)
     {
         item.Inventory.Items.Remove(item);
         this.Items.Add(item);

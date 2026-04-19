@@ -9,7 +9,7 @@ public class HammerProductionContribution
 {
     public InstantActionAvailability? DetermineAvailability(Player player)
     {
-        if (!player.Room.Has<UnfinishedHammer>())
+        if (!player.Room.HasItemOfType<UnfinishedHammer>())
         {
             return null;
         }

@@ -333,7 +333,7 @@ public class SpyglassProductionContributionAppTest : TestBase2
         Player playerAfter =
             await this.GetServiceFromScope<IPlayerRepository>().GetPlayerAndRoomAndInventoryAndGame(playerId);
 
-        Assert.False(playerAfter.Room.Has<UnfinishedSpyglass>());
+        Assert.False(playerAfter.Room.HasItemOfType<UnfinishedSpyglass>());
     }
 
     private async Task ContributeUntillError(Guid playerId)

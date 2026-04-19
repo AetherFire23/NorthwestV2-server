@@ -48,7 +48,7 @@ public class FishingPoleInitiationAppTest : TestBase2
 
         Player player = this.Context.Players.First(x => x.Id == playerId);
 
-        Assert.True(player.Room.Has<UnfinishedFishingPole>());
+        Assert.True(player.Room.HasItemOfType<UnfinishedFishingPole>());
     }
 
     private async Task<Guid> SetupForFishingRodInitiation()

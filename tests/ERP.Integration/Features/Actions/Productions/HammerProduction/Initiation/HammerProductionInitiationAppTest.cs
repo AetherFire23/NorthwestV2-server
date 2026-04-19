@@ -49,7 +49,7 @@ public class HammerProductionInitiationAppTest : TestBase2
         });
 
         Player player = await GetServiceFromScope<IPlayerRepository>().GetPlayerAndRoomAndInventoryAndGame(playerId);
-        Assert.True(player.Room.Has(ItemTypes.UnfinishedHammer));
+        Assert.True(player.Room.HasItemOfType(ItemTypes.UnfinishedHammer));
     }
 
     private async Task<Guid> SetupForHammerProduction()

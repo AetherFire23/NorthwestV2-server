@@ -45,18 +45,41 @@ public class Player : EntityBase
         return hasItem;
     }
 
-    // TODO: Test ! 
-    public void HandleItemTransfer(ItemBase item)
+    public bool HasItem(ItemBase item)
     {
-        bool isPlayerTheOwner = this.Inventory == item.Inventory;
+        bool hasItem = Inventory.Items.Contains(item);
 
-        if (isPlayerTheOwner)
+        return hasItem;
+    }
+
+    public bool RoomHas(ItemBase item)
+    {
+        bool roomHasItem = this.RoomHas(item);
+
+        return roomHasItem;
+    }
+
+    public void SwapItemBetweenPlayerOrRoom(ItemBase transferredItem)
+    {
+        bool neitherPlayerNorHisRoomHaveTheItemToTransfer =
+            !HasItem(transferredItem)
+            && !Room.Inventory.HasItem(transferredItem);
+
+        if (neitherPlayerNorHisRoomHaveTheItemToTransfer)
         {
-            this.Room.Inventory.TakeOwnership(item);
+            throw new Exception($"Neither player nor inventory contain the target item. : " +
+                                $"Item id: {transferredItem.Id}" +
+                                $"Player id: {this.Id}"
+            );
+        }
+
+        if (Room.Inventory.HasItem(transferredItem))
+        {
+            this.Inventory.TakeOwnershipAndRemoveFromPreviousOwner(transferredItem);
         }
         else
         {
-            this.Inventory.TakeOwnership(item);
+            this.Room.TakeOwnershipAndRemoveFromPreviousOwner([transferredItem]);
         }
     }
 

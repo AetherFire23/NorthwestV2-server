@@ -31,7 +31,7 @@ public class HammerProductionContributionAppTest : TestBase2
         await ContributeUntilItemInInventoryAsync(
             playerId,
             ActionNames.HammerProductionContribution,
-            x => x.Room.Has<Hammer>()
+            x => x.Room.HasItemOfType<Hammer>()
         );
 
         Player player = await _playerRepository.GetPlayerAndRoomAndInventoryAndGame(playerId);
@@ -100,7 +100,7 @@ public class HammerProductionContributionAppTest : TestBase2
         try
         {
             Player p = await _playerRepository.GetPlayerAndRoomAndInventoryAndGame(playerId);
-            while (!p.Room.Has<Hammer>())
+            while (!p.Room.HasItemOfType<Hammer>())
             {
                 await Mediator.Send(new ExecuteActionRequest
                 {
