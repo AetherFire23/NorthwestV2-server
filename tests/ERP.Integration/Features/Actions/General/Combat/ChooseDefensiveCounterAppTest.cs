@@ -1,9 +1,7 @@
 ﻿using JetBrains.Annotations;
-using NorthwestV2.Features;
 using NorthwestV2.Features.Features;
 using NorthwestV2.Features.Features.Actions.Core.Domain;
 using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.WithTargets;
-using NorthwestV2.Features.Features.Actions.General.Combat;
 using NorthwestV2.Features.Features.Actions.General.Combat.ChooseDefensiveCounter;
 using NorthwestV2.Features.Features.Actions.General.Combat.StartCombat.Domain;
 using NorthwestV2.Features.Features.Shared.Entity;
