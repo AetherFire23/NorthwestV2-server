@@ -47,7 +47,7 @@ public class AuthController : ControllerBase
         LoginResult lg = await _mediator.Send(request, cancellationToken);
         
         // TODO: set the default player I g
-        this.Response.Cookies.Append("nw_token", lg.Token, new CookieOptions()
+        Response.Cookies.Append("nw_token", lg.Token, new CookieOptions()
         {
             HttpOnly = true,
             Secure = true,
@@ -55,8 +55,8 @@ public class AuthController : ControllerBase
             Expires = DateTime.UtcNow.AddMinutes(420)
         });
         
-        Player playerId = this._context.Players.First(x => x.UserId == lg.UserId);
-        this.HttpContext.Session.SetUserData(new UserData
+        Player playerId = _context.Players.First(x => x.UserId == lg.UserId);
+        HttpContext.Session.SetUserData(new UserData
         {
             UserId = lg.UserId,
             PlayerId = playerId.Id,

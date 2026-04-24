@@ -24,10 +24,10 @@ public class ActionServices
 
     public async Task<List<InstantActionAvailability>> GetInstantActionAvailabilityResults(GetActionsRequest request)
     {
-        IEnumerable<InstantActionBase> services = GetInstantActions();
+        IEnumerable<InstantActionBase> instantActionServices = GetInstantActions();
 
         // Get all the tasks of respective nature ( instants, with targets)  
-        IEnumerable<InstantActionBase> instantActions = services;
+        IEnumerable<InstantActionBase> instantActions = instantActionServices;
 
         List<InstantActionAvailability> instantActionAvailabilities = new();
 

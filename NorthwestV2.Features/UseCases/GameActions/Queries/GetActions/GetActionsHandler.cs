@@ -14,21 +14,13 @@ public class GetActionsHandler : IRequestHandler<GetActionsRequest, GetActionsRe
         _actionServices = actionServices;
     }
 
-
     public async ValueTask<GetActionsResult> Handle(GetActionsRequest request, CancellationToken cancellationToken)
     {
-        List<InstantActionAvailability> instantActionAvailabilities =
-            await _actionServices.GetInstantActionAvailabilityResults(request);
+        // Get the instant actions. 
+        IEnumerable<ActionDto> instantActionsAsDto = await GetInstantActionDtos(request);
 
-        List<ActionWithTargetsAvailability> actionWithTargetsAvailabilities =
-            await _actionServices.GetActionWithTargetsAvailabilityResults(request);
-
-        IEnumerable<ActionDto> instantActionsAsDto = instantActionAvailabilities
-            .Select(ActionDto.FromInstant);
-
-        IEnumerable<ActionDto> actionWithTargetsDto = actionWithTargetsAvailabilities
-            .Select(ActionDto.FromTarget);
-
+        // Get the actions with targets. 
+        IEnumerable<ActionDto> actionWithTargetsDto = await GetActionsWithTargetsDtos(request);
 
         GetActionsResult getActionsResult = new GetActionsResult()
         {
@@ -36,5 +28,23 @@ public class GetActionsHandler : IRequestHandler<GetActionsRequest, GetActionsRe
         };
 
         return getActionsResult;
+    }
+
+    private async ValueTask<IEnumerable<ActionDto>> GetActionsWithTargetsDtos(GetActionsRequest request)
+    {
+        List<ActionWithTargetsAvailability> actionWithTargetsAvailabilities =
+            await _actionServices.GetActionWithTargetsAvailabilityResults(request);
+        IEnumerable<ActionDto> actionWithTargetsDto = actionWithTargetsAvailabilities
+            .Select(ActionDto.FromTarget);
+        return actionWithTargetsDto;
+    }
+
+    private async ValueTask<IEnumerable<ActionDto>> GetInstantActionDtos(GetActionsRequest request)
+    {
+        List<InstantActionAvailability> instantActionAvailabilities =
+            await _actionServices.GetInstantActionAvailabilityResults(request);
+        IEnumerable<ActionDto> instantActionsAsDto = instantActionAvailabilities
+            .Select(ActionDto.FromInstant);
+        return instantActionsAsDto;
     }
 }

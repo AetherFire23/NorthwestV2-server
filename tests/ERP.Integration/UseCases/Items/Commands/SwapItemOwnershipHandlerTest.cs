@@ -13,9 +13,8 @@ public class SwapItemOwnershipHandlerTest : TestBase2
     }
 
     [Fact]
-    public void GivenItemInRoom_When_RyanThen()
+    public void GivenItemInRoom_WhenPlayerTransfers_Then()
     {
-        
         Assert.Fail();
     }
 }
