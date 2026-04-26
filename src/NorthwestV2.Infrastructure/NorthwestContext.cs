@@ -24,7 +24,7 @@ public class NorthwestContext : DbContext, IUnitOfWork
     public DbSet<Room> Rooms { get; set; }
     public DbSet<Player> Players { get; set; }
     public DbSet<ItemBase> Items { get; set; }
-    public DbSet<Log> Logs { get; set; }
+    public DbSet<GameLog> Logs { get; set; }
     public DbSet<Inventory> Inventories { get; set; }
 
 

@@ -21,17 +21,12 @@ public class SwapItemOwnershipHandler : IRequestHandler<SwapItemOwnershipRequest
     public async ValueTask<Unit> Handle(SwapItemOwnershipRequest request,
         CancellationToken cancellationToken)
     {
-        // Get the player.
         Player player = await _playerRepository.GetPlayerAndRoomAndInventoryAndGame(request.PlayerId);
-        
-        //  Ensure that the item is either contained in the player's room OR the current room.
         ItemBase transferredItem = await _itemRepository.Find(request.ItemId);
 
         player.SwapItemBetweenPlayerOrRoom(transferredItem);
 
-        // Take the inventory, and take ownership of the item.
         await _unitOfWork.SaveChangesAsync(cancellationToken);
-
         return Unit.Value;
     }
 }

@@ -17,5 +17,6 @@ public static class InfraInstaller
         serviceCollection.AddScoped<IPlayerRepository, PlayerRepository>();
         serviceCollection.AddScoped<IProductionRepository, ProductionRepository>();
         serviceCollection.AddScoped<IItemrepository, ItemRepository>();
+        serviceCollection.AddScoped<IGameLogsRepository, GameLogsRepository>();
     }
 }

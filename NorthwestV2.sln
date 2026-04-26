@@ -46,7 +46,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NorthwestV2.Scenarios", "sr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NorthwestV2.Infrastructure", "src\NorthwestV2.Infrastructure\NorthwestV2.Infrastructure.csproj", "{D61438F6-8961-4035-86B5-2EC6036D2F3B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NortwestV2.Api", "src\NortwestV2.Api\NortwestV2.Api.csproj", "{AEF18D2D-B5B2-4233-9DE5-58E1473BB764}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NortwestV2.WebApi", "src\NortwestV2.WebApi\NortwestV2.WebApi.csproj", "{AEF18D2D-B5B2-4233-9DE5-58E1473BB764}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NorthwestV2.Compose", "NorthwestV2.Compose\NorthwestV2.Compose.csproj", "{998C4241-370A-4A00-8022-289A1365B8F2}"
 EndProject

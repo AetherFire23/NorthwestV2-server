@@ -34,6 +34,8 @@ public class Player : EntityBase
 
     public virtual Inventory Inventory { get; set; }
 
+    public List<GameLog> Logs { get; set; } = [];
+
     public int ActionPoints { get; set; } = 8; // default 8
 
     public int Health { get; set; } = INITIALIZATION_HEALTH;
