@@ -30,9 +30,13 @@ public class GetGameLogsHandlerTest : TestBase2
         /*
          * Give a log to a player
          */
-        ANY_PLAYER.Logs.Add(new GameLog
+        ANY_PLAYER.PlayerGameLogs.Add(new PlayerGameLog
         {
-            Message = "sdsd",
+            Player = ANY_PLAYER,
+            GameLog = new GameLog
+            {
+                Message = "sdsd",
+            }
         });
 
         await Context.SaveChangesAsync();
@@ -51,8 +55,12 @@ public class GetGameLogsHandlerTest : TestBase2
     [Fact]
     public async Task GivenTwoPlayersWithTheSameLog_WhenGettingLogs_ThenLogIsVisibleToBothPlayers()
     {
-        GameLog sameLog = ANY_PLAYER.Logs.First();
-        ANY_OTHER_PLAYER.Logs.Add(sameLog);
+        GameLog sameLog = ANY_PLAYER.PlayerGameLogs.First().GameLog;
+        ANY_OTHER_PLAYER.PlayerGameLogs.Add(new PlayerGameLog
+        {
+            Player = ANY_OTHER_PLAYER,
+            GameLog = sameLog
+        });
         await Context.SaveChangesAsync();
 
         GetGameLogsResponse logsResponse = await Mediator.Send(new GetGameLogsRequest
