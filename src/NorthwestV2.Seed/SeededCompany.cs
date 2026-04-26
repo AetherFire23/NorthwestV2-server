@@ -43,6 +43,7 @@ public class SeededCompany : ISeeder
         foreach (Player player in _context.Players.Include(player => player.Inventory).Include(player => player.Room)
                      .ThenInclude(room => room.Inventory).ToList())
         {
+            player.Inventory.Items.Add(new Scrap());
             player.Room = _context.Rooms.First(x => x.RoomEnum == RoomEnum.Workshop);
             player.Room.Inventory.Add(new Scrap());
         }

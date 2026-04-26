@@ -35,6 +35,7 @@ public class FishingPoleContributionApp : InstantActionBase
 
     public override async Task Execute(ExecuteActionRequest request)
     {
+        // TODO: Fishing pole contribution 
         throw new NotImplementedException();
 
         await _unitOfWork.SaveChangesAsync();

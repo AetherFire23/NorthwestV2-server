@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.WithTargets;
 using NorthwestV2.Features.UseCases.GameActions.Command.ExecuteAction;
 using NorthwestV2.Features.UseCases.GameActions.Queries.GetActions;
+using NorthwestV2.Features.UseCases.Items.Queries;
 using NorthwestV2.Features.UseCases.OtherPlayers.Queries;
 using NorthwestV2.Infrastructure;
 using NorthwestV2.Practical;
@@ -68,14 +69,27 @@ public class GameController : ControllerBase
     {
         UserData userData = this.HttpContext.Session.GetUserData();
 
-        var res = await _mediator.Send(new GetOtherPlayersRequest()
+        GetOtherPlayersResponse getOtherPlayersResponse = await _mediator.Send(new GetOtherPlayersRequest()
         {
             PlayerId = userData.PlayerId.Value
         });
 
-        return Ok(res);
+        return Ok(getOtherPlayersResponse);
     }
 
+    // TODO: Change response type to something real. 
+    [HttpGet("available-items")]
+    public async Task<ActionResult<GetAvailableItemsResponse>> GetAvailableItems()
+    {
+        UserData userData = this.HttpContext.Session.GetUserData();
+
+        GetAvailableItemsResponse availableItemsResponse = await _mediator.Send(new GetAvailableItemsRequest
+        {
+            PlayerId = userData.PlayerId!.Value
+        });
+
+        return Ok(availableItemsResponse);
+    }
     // TODO: endpoit to swap items to current room. 
 
     // TODO: Endpoint for Logs 
