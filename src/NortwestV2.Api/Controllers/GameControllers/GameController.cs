@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.WithTargets;
 using NorthwestV2.Features.UseCases.GameActions.Command.ExecuteAction;
 using NorthwestV2.Features.UseCases.GameActions.Queries.GetActions;
+using NorthwestV2.Features.UseCases.Items.Commands;
 using NorthwestV2.Features.UseCases.Items.Queries;
 using NorthwestV2.Features.UseCases.OtherPlayers.Queries;
 using NorthwestV2.Infrastructure;
@@ -90,7 +91,26 @@ public class GameController : ControllerBase
 
         return Ok(availableItemsResponse);
     }
-    // TODO: endpoit to swap items to current room. 
+
+    /// <summary>
+    /// Swaps an item from room to player or from player to room.
+    /// Throws an exception if the item is not in either of those. 
+    /// </summary>
+    /// <param name="itemId"></param>
+    /// <returns></returns>
+    [HttpPost("swap-item-in-room")]
+    public async Task<ActionResult> SwapItemsInRoom([FromQuery] Guid itemId)
+    {
+        UserData userData = HttpContext.Session.GetUserData();
+
+        await _mediator.Send(new SwapItemOwnershipRequest
+        {
+            PlayerId = userData.PlayerId.Value,
+            ItemId = itemId
+        });
+
+        return Ok();
+    }
 
     // TODO: Endpoint for Logs 
 }
