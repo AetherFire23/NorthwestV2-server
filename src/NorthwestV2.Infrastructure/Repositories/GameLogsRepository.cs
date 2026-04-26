@@ -15,7 +15,9 @@ public class GameLogsRepository : IGameLogsRepository
 
     public async Task<IReadOnlyCollection<GameLog>> GetAllForPlayer(Guid playerId)
     {
-        
-        return [];
+        return await _context.PlayerGameLogs
+            .Where(x => x.PlayerId == playerId)
+            .Select(x => x.GameLog)
+            .ToListAsync();
     }
 }

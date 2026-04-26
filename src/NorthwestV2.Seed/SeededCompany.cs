@@ -43,9 +43,13 @@ public class SeededCompany : ISeeder
         foreach (Player player in _context.Players.Include(player => player.Inventory).Include(player => player.Room)
                      .ThenInclude(room => room.Inventory).ToList())
         {
-            player.Logs.Add(new GameLog
+            player.PlayerGameLogs.Add(new PlayerGameLog
             {
-                Message = "sample log only for you :)",
+                Player = player,
+                GameLog = new GameLog
+                {
+                    Message = "sample log only for you :)"
+                }
             });
 
             player.Inventory.Items.Add(new Scrap());
