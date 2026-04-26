@@ -9,6 +9,10 @@ using NorthwestV2.Features.UseCases.GameActions.Queries.GetActions;
 
 namespace NorthwestV2.Features.Features.Actions.General.Combat.StartCombat;
 
+/// <summary>
+/// Application-layer service for combat. Handles availability checking and execution.
+/// Wraps <see cref="CombatAction"/> (domain logic) and handles persistence via repositories.
+/// </summary>
 public class CombatActionApp : ActionWithTargetsBase
 {
     private readonly IPlayerRepository _playerRepository;

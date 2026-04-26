@@ -5,6 +5,17 @@ using NorthwestV2.Features.Features.Actions.General.Combat.StartCombat.Domain;
 
 namespace NorthwestV2.Features.Features.Shared.Entity;
 
+/// <summary>
+/// Represents a user playing in a game instance. A player is tied to:
+/// - A <see cref="User"/> (account)
+/// - A <see cref="Game"/> (game session)
+/// - A <see cref="Room"/> (current location)
+/// - A <see cref="Role"/> (character class)
+/// - An <see cref="Inventory"/> (items carried)
+///
+/// Players have health, sanity, and action points. Combat uses BaseToughness to determine
+/// damage absorption before health is lost. Each role has different starting stats.
+/// </summary>
 public class Player : EntityBase
 {
     [NotMapped] [NonSerialized] public const int INITIALIZATION_HEALTH = 100;

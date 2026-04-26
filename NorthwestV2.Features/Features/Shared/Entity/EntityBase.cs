@@ -2,6 +2,10 @@
 
 namespace NorthwestV2.Features.Features.Shared.Entity;
 
+/// <summary>
+/// Base class for all domain entities. Uses <see cref="Id"/> for equality (entity identity pattern).
+/// Two entities are equal if they have the same GUID, regardless of other property values.
+/// </summary>
 public class EntityBase
 {
     [Key] public Guid Id { get; set; } = Guid.Empty;

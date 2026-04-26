@@ -1,7 +1,8 @@
 ﻿namespace NorthwestV2.Features.Features.Shared.Entity;
 
 /// <summary>
-/// BOth a player and a Room can be an Item owner. Introducing the ivnentory makes things so much easier 
+/// Container for items. Both <see cref="Player"/> and <see cref="Room"/> have an inventory.
+/// Items can be transferred between inventories using <see cref="TakeOwnership"/> methods.
 /// </summary>
 public class Inventory : EntityBase
 {

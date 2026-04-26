@@ -5,6 +5,10 @@ using NorthwestV2.Features.Features.Shared.Entity;
 
 namespace NorthwestV2.Features.Features.Actions.General.Combat.StartCombat.Domain;
 
+/// <summary>
+/// Domain logic for combat resolution. Contains the fight loop, stance mechanics, and damage calculation.
+/// Does not persist data - only computes results. Use <see cref="CombatActionApp"/> for persistence.
+/// </summary>
 public class CombatAction
 {
     public const int PLAYER_PROMPT_INDEX = 0;

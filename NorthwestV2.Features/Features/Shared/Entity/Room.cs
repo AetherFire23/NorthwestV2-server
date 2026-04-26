@@ -2,6 +2,14 @@
 
 namespace NorthwestV2.Features.Features.Shared.Entity;
 
+/// <summary>
+/// A location in the game map. Each room belongs to one <see cref="Game"/> and has:
+/// - A <see cref="RoomEnum"/> (type/name like Bridge, Galley, etc.)
+/// - Adjacent rooms forming the map graph
+/// - An <see cref="Inventory"/> (items on the floor)
+///
+/// Players can move between adjacent rooms using movement actions.
+/// </summary>
 public class Room : EntityBase
 {
     public Guid GameId { get; set; }
