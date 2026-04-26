@@ -1,4 +1,5 @@
 ﻿using JetBrains.Annotations;
+using Mediator;
 using NorthwestV2.Features.ApplicationsStuff.EfCoreExtensions;
 using NorthwestV2.Features.Features.Actions.Productions.SpyglassProduction.Items;
 using NorthwestV2.Features.Features.Shared.Entity;
@@ -85,7 +86,7 @@ public class SwapItemOwnershipHandlerTest : TestBase2
 
         Action action = () =>
         {
-            var unit = Mediator.Send(new SwapItemOwnershipRequest
+            Unit unit = Mediator.Send(new SwapItemOwnershipRequest
             {
                 ItemId = item.Id,
                 PlayerId = _anyPlayer.Id
