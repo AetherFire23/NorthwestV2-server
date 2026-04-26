@@ -32,7 +32,7 @@ public class TestBase2 : IAsyncLifetime
     /// <summary>
     /// Runs after constructor. its prety nice. 
     /// </summary>
-    public async Task InitializeAsync()
+    public virtual async Task InitializeAsync()
     {
         //  Get shared container
         PostgreSqlContainer container = await SharedContainerFixture.GetAsync();

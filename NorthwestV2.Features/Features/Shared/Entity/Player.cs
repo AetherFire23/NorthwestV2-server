@@ -52,13 +52,6 @@ public class Player : EntityBase
         return hasItem;
     }
 
-    public bool RoomHas(ItemBase item)
-    {
-        bool roomHasItem = this.RoomHas(item);
-
-        return roomHasItem;
-    }
-
     public void SwapItemBetweenPlayerOrRoom(ItemBase transferredItem)
     {
         bool neitherPlayerNorHisRoomHaveTheItemToTransfer =
@@ -67,7 +60,7 @@ public class Player : EntityBase
 
         if (neitherPlayerNorHisRoomHaveTheItemToTransfer)
         {
-            throw new Exception($"Neither player nor inventory contain the target item. : " +
+            throw new Exception($"Either player or room does not the target item. : " +
                                 $"Item id: {transferredItem.Id}" +
                                 $"Player id: {this.Id}"
             );
