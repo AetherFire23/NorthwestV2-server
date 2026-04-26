@@ -19,7 +19,7 @@ public class GetGameLogsHandler : IRequestHandler<GetGameLogsRequest, GetGameLog
             .Select(MapGameLogDto)
             .ToList();
 
-        GetGameLogsResponse getGameLogsResponse = new GetGameLogsResponse()
+        GetGameLogsResponse getGameLogsResponse = new GetGameLogsResponse
         {
             Logs = log
         };
@@ -31,7 +31,6 @@ public class GetGameLogsHandler : IRequestHandler<GetGameLogsRequest, GetGameLog
     {
         GameLogDto gameLogDto = new GameLogDto()
         {
-            PlayerId = log.PlayerId,
             Id = log.Id,
             Message = log.Message
         };

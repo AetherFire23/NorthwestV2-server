@@ -33,7 +33,6 @@ public class GetGameLogsHandlerTest : TestBase2
         ANY_PLAYER.Logs.Add(new GameLog
         {
             Message = "sdsd",
-            PlayerId = ANY_PLAYER.Id,
         });
 
         await Context.SaveChangesAsync();

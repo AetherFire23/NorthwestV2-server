@@ -75,9 +75,6 @@ public partial class Program
 
         WebApplication app = builder.Build();
 
-        // app.UseCors("AllowAll"); // if the policy is not ran it won't ever work/.
-
-
         app.UseRouting();
         app.UseCors(x =>
         {
@@ -88,7 +85,6 @@ public partial class Program
         });
         app.MapControllers();
         
-        // TODO: baby TeBeCo the sugar cane guy told me to do async for reasonz
          await AppComposer.Initialize(app.Services);
 
         app.MapSwagger();

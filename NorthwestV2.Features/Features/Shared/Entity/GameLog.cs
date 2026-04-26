@@ -2,7 +2,6 @@
 
 public class GameLog : EntityBase
 {
-    public Guid PlayerId { get; set; }
     public virtual ICollection<Player> Players { get; set; }
     public required string Message { get; set; }
 }
