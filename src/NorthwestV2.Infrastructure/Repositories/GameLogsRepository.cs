@@ -1,4 +1,6 @@
-﻿using NorthwestV2.Features.ApplicationsStuff.Repositories;
+﻿using Microsoft.EntityFrameworkCore;
+using NorthwestV2.Features.ApplicationsStuff.Repositories;
+using NorthwestV2.Features.Features.Shared.Entity;
 
 namespace NorthwestV2.Infrastructure.Repositories;
 
@@ -11,9 +13,10 @@ public class GameLogsRepository : IGameLogsRepository
         _context = context;
     }
 
-    public async Task GetAllForPlayer(Guid playerId)
+    public async Task<IReadOnlyCollection<GameLog>> GetAllForPlayer(Guid playerId)
     {
-        // Player player = _context.Logs
-        
+        List<GameLog> logs = await _context.Logs.Where(x => x.PlayerId == playerId).ToListAsync();
+
+        return logs;
     }
 }

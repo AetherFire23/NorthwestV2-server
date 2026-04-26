@@ -1,6 +1,7 @@
 using AetherFire23.Commons.Seeding;
 using Mediator;
 using Microsoft.EntityFrameworkCore;
+using NorthwestV2.Features.Features;
 using NorthwestV2.Features.Features.Actions.Productions.SpyglassProduction.Items;
 using NorthwestV2.Features.Features.Shared.Entity;
 using NorthwestV2.Features.UseCases.Authentication.Register;
@@ -23,7 +24,7 @@ public class SeededCompany : ISeeder
     public async Task SetupSeeding()
     {
         List<Guid> userids = new List<Guid>();
-        for (int i = 0; i < 12; i++)
+        for (int i = 0; i < GameSettings.RequiredPlayerCountToStartGame; i++)
         {
             Guid userId = await _mediator.Send(new RegisterRequest
             {
@@ -38,11 +39,15 @@ public class SeededCompany : ISeeder
         {
             UserIds = userids
         });
-        
-        
+
         foreach (Player player in _context.Players.Include(player => player.Inventory).Include(player => player.Room)
                      .ThenInclude(room => room.Inventory).ToList())
         {
+            player.Logs.Add(new GameLog
+            {
+                Message = "sample log only for you :)",
+            });
+
             player.Inventory.Items.Add(new Scrap());
             player.Room = _context.Rooms.First(x => x.RoomEnum == RoomEnum.Workshop);
             player.Room.Inventory.Add(new Scrap());

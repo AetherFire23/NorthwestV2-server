@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.WithTargets;
 using NorthwestV2.Features.UseCases.GameActions.Command.ExecuteAction;
 using NorthwestV2.Features.UseCases.GameActions.Queries.GetActions;
+using NorthwestV2.Features.UseCases.GameLogs.Queries;
 using NorthwestV2.Features.UseCases.Items.Commands;
 using NorthwestV2.Features.UseCases.Items.Queries;
 using NorthwestV2.Features.UseCases.OtherPlayers.Queries;
@@ -110,6 +111,19 @@ public class GameController : ControllerBase
         });
 
         return Ok();
+    }
+
+    [HttpGet("get-available-logs")]
+    public async Task<ActionResult<GetGameLogsResponse>> GetLogs()
+    {
+        UserData userData = HttpContext.Session.GetUserData();
+
+        GetGameLogsResponse logs = await _mediator.Send(new GetGameLogsRequest()
+        {
+            PlayerId = userData.PlayerId.Value,
+        });
+
+        return Ok(logs);
     }
 
     // TODO: Endpoint for Logs 

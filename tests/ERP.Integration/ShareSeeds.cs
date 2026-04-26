@@ -31,6 +31,7 @@ public class ShareSeeds
 
 
         List<Guid> playerIds = context.Players
+            .OrderBy(x=> x.Role.ToString())  // al;ways the same order
             .Where(x => x.GameId == gameId)
             .Select(x => x.Id)
             .ToList();
