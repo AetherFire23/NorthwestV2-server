@@ -15,7 +15,10 @@ public class GameLogsRepository : IGameLogsRepository
 
     public async Task<IReadOnlyCollection<GameLog>> GetAllForPlayer(Guid playerId)
     {
-        
-        return [];
+        Player player = await _context.Players
+            .Include(x => x.Logs)
+            .FirstAsync(p => p.Id == playerId);
+
+        return player.Logs;
     }
 }

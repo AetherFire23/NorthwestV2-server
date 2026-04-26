@@ -39,7 +39,7 @@ public class SpyglassProductionInitiationActionApp : InstantActionBase
 
     public async override Task Execute(ExecuteActionRequest request)
     {
-        Player player = await _playerRepository.GetPlayer(request.PlayerId);
+        Player player = await _playerRepository.GetPlayerWithRoomAndInventory(request.PlayerId);
         
         _spyglassProductionInitiationAction.InitiateProduction(player);
         

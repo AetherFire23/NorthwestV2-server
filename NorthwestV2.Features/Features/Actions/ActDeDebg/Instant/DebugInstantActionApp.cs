@@ -38,7 +38,10 @@ public class DebugInstantActionApp : InstantActionBase
         Player player = await _playerRepository.GetPlayer(request.PlayerId);
 
         player.Health += 2;
-
+        player.Logs.Add(new GameLog()
+        {
+            Message = "You just healed someone !!!!",
+        });
         await _unitOfWork.SaveChangesAsync();
     }
 }

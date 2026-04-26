@@ -44,7 +44,8 @@ public class NorthwestContext : DbContext, IUnitOfWork
             .HasValue<UnfinishedFishingPole>(nameof(UnfinishedFishingPole))
             .HasValue<Hammer>(nameof(Hammer))
             .HasValue<Spyglass>(nameof(Spyglass))
-            .HasValue<UnfinishedHammer>(nameof(UnfinishedHammer));
+            .HasValue<UnfinishedHammer>(nameof(UnfinishedHammer))
+            .HasValue<Scrap>(nameof(Scrap));
 
         modelBuilder.Entity<ProductionItemBase>(x =>
         {

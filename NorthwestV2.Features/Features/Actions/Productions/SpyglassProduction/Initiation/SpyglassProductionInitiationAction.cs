@@ -38,7 +38,7 @@ public class SpyglassProductionInitiationAction
 
     public void InitiateProduction(Player player)
     {
-        Scrap scrapItemInPlayersInventory = player.Inventory.Find<Scrap>();
+        Scrap scrapItemInPlayersInventory = (Scrap)player.Inventory.Items.First(x=> x.ItemType == ItemTypes.Scrap);
 
         UnfinishedSpyglass createdUnfinishedSpyglass =
             UnfinishedSpyglass.CreateFromItemsAndLock(scrapItemInPlayersInventory);

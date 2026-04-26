@@ -16,7 +16,7 @@ public static class NorthwestContextInstaller
             action.UseNpgsql(GetConnectionStringInConfiguration(configuration), c =>
             {
                 
-            }).UseLazyLoadingProxies();
+            });
         });
 
         serviceCollection.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<NorthwestContext>());

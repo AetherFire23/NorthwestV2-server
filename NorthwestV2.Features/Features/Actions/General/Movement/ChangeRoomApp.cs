@@ -32,6 +32,11 @@ public class ChangeRoomApp : ActionWithTargetsBase
 
         ActionWithTargetsAvailability changeRoomAvailability =
             _changeRoomAction.CreateActionFromAvailableRooms(adjacentRooms);
+        
+        var player = await _playerRepository.GetPlayer(request.PlayerId);
+        
+
+
 
         return changeRoomAvailability;
     }
@@ -41,6 +46,7 @@ public class ChangeRoomApp : ActionWithTargetsBase
         Player player = await _playerRepository.GetPlayerAndRoomAndInventoryAndGame(request.PlayerId);
 
          _changeRoomAction.ChangeRoom(player, request.ActionTargets);
+   
 
         await _unitOfWork.SaveChangesAsync();
     }

@@ -48,6 +48,8 @@ public class SeededCompany : ISeeder
                 Message = "sample log only for you :)",
             });
 
+            player.ActionPoints += 9999;
+
             player.Inventory.Items.Add(new Scrap());
             player.Room = _context.Rooms.First(x => x.RoomEnum == RoomEnum.Workshop);
             player.Room.Inventory.Add(new Scrap());
