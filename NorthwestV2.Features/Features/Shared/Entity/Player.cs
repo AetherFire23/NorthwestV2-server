@@ -51,6 +51,7 @@ public class Player : EntityBase
 
     public AttackTypes AttackTypes { get; set; } = AttackTypes.Kill;
 
+
     public bool Has<T>() where T : ItemBase
     {
         bool hasItem = Inventory.Has<T>();

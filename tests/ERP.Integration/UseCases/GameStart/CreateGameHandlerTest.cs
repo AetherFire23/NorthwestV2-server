@@ -62,8 +62,8 @@ public class CreateGameHandlerTest : TestBase2
         });
 
         var adjs = Context.Rooms
-            .Include(x => x.AdjacentRooms)
-            .SelectMany(x => x.AdjacentRooms).ToList();
+            .Include(x => x.Connections)
+            .SelectMany(x => x.Connections).ToList();
 
         Assert.NotEmpty(adjs);
     }

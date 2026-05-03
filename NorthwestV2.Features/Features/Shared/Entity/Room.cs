@@ -1,4 +1,5 @@
-﻿using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.WithTargets;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.WithTargets;
 
 namespace NorthwestV2.Features.Features.Shared.Entity;
 
@@ -16,10 +17,20 @@ public class Room : EntityBase
     public required virtual Game Game { get; set; }
     public required RoomEnum RoomEnum { get; set; }
 
-    public virtual List<Room> AdjacentRooms { get; set; } = [];
+    public virtual List<RoomConnection> Connections { get; set; } = [];
 
     public virtual Inventory Inventory { get; set; }
 
+    //
+    // [NotMapped]
+    // public List<Room> AdjacentRooms => this.Connections.Select(x =>
+    // {
+    //     Room otherRoom = x.Room1.Id == this.Id ? x.Room2 : x.Room1;
+    //
+    //     return otherRoom;
+    // }).ToList();
+    
+    
     //TODO: One day make method to get 
 
     /// <summary>

@@ -268,22 +268,24 @@ public class RoomFactory
 
     public void ConnectRooms(ConnectRoomContext context)
     {
-        context.CrowsNest.AdjacentRooms.Add(context.MainDeck);
-        context.MainDeck.AdjacentRooms.Add(context.CrowsNest);
-        
+        var rf = new RoomConnection
+        {
+            Room1 = context.CrowsNest,
+            Room2 = context.MainDeck
+        };
+
         // 3RD FLOOR 
-        context.MainDeck.AdjacentRooms.Add(context.Forecastle);
-        context.Forecastle.AdjacentRooms.Add(context.MainDeck);
-        
-        context.MainDeck.AdjacentRooms.Add(context.FrontStairway);
-        context.FrontStairway.AdjacentRooms.Add(context.MainDeck);
+        // context.MainDeck.AdjacentRooms.Add(context.Forecastle);
+        // context.Forecastle.AdjacentRooms.Add(context.MainDeck);
         //
-        context.MainDeck.AdjacentRooms.Add(context.QuarterDeck);
-        context.QuarterDeck.AdjacentRooms.Add(context.MainDeck);
+        // context.MainDeck.AdjacentRooms.Add(context.FrontStairway);
+        // context.FrontStairway.AdjacentRooms.Add(context.MainDeck);
+        // //
+        // context.MainDeck.AdjacentRooms.Add(context.QuarterDeck);
+        // context.QuarterDeck.AdjacentRooms.Add(context.MainDeck);
         //
         // context.MainDeck.AdjacentRooms.Add(context.RearStairway);
         // context.RearStairway.AdjacentRooms.Add(context.MainDeck);
-        
     }
 }
 

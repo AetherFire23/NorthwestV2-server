@@ -26,7 +26,7 @@ public class NorthwestContext : DbContext, IUnitOfWork
     public DbSet<ItemBase> Items { get; set; }
     public DbSet<GameLog> Logs { get; set; }
     public DbSet<Inventory> Inventories { get; set; }
-
+    public DbSet<RoomConnection> RoomConnection { get; set; }
 
     public NorthwestContext(DbContextOptions<NorthwestContext> options) : base(options)
     {
@@ -59,6 +59,32 @@ public class NorthwestContext : DbContext, IUnitOfWork
             //     c => c == null ? 0 : JsonSerializer.Serialize(c, (JsonSerializerOptions?)null).GetHashCode(),
             //     c => JsonSerializer.Deserialize<StageBase>(JsonSerializer.Serialize(c, (JsonSerializerOptions?)null), (JsonSerializerOptions?)null)!));
         });
+
+
+        /*
+         * Do the
+         */
+        // Composite PK
+
+        modelBuilder.Entity<RoomConnection>(entity =>
+        {
+            // Follower side
+            entity.HasOne(uf => uf.Room1)
+                .WithMany(u => u.Connections)
+                .HasForeignKey(uf => uf.Room1Id)
+                .OnDelete(DeleteBehavior.Restrict); // avoid cascade cycles
+            
+            // Followed side
+            entity.HasOne(uf => uf.Room2)
+                .WithMany(u => u.Connections)
+                .HasForeignKey(uf => uf.Room2Id)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+
+
+;
+
 
         // TODO: Automatic discovery of children types of items 
     }
