@@ -1,4 +1,5 @@
-﻿using NorthwestV2.Features.Features.Shared.Entity;
+﻿using System.Data.Common;
+using NorthwestV2.Features.Features.Shared.Entity;
 
 namespace NorthwestV2.Features.Features.GameStart.Domain;
 
@@ -192,14 +193,55 @@ public class RoomFactory
             Inventory = new Inventory(),
         };
 
+        /*
+         *  CROWS NEST
+         */
+        ConnectRooms(mainDeck, crowsNest);
 
-        mainDeck.AdjacentRooms.Add(crowsNest);
-        crowsNest.AdjacentRooms.Add(mainDeck);
+        /*
+         *  3RD FLOOR
+         */
+        ConnectRooms(mainDeck, forecastle);
+        ConnectRooms(mainDeck, quarterDeck);
+        ConnectRooms(mainDeck, rearStairway);
+        ConnectRooms(mainDeck, frontStairway);
 
-        // NOT REAL CONNECTION
-        brig.AdjacentRooms.Add(lowerCorridor);
+        ConnectRooms(chartsRoom, frontStairway);
 
-        //
+        ConnectRooms(captainsQuarters, rearStairway);
+
+        /*
+         * 2ND FLOOR
+         */
+
+        ConnectRooms(rearStairway, mess);
+        ConnectRooms(mess, sickbay);
+        ConnectRooms(sickbay, brig);
+        ConnectRooms(mess, crewsQuarters);
+        ConnectRooms(mess, galley);
+        ConnectRooms(mess, middleCorridor);
+
+        ConnectRooms(middleCorridor, magazine);
+        ConnectRooms(middleCorridor, officersQuarters);
+        ConnectRooms(middleCorridor, laundryRoom);
+        ConnectRooms(middleCorridor, lowerStairway);
+        ConnectRooms(middleCorridor, rearStairway);
+
+
+        /*
+         * 1ND FLOOR
+         */
+        ConnectRooms(lowerStairway, lowerCorridor);
+
+        ConnectRooms(lowerCorridor, armory);
+        ConnectRooms(lowerCorridor, workshop);
+        ConnectRooms(lowerCorridor, engineRoom);
+        ConnectRooms(lowerCorridor, boilerRoom);
+        ConnectRooms(lowerCorridor, hold);
+
+        ConnectRooms(hold, coal);
+        ConnectRooms(hold, food);
+
         List<Room> rooms = new([
             brig,
             boilerRoom,
@@ -230,5 +272,11 @@ public class RoomFactory
         ]);
 
         return rooms;
+    }
+
+    private void ConnectRooms(Room r1, Room r2)
+    {
+        r1.AdjacentRooms.Add(r2);
+        r2.AdjacentRooms.Add(r1);
     }
 }
