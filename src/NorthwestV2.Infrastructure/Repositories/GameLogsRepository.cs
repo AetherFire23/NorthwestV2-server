@@ -13,12 +13,14 @@ public class GameLogsRepository : IGameLogsRepository
         _context = context;
     }
 
-    public async Task<IReadOnlyCollection<GameLog>> GetAllForPlayer(Guid playerId)
+    public async Task<IReadOnlyList<GameLog>> GetAllForPlayer(Guid playerId)
     {
-        Player player = await _context.Players
-            .Include(x => x.Logs)
-            .FirstAsync(p => p.Id == playerId);
+        Player player = await _context
+            .Players
+            .Include(x => x.GameLogs)
+            .FirstAsync(x => x.Id == playerId);
 
-        return player.Logs;
+        List<GameLog> logs = player.GameLogs.ToList();
+        return logs;
     }
 }

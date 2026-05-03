@@ -2,6 +2,6 @@
 
 public class GameLog : EntityBase
 {
-    public virtual ICollection<PlayerGameLog> PlayerGameLogs { get; set; } = [];
+    public ICollection<Player> Players { get; set; } = new List<Player>();
     public required string Message { get; set; }
 }

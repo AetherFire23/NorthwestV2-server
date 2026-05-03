@@ -25,7 +25,6 @@ public class NorthwestContext : DbContext, IUnitOfWork
     public DbSet<Player> Players { get; set; }
     public DbSet<ItemBase> Items { get; set; }
     public DbSet<GameLog> Logs { get; set; }
-    public DbSet<PlayerGameLog> PlayerGameLogs { get; set; }
     public DbSet<Inventory> Inventories { get; set; }
 
 
@@ -61,16 +60,6 @@ public class NorthwestContext : DbContext, IUnitOfWork
             //     c => JsonSerializer.Deserialize<StageBase>(JsonSerializer.Serialize(c, (JsonSerializerOptions?)null), (JsonSerializerOptions?)null)!));
         });
 
-        modelBuilder.Entity<PlayerGameLog>(x =>
-        {
-            x.HasOne(pgl => pgl.Player)
-                .WithMany(p => p.PlayerGameLogs)
-                .HasForeignKey(pgl => pgl.PlayerId);
-
-            x.HasOne(pgl => pgl.GameLog)
-                .WithMany(gl => gl.PlayerGameLogs)
-                .HasForeignKey(pgl => pgl.GameLogId);
-        });
         // TODO: Automatic discovery of children types of items 
     }
 

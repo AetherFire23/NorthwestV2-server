@@ -4,5 +4,5 @@ namespace NorthwestV2.Features.ApplicationsStuff.Repositories;
 
 public interface IGameLogsRepository
 {
-    public Task<IReadOnlyCollection<GameLog>> GetAllForPlayer(Guid playerId);
+    public Task<IReadOnlyList<GameLog>> GetAllForPlayer(Guid playerId);
 }

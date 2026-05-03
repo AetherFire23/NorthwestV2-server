@@ -43,13 +43,9 @@ public class SeededCompany : ISeeder
         foreach (Player player in _context.Players.Include(player => player.Inventory).Include(player => player.Room)
                      .ThenInclude(room => room.Inventory).ToList())
         {
-            player.PlayerGameLogs.Add(new PlayerGameLog
+            player.GameLogs.Add(new GameLog()
             {
-                Player = player,
-                GameLog = new GameLog
-                {
-                    Message = "sample log only for you :)"
-                }
+                Message = "sample log only for you :)"
             });
 
             player.ActionPoints += 9999;

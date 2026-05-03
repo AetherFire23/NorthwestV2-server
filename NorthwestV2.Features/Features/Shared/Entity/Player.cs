@@ -34,7 +34,7 @@ public class Player : EntityBase
 
     public virtual Inventory Inventory { get; set; }
 
-    public virtual ICollection<PlayerGameLog> PlayerGameLogs { get; set; } = [];
+    public ICollection<GameLog> GameLogs { get; set; } = [];
 
     public int ActionPoints { get; set; } = 8; // default 8
 
