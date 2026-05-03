@@ -16,6 +16,7 @@ public class RoomRepository : IRoomRepository
     public async Task SaveRooms(List<Room> rooms)
     {
         _northwestContext.Rooms.AddRange(rooms);
+        await _northwestContext.SaveChangesAsync();
     }
 
     /// <summary>

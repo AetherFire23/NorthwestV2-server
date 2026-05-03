@@ -53,7 +53,7 @@ public class ChangeRoomAppTest : TestBase2
             PlayerId = playerId,
         });
         ActionDto action = roms.Actions.First(x => x.Name == ActionNames.ChangeRoom);
-        await Mediator.Send(new ExecuteActionRequest()
+         await Mediator.Send(new ExecuteActionRequest()
         {
             ActionName = ActionNames.ChangeRoom,
             PlayerId = playerId,
