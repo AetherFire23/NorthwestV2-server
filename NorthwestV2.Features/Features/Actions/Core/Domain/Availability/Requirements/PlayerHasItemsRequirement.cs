@@ -24,8 +24,8 @@ public class PlayerHasItemsRequirement : ActionRequirement
         get
         {
             var playerItemTypes = _player.Inventory.Items.Select(x => x.ItemType);
-            bool isContainedAll = _requiredItems.All(playerItemTypes.Contains);
-            return isContainedAll;
+            bool areAllRequiredItemsOwnedByPlayer = _requiredItems.All(playerItemTypes.Contains);
+            return areAllRequiredItemsOwnedByPlayer;
         }
     }
 }

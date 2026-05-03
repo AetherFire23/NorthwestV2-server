@@ -34,7 +34,6 @@ public class GetGameLogsHandlerTest : TestBase2
         {
             Message = "sdsd",
         });
-        
 
         await Context.SaveChangesAsync();
     }
