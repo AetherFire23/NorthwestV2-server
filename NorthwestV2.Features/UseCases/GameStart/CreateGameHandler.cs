@@ -66,10 +66,23 @@ public class CreateGameHandler : IRequestHandler<CreateGameRequest, Guid>
         _gameRepository.Add(game);
 
         // Using a trick to get to save the entities & the nested properties without ef core crying. 
-        IEnumerable<Room> rooms = _roomFactory.CreateRoomsForGame(game);
+        List<Room> rooms = _roomFactory.CreateRoomsForGame(game);
+        await _roomRepository.SaveRooms(rooms);
 
+        await _unitOfWork.SaveChangesAsync();
 
-        await _roomRepository.SaveRoomAndAdjacents(rooms);
+        /*
+         * CONNECTIONS
+         */
+        var crowsNest = rooms.First(x => x.RoomEnum == RoomEnum.CrowsNest);
+        var mainDeck = rooms.First(x => x.RoomEnum == RoomEnum.MainDeck);
+
+        crowsNest.AdjacentRooms.Add(mainDeck);
+        mainDeck.AdjacentRooms.Add(crowsNest);
+
+        
+        await _unitOfWork.SaveChangesAsync();
+
 
         IEnumerable<User> usersInGame = await _userRepository.GetAllById(request.UserIds.ToList());
 

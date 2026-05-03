@@ -13,6 +13,11 @@ public class RoomRepository : IRoomRepository
         _northwestContext = northwestContext;
     }
 
+    public async Task SaveRooms(List<Room> rooms)
+    {
+        _northwestContext.Rooms.AddRange(rooms);
+    }
+
     /// <summary>
     /// Persists a collection of rooms and their adjacency relationships while avoiding
     /// EF Core cyclic navigation issues. This method temporarily removes adjacency links,
@@ -36,7 +41,7 @@ public class RoomRepository : IRoomRepository
     /// This ensures that the room graph (which may contain cycles) is persisted safely
     /// without EF Core attempting to re‑insert already tracked entities.
     /// </remarks>
-    public async ValueTask SaveRoomAndAdjacents(IEnumerable<Room> rooms)
+    public async ValueTask SaveRoomAndAdjacents(List<Room> rooms)
     {
         Dictionary<Room, List<Room>> roomsToAdjacents = new Dictionary<Room, List<Room>>();
         foreach (Room room in rooms)
@@ -59,6 +64,13 @@ public class RoomRepository : IRoomRepository
         {
             roomsToAdjacent.Key.AdjacentRooms.AddRange(roomsToAdjacent.Value);
         }
+
+        await _northwestContext.SaveChangesAsync();
+
+        var allRooms = this._northwestContext.Rooms
+            .Include(x => x.AdjacentRooms)
+            .ThenInclude(x => x.AdjacentRooms)
+            .ToList();
     }
 
     public async Task<List<Room>> GetAdjacentRoomsOfPlayer(Guid playerId)

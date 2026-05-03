@@ -25,7 +25,9 @@ public class ChangeRoomAppTest : TestBase2
     {
         CreateGameSeedData gameData = await ArrangeUntilGameCreation();
         Guid playerId = gameData.PlayerIds.First();
-
+        Context.Players.First(x=> x.Id == playerId).RoomId = Context.Rooms.First(x=> x.RoomEnum == RoomEnum.CrowsNest).Id;
+        await Context.SaveChangesAsync();
+        
         GetActionsResult roms = await Mediator.Send(new GetActionsRequest
         {
             PlayerId = playerId,

@@ -27,10 +27,12 @@ public interface IRoomRepository
     /// This ensures that the room graph (which may contain cycles) is persisted safely
     /// without EF Core attempting to re‑insert already tracked entities.
     /// </remarks>
-    public ValueTask SaveRoomAndAdjacents(IEnumerable<Room> rooms);
+    public ValueTask SaveRoomAndAdjacents(List<Room> rooms);
 
     public Task<List<Room>> GetAdjacentRoomsOfPlayer(Guid playerId);
 
     public Task<Room> GetRoomInPlayersGame(Player player, RoomEnum roomEnum);
     public Task<Room> GetRoomInGame(Game game, RoomEnum room);
+
+    public Task SaveRooms(List<Room> rooms);
 }

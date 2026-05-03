@@ -28,15 +28,11 @@ public class ChangeRoomApp : ActionWithTargetsBase
 
     public override async Task<ActionWithTargetsAvailability?> GetAvailabilityResult(GetActionsRequest request)
     {
+        Player player = await _playerRepository.GetPlayer(request.PlayerId);
         List<Room> adjacentRooms = await _roomRepository.GetAdjacentRoomsOfPlayer(request.PlayerId);
 
         ActionWithTargetsAvailability changeRoomAvailability =
             _changeRoomAction.CreateActionFromAvailableRooms(adjacentRooms);
-        
-        var player = await _playerRepository.GetPlayer(request.PlayerId);
-        
-
-
 
         return changeRoomAvailability;
     }

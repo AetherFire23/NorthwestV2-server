@@ -5,7 +5,7 @@ namespace NorthwestV2.Features.Features.GameStart.Domain;
 public class RoomFactory
 {
     // TODO: Write test that checks if amount of rooms is equal to the amount of game rooms that should exist
-    public IEnumerable<Room> CreateRoomsForGame(Game game)
+    public List<Room> CreateRoomsForGame(Game game)
     {
         Room boilerRoom = new Room
         {
@@ -192,12 +192,46 @@ public class RoomFactory
             Inventory = new Inventory(),
         };
 
+        // /*
+        //  *  CROWS NEST
+        //  */
+        // mainDeck.AdjacentRooms.Add(crowsNest);
+        // crowsNest.AdjacentRooms.Add(mainDeck);
+        //
+        //
+        //
+        // // MAIN DECK
+        // mainDeck.AdjacentRooms.Add(forecastle);
+        // forecastle.AdjacentRooms.Add(mainDeck);
+        // //
+        // mainDeck.AdjacentRooms.Add(frontStairway);
+        // frontStairway.AdjacentRooms.Add(mainDeck);
+        //
+        // mainDeck.AdjacentRooms.Add(quarterDeck);
+        // quarterDeck.AdjacentRooms.Add(mainDeck);
+        //
+        // mainDeck.AdjacentRooms.Add(rearStairway);
+        // rearStairway.AdjacentRooms.Add(mainDeck);
+        // //
+        // /*
+        //  *  CROWS NEST
+        //  */
+        //
+        //
+        //
+        // /*
+        //  * 3RD ROOM
+        //  */
+        //
+        // // LOWER CORRIDOR
+        // lowerCorridor.AdjacentRooms.Add(workshop);
+        // workshop.AdjacentRooms.Add(lowerCorridor);
+        //
+        // lowerCorridor.AdjacentRooms.Add(boilerRoom);
+        // boilerRoom.AdjacentRooms.Add(lowerCorridor);
 
-        mainDeck.AdjacentRooms.Add(crowsNest);
-        crowsNest.AdjacentRooms.Add(mainDeck);
 
         // NOT REAL CONNECTION
-        brig.AdjacentRooms.Add(lowerCorridor);
 
         //
         List<Room> rooms = new([
@@ -230,5 +264,77 @@ public class RoomFactory
         ]);
 
         return rooms;
+    }
+
+    public void ConnectRooms()
+    {
+    }
+}
+
+public class ConnectRoomContext
+{
+    public Room Brig { get; set; }
+    public Room BoilerRoom { get; set; }
+    public Room Workshop { get; set; }
+    public Room Coal { get; set; }
+    public Room FrontStairway { get; set; }
+    public Room Forecastle { get; set; }
+    public Room Food { get; set; }
+    public Room EngineRoom { get; set; }
+    public Room ChartsRoom { get; set; }
+    public Room CaptainsQuarters { get; set; }
+    public Room Armory { get; set; }
+    public Room CrewsQuarters { get; set; }
+    public Room Sickbay { get; set; }
+    public Room MiddleCorridor { get; set; }
+    public Room CrowsNest { get; set; }
+    public Room Hold { get; set; }
+    public Room OfficersQuarters { get; set; }
+    public Room Mess { get; set; }
+    public Room MainDeck { get; set; }
+    public Room Magazine { get; set; }
+    public Room LaundryRoom { get; set; }
+    public Room Galley { get; set; }
+    public Room LowerCorridor { get; set; }
+    public Room LowerStairway { get; set; }
+    public Room QuarterDeck { get; set; }
+    public Room RearStairway { get; set; }
+
+    private ConnectRoomContext()
+    {
+    }
+
+    public static ConnectRoomContext FromRooms(IEnumerable<Room> rooms)
+    {
+        var roomsList = rooms.ToList();
+        return new ConnectRoomContext
+        {
+            Brig = roomsList.First(x => x.RoomEnum == RoomEnum.Brig),
+            BoilerRoom = roomsList.First(x => x.RoomEnum == RoomEnum.BoilerRoom),
+            Workshop = roomsList.First(x => x.RoomEnum == RoomEnum.Workshop),
+            Coal = roomsList.First(x => x.RoomEnum == RoomEnum.Coal),
+            FrontStairway = roomsList.First(x => x.RoomEnum == RoomEnum.FrontStairway),
+            Forecastle = roomsList.First(x => x.RoomEnum == RoomEnum.ForeCastle),
+            Food = roomsList.First(x => x.RoomEnum == RoomEnum.Food),
+            EngineRoom = roomsList.First(x => x.RoomEnum == RoomEnum.EngineRoom),
+            ChartsRoom = roomsList.First(x => x.RoomEnum == RoomEnum.ChartsRoom),
+            CaptainsQuarters = roomsList.First(x => x.RoomEnum == RoomEnum.CaptainsQuarters),
+            Armory = roomsList.First(x => x.RoomEnum == RoomEnum.Armory),
+            CrewsQuarters = roomsList.First(x => x.RoomEnum == RoomEnum.CrewsQuarters),
+            Sickbay = roomsList.First(x => x.RoomEnum == RoomEnum.Sickbay),
+            MiddleCorridor = roomsList.First(x => x.RoomEnum == RoomEnum.MiddleCorridor),
+            CrowsNest = roomsList.First(x => x.RoomEnum == RoomEnum.CrowsNest),
+            Hold = roomsList.First(x => x.RoomEnum == RoomEnum.Hold),
+            OfficersQuarters = roomsList.First(x => x.RoomEnum == RoomEnum.OfficersQuarters),
+            Mess = roomsList.First(x => x.RoomEnum == RoomEnum.Mess),
+            MainDeck = roomsList.First(x => x.RoomEnum == RoomEnum.MainDeck),
+            Magazine = roomsList.First(x => x.RoomEnum == RoomEnum.Magazine),
+            LaundryRoom = roomsList.First(x => x.RoomEnum == RoomEnum.LaundryRoom),
+            Galley = roomsList.First(x => x.RoomEnum == RoomEnum.Galley),
+            LowerCorridor = roomsList.First(x => x.RoomEnum == RoomEnum.LowerCorridor),
+            LowerStairway = roomsList.First(x => x.RoomEnum == RoomEnum.LowerStairway),
+            QuarterDeck = roomsList.First(x => x.RoomEnum == RoomEnum.QuarterDeck),
+            RearStairway = roomsList.First(x => x.RoomEnum == RoomEnum.RearStairway)
+        };
     }
 }

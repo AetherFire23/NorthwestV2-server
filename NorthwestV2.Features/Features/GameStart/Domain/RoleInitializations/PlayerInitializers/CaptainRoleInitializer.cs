@@ -14,7 +14,7 @@ public class CaptainRoleInitializer : RoleInitializer
         {
             Game = context.Game,
             User = context.User,
-            Room = context.Rooms.First(),
+            Room = context.Rooms.First(x=> x.GameId == context.Game.Id && x.RoomEnum == RoomEnum.MainDeck),
             Role = Roles.Captain,
             BaseToughness = ToughnessInitializationConstants.NORMAL,
             Inventory = new Inventory()
