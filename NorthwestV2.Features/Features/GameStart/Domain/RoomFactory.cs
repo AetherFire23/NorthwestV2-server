@@ -6,7 +6,7 @@ namespace NorthwestV2.Features.Features.GameStart.Domain;
 public class RoomFactory
 {
     // TODO: Write test that checks if amount of rooms is equal to the amount of game rooms that should exist
-    public IEnumerable<Room> CreateRoomsForGame(Game game)
+    public List<Room> CreateRoomsForGame(Game game)
     {
         Room boilerRoom = new Room
         {

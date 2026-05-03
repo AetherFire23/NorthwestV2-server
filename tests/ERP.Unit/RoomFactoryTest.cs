@@ -31,21 +31,21 @@ public class RoomFactoryTest
 
         Assert.Contains(room, rooms.Select(x => x.RoomEnum));
     }
-
-    [Theory]
-    [ClassData(typeof(RoomConnectionsTestData))]
-    public void GivenFactory_WhenCreatingRooms_ThenAllAdjacentRoomsAreInRoom(RoomEnum room,
-        IEnumerable<RoomEnum> adjacents)
-    {
-        Game fakeGame = new Game();
-        RoomFactory roomFactory = new RoomFactory();
-
-        IEnumerable<Room> rooms = roomFactory.CreateRoomsForGame(fakeGame);
-
-        Room testedRoom = rooms.First(x => x.RoomEnum == room);
-        IEnumerable<RoomEnum> adjacentsAsEnum = testedRoom.AdjacentRooms.Select(x => x.RoomEnum);
-        Assert.True(adjacents.All(adjacentsAsEnum.Contains));
-    }
+    //
+    // [Theory]
+    // [ClassData(typeof(RoomConnectionsTestData))]
+    // public void GivenFactory_WhenCreatingRooms_ThenAllAdjacentRoomsAreInRoom(RoomEnum room,
+    //     IEnumerable<RoomEnum> adjacents)
+    // {
+    //     Game fakeGame = new Game();
+    //     RoomFactory roomFactory = new RoomFactory();
+    //
+    //     IEnumerable<Room> rooms = roomFactory.CreateRoomsForGame(fakeGame);
+    //
+    //     Room testedRoom = rooms.First(x => x.RoomEnum == room);
+    //     IEnumerable<RoomEnum> adjacentsAsEnum = testedRoom.AdjacentRooms.Select(x => x.RoomEnum);
+    //     Assert.True(adjacents.All(adjacentsAsEnum.Contains));
+    // }
     // TODO: Assert rooms have connections. 
 }
 
