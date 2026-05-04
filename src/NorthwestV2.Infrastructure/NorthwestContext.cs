@@ -66,22 +66,6 @@ public class NorthwestContext : DbContext, IUnitOfWork
          */
         // Composite PK
 
-        modelBuilder.Entity<RoomConnection>(entity =>
-        {
-            // Follower side
-            entity.HasOne(uf => uf.Room1)
-                .WithMany(u => u.Connections)
-                .HasForeignKey(uf => uf.Room1Id)
-                .OnDelete(DeleteBehavior.Restrict); // avoid cascade cycles
-            
-            // Followed side
-            entity.HasOne(uf => uf.Room2)
-                .WithMany(u => u.Connections)
-                .HasForeignKey(uf => uf.Room2Id)
-                .OnDelete(DeleteBehavior.Restrict);
-        });
-
-
 
 ;
 

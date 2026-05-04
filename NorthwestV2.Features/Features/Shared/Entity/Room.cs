@@ -17,8 +17,6 @@ public class Room : EntityBase
     public required virtual Game Game { get; set; }
     public required RoomEnum RoomEnum { get; set; }
 
-    public virtual List<RoomConnection> Connections { get; set; } = [];
-
     public virtual Inventory Inventory { get; set; }
 
     //

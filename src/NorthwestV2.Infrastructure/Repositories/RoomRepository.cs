@@ -21,18 +21,37 @@ public class RoomRepository : IRoomRepository
 
     public async Task<List<Room>> GetAdjacentRoomsOfPlayer(Guid playerId)
     {
-        Player player = await this._northwestContext.Players
+        Player player = _northwestContext
+            .Players
             .Include(x => x.Room)
-            .ThenInclude(x => x.Connections)
-            .ThenInclude(x => x.Room1)
-            .ThenInclude(x => x.Connections)
-            .ThenInclude(x => x.Room2)
-            .FirstAsync(x => x.Id == playerId);
+            .First(x => x.Id == playerId);
+
+        var currentRoomId = player.Room.Id;
+
+        List<RoomConnection> adj = _northwestContext
+            .RoomConnection
+            .Where(x => x.Room1Id == currentRoomId || x.Room2Id == currentRoomId)
+            .ToList();
 
         // TODO: Make Room Connection a pure Join table and query from there. 
 
+        List<Room> adjacents = new List<Room>();
+        foreach (var roomConnection in adj)
+        {
+            Guid otherRoomId = roomConnection.Room1Id == currentRoomId
+                ? roomConnection.Room2Id
+                : roomConnection.Room1Id;
 
-        return new List<Room>();
+            Room otherRoom = await _northwestContext.Rooms
+                .Include(x => x.Inventory)
+                .ThenInclude(x => x.Items)
+                .Include(x => x.Game)
+                .FirstAsync(x => x.Id == otherRoomId);
+
+            adjacents.Add(otherRoom);
+        }
+
+        return adjacents;
     }
 
     /// <summary>
@@ -59,5 +78,11 @@ public class RoomRepository : IRoomRepository
             .FirstAsync(x => x.RoomEnum == roomEnmum);
 
         return room;
+    }
+
+    public async Task SaveRoomConnections(List<RoomConnection> connections)
+    {
+        _northwestContext.RoomConnection.AddRange(connections);
+        await _northwestContext.SaveChangesAsync();
     }
 }

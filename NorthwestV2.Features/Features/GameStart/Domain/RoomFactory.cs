@@ -266,12 +266,12 @@ public class RoomFactory
         return rooms;
     }
 
-    public void ConnectRooms(ConnectRoomContext context)
+    public List<RoomConnection> ConnectRooms(ConnectRoomContext context)
     {
-        var rf = new RoomConnection
+        RoomConnection rf = new RoomConnection
         {
-            Room1 = context.CrowsNest,
-            Room2 = context.MainDeck
+            Room1Id = context.CrowsNest.Id,
+            Room2Id = context.MainDeck.Id
         };
 
         // 3RD FLOOR 
@@ -286,6 +286,8 @@ public class RoomFactory
         //
         // context.MainDeck.AdjacentRooms.Add(context.RearStairway);
         // context.RearStairway.AdjacentRooms.Add(context.MainDeck);
+
+        return [rf];
     }
 }
 

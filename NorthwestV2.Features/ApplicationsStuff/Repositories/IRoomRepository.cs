@@ -4,7 +4,7 @@ namespace NorthwestV2.Features.ApplicationsStuff.Repositories;
 
 public interface IRoomRepository
 {
-
+    public Task SaveRoomConnections(List<RoomConnection> connections);
 
     public Task<List<Room>> GetAdjacentRoomsOfPlayer(Guid playerId);
 

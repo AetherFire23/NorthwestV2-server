@@ -25,9 +25,10 @@ public class ChangeRoomAppTest : TestBase2
     {
         CreateGameSeedData gameData = await ArrangeUntilGameCreation();
         Guid playerId = gameData.PlayerIds.First();
-        Context.Players.First(x=> x.Id == playerId).RoomId = Context.Rooms.First(x=> x.RoomEnum == RoomEnum.CrowsNest).Id;
+        Context.Players.First(x => x.Id == playerId).RoomId =
+            Context.Rooms.First(x => x.RoomEnum == RoomEnum.CrowsNest).Id;
         await Context.SaveChangesAsync();
-        
+
         GetActionsResult roms = await Mediator.Send(new GetActionsRequest
         {
             PlayerId = playerId,
@@ -40,7 +41,7 @@ public class ChangeRoomAppTest : TestBase2
 
     /*
      * The only other room connected to crow's nest is Main Deck, whhichi makes it the best ideal candiate to test for
-     * room changes. 
+     * room changes.
      */
     [Fact]
     public async Task GivenPlayerInAnyRoom_WhenChangingRoom_ThenPlayerIsInDifferentRoom()
@@ -53,7 +54,7 @@ public class ChangeRoomAppTest : TestBase2
             PlayerId = playerId,
         });
         ActionDto action = roms.Actions.First(x => x.Name == ActionNames.ChangeRoom);
-         await Mediator.Send(new ExecuteActionRequest()
+        await Mediator.Send(new ExecuteActionRequest()
         {
             ActionName = ActionNames.ChangeRoom,
             PlayerId = playerId,

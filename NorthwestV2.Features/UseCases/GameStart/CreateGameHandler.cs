@@ -69,7 +69,8 @@ public class CreateGameHandler : IRequestHandler<CreateGameRequest, Guid>
         List<Room> rooms = _roomFactory.CreateRoomsForGame(game);
         await _roomRepository.SaveRooms(rooms);
         
-        _roomFactory.ConnectRooms(ConnectRoomContext.FromRooms(rooms));
+        var ls = _roomFactory.ConnectRooms(ConnectRoomContext.FromRooms(rooms));
+        await _roomRepository.SaveRoomConnections(ls);
         await _unitOfWork.SaveChangesAsync();
 
         /*
