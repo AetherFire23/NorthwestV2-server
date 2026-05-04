@@ -273,19 +273,12 @@ public class RoomFactory
             Room1Id = context.CrowsNest.Id,
             Room2Id = context.MainDeck.Id
         };
-
-        // 3RD FLOOR 
-        // context.MainDeck.AdjacentRooms.Add(context.Forecastle);
-        // context.Forecastle.AdjacentRooms.Add(context.MainDeck);
-        //
-        // context.MainDeck.AdjacentRooms.Add(context.FrontStairway);
-        // context.FrontStairway.AdjacentRooms.Add(context.MainDeck);
-        // //
-        // context.MainDeck.AdjacentRooms.Add(context.QuarterDeck);
-        // context.QuarterDeck.AdjacentRooms.Add(context.MainDeck);
-        //
-        // context.MainDeck.AdjacentRooms.Add(context.RearStairway);
-        // context.RearStairway.AdjacentRooms.Add(context.MainDeck);
+        
+        RoomConnection maindeckForecastle = new RoomConnection
+        {
+            Room1Id = context.MainDeck.Id,
+            Room2Id = context.Forecastle.Id
+        };
 
         return [rf];
     }
