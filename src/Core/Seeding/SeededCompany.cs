@@ -1,6 +1,7 @@
 using Mediator;
 using Microsoft.EntityFrameworkCore;
 using NorthwestV2.Features;
+using NorthwestV2.Features.Actions.Cooking.Items;
 using NorthwestV2.Features.Actions.Productions.SpyglassProduction.Items;
 using NorthwestV2.Features.Shared.Entity;
 using NorthwestV2.UseCases.Authentication.Register;
@@ -49,6 +50,8 @@ public class SeededCompany : ISeeder
             player.ActionPoints += 9999;
 
             player.Inventory.Items.Add(new Scrap());
+            player.Inventory.Items.Add(new Can());
+            player.Inventory.Items.Add(new Can());
             player.Room = _context.Rooms.First(x => x.RoomEnum == RoomEnum.Workshop);
             player.Room.Inventory.Add(new Scrap());
         }

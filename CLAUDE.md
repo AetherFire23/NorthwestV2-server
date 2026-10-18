@@ -121,7 +121,10 @@ Rules live in `docs/combat.md` (with **[assumed]** numbers in `CombatConstants`)
 - Tests seed themselves through Mediator requests (`RegisterRequest`, `CreateGameRequest`), usually via `ShareSeeds.ArrangeUntilGameCreation(mediator, context)`, which returns a `GameDataSeed` (UserIds, GameId, PlayerIds). Reuse it. `PlayerHelper.TeleportPlayerTo` moves a player for room-dependent tests.
 - Game creation is random under `RealRandom`; order players by role (as `ShareSeeds` does) instead of relying on creation order.
 - Logging from tests goes to xUnit output via `XUnitLoggerProvider` (EF Core categories are filtered out).
-- Test style follows ActifNet: xUnit `[Fact]`, `Assert.*`, hand-written fakes, no mocking library, no FluentAssertions. Prefer `GivenX_WhenY_ThenZ` names and a blank line between Given, When and Then (no `// Arrange` comments) for new tests; do not rename existing tests just for style.
+- Test style follows ActifNet: xUnit `[Fact]`, `Assert.*`, hand-written fakes, no mocking library, no FluentAssertions. Prefer `GivenX_WhenY_ThenZ` names for new tests; do not rename or rewrite existing tests just for style. Conventions for new tests:
+  - Insert a blank line only when switching from arrange to act and from act to assert, never inside a block. No `// Arrange` comments.
+  - One assert per test.
+  - For expected exceptions, wrap the call in a lambda and use `Assert.Throws(...)`.
 
 ## Code style
 

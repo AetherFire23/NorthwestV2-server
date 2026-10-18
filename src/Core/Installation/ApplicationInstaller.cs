@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using NorthwestV2.Features.Actions.ActDeDebg.Instant;
 using NorthwestV2.Features.Actions.ActDeDebg.Targets;
+using NorthwestV2.Features.Actions.Cooking.CookRation;
 using NorthwestV2.Features.Actions.Core.Application;
 using NorthwestV2.Features.Actions.General.Combat.ChooseDefensiveCounter;
 using NorthwestV2.Features.Actions.General.Combat.StartCombat;
@@ -37,5 +38,7 @@ public class ApplicationInstaller
 
         serviceCollection.AddScoped<FishingPoleInitiationApp>();
         serviceCollection.AddScoped<FishingPoleContributionApp>();
+
+        serviceCollection.AddScoped<CookRationActionApp>();
     }
 }

@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NorthwestV2.Features.Actions.ActDeDebg.Instant;
 using NorthwestV2.Features.Actions.ActDeDebg.Targets;
+using NorthwestV2.Features.Actions.Cooking.CookRation;
 using NorthwestV2.Features.Actions.Core.Domain;
 using NorthwestV2.Features.Actions.General.Combat.ChooseDefensiveCounter;
 using NorthwestV2.Features.Actions.General.Combat.StartCombat.Domain;
@@ -38,6 +39,7 @@ public static class DomainInstaller
         serviceCollection.AddScoped<CancelProductionAction>();
         serviceCollection.AddScoped<FishingPoleInitiation>();
         serviceCollection.AddScoped<FishingPoleContribution>();
+        serviceCollection.AddScoped<CookRationAction>();
 
         /*
          * Hammer production

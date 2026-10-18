@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
+using NorthwestV2.Features.Actions.Cooking.Items;
 using NorthwestV2.Features.Actions.Productions.Core;
 using NorthwestV2.Features.Actions.Productions.Core.Entities;
 using NorthwestV2.Features.Actions.Productions.FishingPole;
@@ -44,7 +45,9 @@ public class NorthwestContext : DbContext, IUnitOfWork
             .HasValue<Hammer>(nameof(Hammer))
             .HasValue<Spyglass>(nameof(Spyglass))
             .HasValue<UnfinishedHammer>(nameof(UnfinishedHammer))
-            .HasValue<Scrap>(nameof(Scrap));
+            .HasValue<Scrap>(nameof(Scrap))
+            .HasValue<Can>(nameof(Can))
+            .HasValue<Ration>(nameof(Ration));
 
         modelBuilder.Entity<ProductionItemBase>(x =>
         {

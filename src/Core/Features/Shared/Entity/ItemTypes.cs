@@ -14,4 +14,7 @@ public enum ItemTypes
 
     UnfinishedFishingPole,
     FishingPole,
+
+    Can,
+    Ration,
 }

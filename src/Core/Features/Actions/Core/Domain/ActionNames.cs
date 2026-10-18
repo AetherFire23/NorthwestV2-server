@@ -29,4 +29,6 @@ public static class ActionNames
      */
     public const string InitiateFishingPoleProduction = nameof(InitiateFishingPoleProduction);
     public const string ContributeFishingPoleProduction = nameof(ContributeFishingPoleProduction);
+
+    public const string CookRation = nameof(CookRation);
 }
