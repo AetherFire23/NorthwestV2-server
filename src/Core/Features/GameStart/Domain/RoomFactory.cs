@@ -193,13 +193,38 @@ public class RoomFactory
         };
 
 
-        mainDeck.AdjacentRooms.Add(crowsNest);
-        crowsNest.AdjacentRooms.Add(mainDeck);
+        // See docs/room-connections.md for the map these come from.
+        Connect(crowsNest, mainDeck);
+        Connect(mainDeck, forecastle);
+        Connect(mainDeck, quarterDeck);
+        Connect(mainDeck, chartsRoom);
+        Connect(mainDeck, frontStairway);
+        Connect(mainDeck, rearStairway);
+        Connect(chartsRoom, frontStairway);
+        Connect(rearStairway, captainsQuarters);
 
-        // NOT REAL CONNECTION
-        brig.AdjacentRooms.Add(lowerCorridor);
+        Connect(frontStairway, mess);
+        Connect(rearStairway, middleCorridor);
+        Connect(mess, sickbay);
+        Connect(mess, galley);
+        Connect(mess, crewsQuarters);
+        Connect(mess, middleCorridor);
+        Connect(sickbay, brig);
+        Connect(middleCorridor, galley);
+        Connect(middleCorridor, magazine);
+        Connect(middleCorridor, officersQuarters);
+        Connect(middleCorridor, laundryRoom);
+        Connect(middleCorridor, lowerStairway);
 
-        //
+        Connect(lowerStairway, lowerCorridor);
+        Connect(lowerCorridor, workshop);
+        Connect(lowerCorridor, armory);
+        Connect(lowerCorridor, engineRoom);
+        Connect(lowerCorridor, boilerRoom);
+        Connect(lowerCorridor, hold);
+        Connect(hold, coal);
+        Connect(coal, food);
+
         List<Room> rooms = new([
             brig,
             boilerRoom,
@@ -230,5 +255,12 @@ public class RoomFactory
         ]);
 
         return rooms;
+    }
+
+    // AdjacentRooms is directed, so a door needs an entry on both sides.
+    private static void Connect(Room a, Room b)
+    {
+        a.AdjacentRooms.Add(b);
+        b.AdjacentRooms.Add(a);
     }
 }

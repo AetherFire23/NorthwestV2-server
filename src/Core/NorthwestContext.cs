@@ -60,7 +60,13 @@ public class NorthwestContext : DbContext, IUnitOfWork
             //     c => JsonSerializer.Deserialize<StageBase>(JsonSerializer.Serialize(c, (JsonSerializerOptions?)null), (JsonSerializerOptions?)null)!));
         });
 
-        // TODO: Automatic discovery of children types of items 
+        // One-to-many would let a room be listed by a single other room only. Both directions of a door are stored
+        // as rows by RoomFactory.
+        modelBuilder.Entity<Room>()
+            .HasMany(x => x.AdjacentRooms)
+            .WithMany();
+
+        // TODO: Automatic discovery of children types of items
     }
 
     public override async Task<int> SaveChangesAsync(CancellationToken ct = default)

@@ -44,9 +44,25 @@ public class RoomFactoryTest
 
         Room testedRoom = rooms.First(x => x.RoomEnum == room);
         IEnumerable<RoomEnum> adjacentsAsEnum = testedRoom.AdjacentRooms.Select(x => x.RoomEnum);
-        Assert.True(adjacents.All(adjacentsAsEnum.Contains));
+        Assert.True(adjacents.ToHashSet().SetEquals(adjacentsAsEnum));
     }
-    // TODO: Assert rooms have connections. 
+
+    [Fact]
+    public void GivenFactory_WhenCreatingRooms_ThenEveryConnectionIsTwoWay()
+    {
+        Game fakeGame = new Game();
+        RoomFactory roomFactory = new RoomFactory();
+
+        List<Room> rooms = roomFactory.CreateRoomsForGame(fakeGame).ToList();
+
+        foreach (Room room in rooms)
+        {
+            foreach (Room adjacent in room.AdjacentRooms)
+            {
+                Assert.Contains(room, adjacent.AdjacentRooms);
+            }
+        }
+    }
 }
 
 public class RoomEnumTestData : TheoryData<RoomEnum>
@@ -66,46 +82,57 @@ public class RoomConnectionsTestData : TheoryData<RoomEnum, IEnumerable<RoomEnum
     {
         this.Add(RoomEnum.CrowsNest, [RoomEnum.MainDeck]);
         this.Add(RoomEnum.MainDeck, [
-            RoomEnum.FrontStairway,
-            RoomEnum.RearStairway,
             RoomEnum.CrowsNest,
+            RoomEnum.ForeCastle,
             RoomEnum.QuarterDeck,
-            RoomEnum.ForeCastle
-        ]);
-        this.Add(RoomEnum.ForeCastle, [
-            RoomEnum.MainDeck,
-        ]);
-        this.Add(RoomEnum.FrontStairway, [
-            RoomEnum.MainDeck,
             RoomEnum.ChartsRoom,
-        ]);
-        this.Add(RoomEnum.ChartsRoom, [
             RoomEnum.FrontStairway,
+            RoomEnum.RearStairway
         ]);
-        this.Add(RoomEnum.QuarterDeck, [
-            RoomEnum.MainDeck,
-        ]);
-        this.Add(RoomEnum.RearStairway, [
-            RoomEnum.MainDeck,
-            RoomEnum.CaptainsQuarters
-        ]);
-        this.Add(RoomEnum.Sickbay, [
-            RoomEnum.Brig,
-            RoomEnum.Mess
-        ]);
-        this.Add(RoomEnum.Brig, [
-            RoomEnum.Sickbay,
-        ]);
+        this.Add(RoomEnum.ForeCastle, [RoomEnum.MainDeck]);
+        this.Add(RoomEnum.QuarterDeck, [RoomEnum.MainDeck]);
+        this.Add(RoomEnum.ChartsRoom, [RoomEnum.MainDeck, RoomEnum.FrontStairway]);
+        this.Add(RoomEnum.CaptainsQuarters, [RoomEnum.RearStairway]);
+        this.Add(RoomEnum.FrontStairway, [RoomEnum.MainDeck, RoomEnum.ChartsRoom, RoomEnum.Mess]);
+        this.Add(RoomEnum.RearStairway, [RoomEnum.MainDeck, RoomEnum.CaptainsQuarters, RoomEnum.MiddleCorridor]);
+        this.Add(RoomEnum.Sickbay, [RoomEnum.Brig, RoomEnum.Mess]);
+        this.Add(RoomEnum.Brig, [RoomEnum.Sickbay]);
         this.Add(RoomEnum.Mess, [
+            RoomEnum.FrontStairway,
             RoomEnum.Sickbay,
-            RoomEnum.CrowsNest,
             RoomEnum.Galley,
-            RoomEnum.MiddleCorridor, 
+            RoomEnum.CrewsQuarters,
+            RoomEnum.MiddleCorridor
         ]);
-        this.Add(RoomEnum.Galley, [
+        this.Add(RoomEnum.CrewsQuarters, [RoomEnum.Mess]);
+        this.Add(RoomEnum.Magazine, [RoomEnum.MiddleCorridor]);
+        this.Add(RoomEnum.Galley, [RoomEnum.Mess, RoomEnum.MiddleCorridor]);
+        this.Add(RoomEnum.MiddleCorridor, [
+            RoomEnum.RearStairway,
             RoomEnum.Mess,
+            RoomEnum.Galley,
+            RoomEnum.Magazine,
+            RoomEnum.OfficersQuarters,
+            RoomEnum.LaundryRoom,
+            RoomEnum.LowerStairway
         ]);
-        
-        // TODO: Finish Connections
+        this.Add(RoomEnum.OfficersQuarters, [RoomEnum.MiddleCorridor]);
+        this.Add(RoomEnum.LaundryRoom, [RoomEnum.MiddleCorridor]);
+        this.Add(RoomEnum.LowerStairway, [RoomEnum.MiddleCorridor, RoomEnum.LowerCorridor]);
+        this.Add(RoomEnum.LowerCorridor, [
+            RoomEnum.LowerStairway,
+            RoomEnum.Workshop,
+            RoomEnum.Armory,
+            RoomEnum.EngineRoom,
+            RoomEnum.BoilerRoom,
+            RoomEnum.Hold
+        ]);
+        this.Add(RoomEnum.Workshop, [RoomEnum.LowerCorridor]);
+        this.Add(RoomEnum.Armory, [RoomEnum.LowerCorridor]);
+        this.Add(RoomEnum.EngineRoom, [RoomEnum.LowerCorridor]);
+        this.Add(RoomEnum.BoilerRoom, [RoomEnum.LowerCorridor]);
+        this.Add(RoomEnum.Hold, [RoomEnum.LowerCorridor, RoomEnum.Coal]);
+        this.Add(RoomEnum.Coal, [RoomEnum.Hold, RoomEnum.Food]);
+        this.Add(RoomEnum.Food, [RoomEnum.Coal]);
     }
 }
