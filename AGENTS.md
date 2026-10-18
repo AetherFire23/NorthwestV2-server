@@ -6,7 +6,7 @@
 ## Build & Run
 ```powershell
 dotnet build
-dotnet run --project src/NortwestV2.Api
+dotnet run --project src/Api
 ```
 - API: `http://localhost:5272`
 - Swagger: `/swagger`
@@ -18,27 +18,23 @@ dotnet run --project src/NortwestV2.Api
 
 ## Migrations
 ```powershell
-dotnet ef migrations add <Name> --project src/NorthwestV2.Infrastructure
+dotnet ef migrations add <Name> --project src/Core
 ```
 
 ## Testing
-- Unit: `dotnet test tests/ERP.Unit`
-- Integration: `dotnet test tests/ERP.Integration` (uses Testcontainers PostgreSQL)
+- Unit: `dotnet test tests/Unit`
+- Integration: `dotnet test tests/Integration` (uses Testcontainers PostgreSQL)
 
 ## Important Quirks
-- **Dev mode auto-resets DB**: In Development, app deletes and remigrates DB on every startup (`Program.cs:114-117`)
+- **Dev mode auto-resets DB**: In Development, app deletes and remigrates DB on every startup (`Program.AppPhase`)
 - CORS allows `localhost:5173` and `192.168.2.100:5173` only
 - Session-based auth with cookies
-- Frontend URL constant: `http://localhost:5173` (Program.cs:17)
+- Connection string key: `ConnectionStrings:DefaultConnection`
 
 ## Solution Structure
 | Directory | Purpose |
 |-----------|---------|
-| `src/NortwestV2.Api` | Web API entrypoint |
-| `NorthwestV2.Features` | Use cases (MediatR handlers) |
-| `src/NorthwestV2.Infrastructure` | EF Core DbContext, migrations |
-| `NorthwestV2.Compose` | DI composition |
-| `src/NorthwestV2.Seed` | Database seeding |
-| `src/NorthwestV2.Scenarios` | Scenario launcher |
-| `tests/ERP.Unit` | Unit tests (xUnit) |
-| `tests/ERP.Integration` | Integration tests |
+| `src/Api` | Web API entrypoint (`Program` BuildPhase/AppPhase), `Composition/Composer` (`AddCoreServices`/`InitializeServices`), scenario launcher |
+| `src/Core` | Use cases (MediatR handlers), domain, EF Core DbContext, migrations, seeding |
+| `tests/Unit` | Unit tests (xUnit) |
+| `tests/Integration` | Integration tests; `Tooling/IntegrationTestBase` + `NorthwestTestBase` (shared Postgres container, one DB per test) |
