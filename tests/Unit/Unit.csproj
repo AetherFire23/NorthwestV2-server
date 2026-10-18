@@ -5,7 +5,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <IsPackable>false</IsPackable>
-        <RootNamespace>ERP.Testing.Domain</RootNamespace>
+        <RootNamespace>NorthwestV2.Unit</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>

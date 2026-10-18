@@ -1,7 +1,7 @@
-using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.WithTargets;
-using NorthwestV2.Features.Features.Shared.Entity;
+﻿using NorthwestV2.Features.Actions.Core.Domain.Availability.WithTargets;
+using NorthwestV2.Features.Shared.Entity;
 
-namespace NorthwestV2.Features.Features.Actions.Productions.Core.Entities;
+namespace NorthwestV2.Features.Actions.Productions.Core.Entities;
 
 /// <summary>
 /// Base class for unfinished production items.

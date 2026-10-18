@@ -1,14 +1,12 @@
-using NorthwestV2.Seed;
 using Mediator;
 using Microsoft.EntityFrameworkCore;
-using NorthwestV2.Features.Features;
-using NorthwestV2.Features.Features.Actions.Productions.SpyglassProduction.Items;
-using NorthwestV2.Features.Features.Shared.Entity;
-using NorthwestV2.Features.UseCases.Authentication.Register;
-using NorthwestV2.Features.UseCases.GameStart;
-using NorthwestV2.Infrastructure;
+using NorthwestV2.Features;
+using NorthwestV2.Features.Actions.Productions.SpyglassProduction.Items;
+using NorthwestV2.Features.Shared.Entity;
+using NorthwestV2.UseCases.Authentication.Register;
+using NorthwestV2.UseCases.GameStart;
 
-namespace NorthwestV2.Seed;
+namespace NorthwestV2.Seeding;
 
 public class SeededCompany : ISeeder
 {

@@ -2,9 +2,9 @@ using System.Reflection;
 using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using NorthwestV2.Api.Composition;
+using NorthwestV2.Api.Scenarios;
 using NorthwestV2.Infrastructure;
-using NorthwestV2.Scenarios;
-using NorthwestV2.Seed;
+using NorthwestV2.Seeding;
 
 namespace NorthwestV2.Api;
 

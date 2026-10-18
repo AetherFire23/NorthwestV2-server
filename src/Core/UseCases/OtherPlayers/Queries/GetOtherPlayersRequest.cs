@@ -1,6 +1,6 @@
 ﻿using Mediator;
 
-namespace NorthwestV2.Features.UseCases.OtherPlayers.Queries;
+namespace NorthwestV2.UseCases.OtherPlayers.Queries;
 
 public class GetOtherPlayersRequest : IRequest<GetOtherPlayersResponse>
 {

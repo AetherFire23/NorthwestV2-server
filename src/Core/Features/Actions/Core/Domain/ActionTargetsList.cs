@@ -1,6 +1,6 @@
-﻿using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.WithTargets;
+﻿using NorthwestV2.Features.Actions.Core.Domain.Availability.WithTargets;
 
-namespace NorthwestV2.Features.Features.Actions.Core.Domain;
+namespace NorthwestV2.Features.Actions.Core.Domain;
 
 public class ActionTargetsList
 {

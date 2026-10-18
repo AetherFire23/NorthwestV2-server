@@ -1,10 +1,9 @@
 ﻿using Mediator;
-using NorthwestV2.Features.ApplicationsStuff.Repositories;
-using NorthwestV2.Features.Features.GameStart;
-using NorthwestV2.Features.Features.GameStart.Domain;
-using NorthwestV2.Features.Features.Shared.Entity;
+using NorthwestV2.ApplicationsStuff.Repositories;
+using NorthwestV2.Features.GameStart.Domain;
+using NorthwestV2.Features.Shared.Entity;
 
-namespace NorthwestV2.Features.UseCases.GameStart;
+namespace NorthwestV2.UseCases.GameStart;
 
 public class CreateGameHandler : IRequestHandler<CreateGameRequest, Guid>
 {

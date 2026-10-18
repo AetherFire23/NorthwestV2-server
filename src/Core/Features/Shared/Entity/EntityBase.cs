@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace NorthwestV2.Features.Features.Shared.Entity;
+namespace NorthwestV2.Features.Shared.Entity;
 
 /// <summary>
 /// Base class for all domain entities. Uses <see cref="Id"/> for equality (entity identity pattern).

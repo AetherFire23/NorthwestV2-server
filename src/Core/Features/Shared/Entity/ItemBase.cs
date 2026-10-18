@@ -1,7 +1,7 @@
-﻿using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.WithTargets;
-using NorthwestV2.Features.UseCases.Items;
+﻿using NorthwestV2.Features.Actions.Core.Domain.Availability.WithTargets;
+using NorthwestV2.UseCases.Items;
 
-namespace NorthwestV2.Features.Features.Shared.Entity;
+namespace NorthwestV2.Features.Shared.Entity;
 
 /// <summary>
 /// Base class for all items in the game.

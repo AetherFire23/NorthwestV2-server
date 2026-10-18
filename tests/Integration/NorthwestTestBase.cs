@@ -2,9 +2,8 @@ using Mediator;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NorthwestV2.Api.Composition;
-using NorthwestV2.Features.ApplicationsStuff.Repositories;
-using NorthwestV2.Infrastructure;
-using NorthwestV2.Infrastructure.Contexts;
+using NorthwestV2.ApplicationsStuff.Repositories;
+using NorthwestV2.Contexts;
 using NorthwestV2.Integration.Tooling;
 using Xunit.Abstractions;
 

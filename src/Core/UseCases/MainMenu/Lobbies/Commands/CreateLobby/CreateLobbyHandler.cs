@@ -1,9 +1,9 @@
 ﻿using Mediator;
-using NorthwestV2.Features.ApplicationsStuff.Repositories;
-using NorthwestV2.Features.Features.Shared.Entity;
-using NorthwestV2.Features.UseCases.MainMenu.Lobbies.Commands.JoinLobby;
+using NorthwestV2.ApplicationsStuff.Repositories;
+using NorthwestV2.Features.Shared.Entity;
+using NorthwestV2.UseCases.MainMenu.Lobbies.Commands.JoinLobby;
 
-namespace NorthwestV2.Features.UseCases.MainMenu.Lobbies.Commands.CreateLobby;
+namespace NorthwestV2.UseCases.MainMenu.Lobbies.Commands.CreateLobby;
 
 public class CreateLobbyHandler : IRequestHandler<CreateLobbyRequest, Guid>
 {

@@ -1,10 +1,8 @@
-﻿using System.Xml.Schema;
-using JetBrains.Annotations;
-using NorthwestV2.Features.Features.GameStart;
-using NorthwestV2.Features.Features.GameStart.Domain;
-using NorthwestV2.Features.Features.Shared.Entity;
+﻿using JetBrains.Annotations;
+using NorthwestV2.Features.GameStart.Domain;
+using NorthwestV2.Features.Shared.Entity;
 
-namespace ERP.Testing.Domain;
+namespace NorthwestV2.Unit;
 
 [TestSubject(typeof(RoomFactory))]
 public class RoomFactoryTest

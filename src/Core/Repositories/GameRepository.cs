@@ -1,8 +1,7 @@
-﻿using NorthwestV2.Features.ApplicationsStuff.Repositories;
-using NorthwestV2.Features.Features.Shared.Entity;
-using NorthwestV2.Practical;
+﻿using NorthwestV2.ApplicationsStuff.Repositories;
+using NorthwestV2.Features.Shared.Entity;
 
-namespace NorthwestV2.Infrastructure.Repositories;
+namespace NorthwestV2.Repositories;
 
 public class GameRepository : IGameRepository
 {

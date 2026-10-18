@@ -1,14 +1,13 @@
 ﻿using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
-using NorthwestV2.Features;
-using NorthwestV2.Features.Features.Actions.Productions.Core;
-using NorthwestV2.Features.Features.Actions.Productions.Core.Entities;
-using NorthwestV2.Features.Features.Actions.Productions.FishingPole;
-using NorthwestV2.Features.Features.Actions.Productions.HammerProduction;
-using NorthwestV2.Features.Features.Actions.Productions.SpyglassProduction.Items;
-using NorthwestV2.Features.Features.Shared.Entity;
+using NorthwestV2.Features.Actions.Productions.Core;
+using NorthwestV2.Features.Actions.Productions.Core.Entities;
+using NorthwestV2.Features.Actions.Productions.FishingPole;
+using NorthwestV2.Features.Actions.Productions.HammerProduction;
+using NorthwestV2.Features.Actions.Productions.SpyglassProduction.Items;
+using NorthwestV2.Features.Shared.Entity;
 
-namespace NorthwestV2.Infrastructure;
+namespace NorthwestV2;
 
 /*
  * I did the whole UOW patteern initially for mocking; separartion. It's not necessary.

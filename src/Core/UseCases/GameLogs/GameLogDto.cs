@@ -1,4 +1,4 @@
-﻿namespace NorthwestV2.Features.UseCases.GameLogs;
+﻿namespace NorthwestV2.UseCases.GameLogs;
 
 public class GameLogDto
 {

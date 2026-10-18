@@ -1,7 +1,7 @@
+using NorthwestV2.Contexts;
 using NorthwestV2.Features;
-using NorthwestV2.Features.Features.Actions.Core.Application;
-using NorthwestV2.Features.Installation;
-using NorthwestV2.Infrastructure.Contexts;
+using NorthwestV2.Features.Actions.Core.Application;
+using NorthwestV2.Installation;
 
 namespace NorthwestV2.Api.Composition;
 

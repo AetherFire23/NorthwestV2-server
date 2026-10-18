@@ -1,4 +1,4 @@
-﻿namespace NorthwestV2.Features.Installation;
+﻿namespace NorthwestV2.Installation;
 
 public class NorthwestDomainService
 {

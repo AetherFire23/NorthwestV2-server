@@ -1,4 +1,4 @@
-﻿namespace NorthwestV2.Features.UseCases.Authentication.Login.Tokens;
+﻿namespace NorthwestV2.UseCases.Authentication.Login.Tokens;
 
 public class JwtConfig
 {

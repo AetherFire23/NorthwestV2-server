@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace ERP.Testing.Domain;
+namespace NorthwestV2.Unit;
 
 [TestSubject(typeof(FakeRandom))]
 public class FakeRandomTest

@@ -1,4 +1,4 @@
-﻿namespace NorthwestV2.Features.Features.GameStart.Domain.RoleInitializations;
+﻿namespace NorthwestV2.Features.GameStart.Domain.RoleInitializations;
 
 /// <summary>
 /// Starting toughness values for different roles. Toughness acts as a damage buffer - damage is

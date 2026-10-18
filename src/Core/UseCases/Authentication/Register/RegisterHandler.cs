@@ -1,8 +1,8 @@
 ﻿using Mediator;
-using NorthwestV2.Features.ApplicationsStuff.Repositories;
-using NorthwestV2.Features.Features.Shared.Entity;
+using NorthwestV2.ApplicationsStuff.Repositories;
+using NorthwestV2.Features.Shared.Entity;
 
-namespace NorthwestV2.Features.UseCases.Authentication.Register;
+namespace NorthwestV2.UseCases.Authentication.Register;
 
 public class RegisterHandler : IRequestHandler<RegisterRequest, Guid>
 {

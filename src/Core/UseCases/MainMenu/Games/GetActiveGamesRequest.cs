@@ -1,4 +1,4 @@
-﻿namespace NorthwestV2.Features.UseCases.MainMenu.Games;
+﻿namespace NorthwestV2.UseCases.MainMenu.Games;
 
 public class GetActiveGamesRequest
 {

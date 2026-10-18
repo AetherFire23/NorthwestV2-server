@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-
-namespace NorthwestV2.Scenarios;
+﻿namespace NorthwestV2.Api.Scenarios;
 
 public static class ScenarioConfigurator
 {

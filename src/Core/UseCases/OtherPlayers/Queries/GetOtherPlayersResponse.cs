@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace NorthwestV2.Features.UseCases.OtherPlayers.Queries;
+namespace NorthwestV2.UseCases.OtherPlayers.Queries;
 
 public class GetOtherPlayersResponse
 {

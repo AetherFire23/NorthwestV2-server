@@ -1,8 +1,8 @@
 ﻿using JetBrains.Annotations;
-using NorthwestV2.Features.Features.Shared.Entity;
-using NorthwestV2.Features.UseCases.Authentication.Register;
-using NorthwestV2.Features.UseCases.GameActions.Queries.GetActions;
-using NorthwestV2.Features.UseCases.GameStart;
+using NorthwestV2.Features.Shared.Entity;
+using NorthwestV2.UseCases.Authentication.Register;
+using NorthwestV2.UseCases.GameActions.Queries.GetActions;
+using NorthwestV2.UseCases.GameStart;
 using Xunit.Abstractions;
 
 namespace NorthwestV2.Integration.UseCases.GameActions.Queries.GetActions;

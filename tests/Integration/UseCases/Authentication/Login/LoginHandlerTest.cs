@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
-using NorthwestV2.Features.UseCases.Authentication.Login;
-using NorthwestV2.Features.UseCases.Authentication.Register;
+using NorthwestV2.UseCases.Authentication.Login;
+using NorthwestV2.UseCases.Authentication.Register;
 using Xunit.Abstractions;
 
 namespace NorthwestV2.Integration.UseCases.Authentication.Login;

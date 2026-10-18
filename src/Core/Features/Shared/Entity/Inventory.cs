@@ -1,4 +1,4 @@
-﻿namespace NorthwestV2.Features.Features.Shared.Entity;
+﻿namespace NorthwestV2.Features.Shared.Entity;
 
 /// <summary>
 /// Container for items. Both <see cref="Player"/> and <see cref="Room"/> have an inventory.

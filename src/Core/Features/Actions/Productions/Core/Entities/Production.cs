@@ -1,4 +1,4 @@
-﻿namespace NorthwestV2.Features.Features.Actions.Productions.Core.Entities;
+﻿namespace NorthwestV2.Features.Actions.Productions.Core.Entities;
 
 // public class Production : EntityBase
 // {

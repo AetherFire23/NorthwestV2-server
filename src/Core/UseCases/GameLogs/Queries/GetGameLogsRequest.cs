@@ -1,6 +1,6 @@
 ﻿using Mediator;
 
-namespace NorthwestV2.Features.UseCases.GameLogs.Queries;
+namespace NorthwestV2.UseCases.GameLogs.Queries;
 
 public class GetGameLogsRequest : IRequest<GetGameLogsResponse>
 {

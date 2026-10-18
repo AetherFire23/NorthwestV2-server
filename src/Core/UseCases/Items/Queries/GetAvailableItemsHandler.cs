@@ -1,8 +1,8 @@
 ﻿using Mediator;
-using NorthwestV2.Features.ApplicationsStuff.Repositories;
-using NorthwestV2.Features.Features.Shared.Entity;
+using NorthwestV2.ApplicationsStuff.Repositories;
+using NorthwestV2.Features.Shared.Entity;
 
-namespace NorthwestV2.Features.UseCases.Items.Queries;
+namespace NorthwestV2.UseCases.Items.Queries;
 
 /// <summary>
 /// Returns the Item Dtos of the player and of the current room of the player. 

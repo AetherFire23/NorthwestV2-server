@@ -1,4 +1,4 @@
-﻿using NorthwestV2.Features.UseCases.Authentication.Login;
+﻿using NorthwestV2.UseCases.Authentication.Login;
 
 namespace NorthwestV2.Integration.UseCases.Authentication.Login;
 

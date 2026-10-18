@@ -1,6 +1,6 @@
 ﻿using Mediator;
 
-namespace NorthwestV2.Features.UseCases.Authentication.Register;
+namespace NorthwestV2.UseCases.Authentication.Register;
 
 public class RegisterRequest : IRequest<Guid>
 {

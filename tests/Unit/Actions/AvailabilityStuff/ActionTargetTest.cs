@@ -1,7 +1,7 @@
 ﻿using JetBrains.Annotations;
-using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.WithTargets;
+using NorthwestV2.Features.Actions.Core.Domain.Availability.WithTargets;
 
-namespace ERP.Testing.Domain.Actions.AvailabilityStuff;
+namespace NorthwestV2.Unit.Actions.AvailabilityStuff;
 
 [TestSubject(typeof(ActionTarget))]
 public class ActionTargetTest

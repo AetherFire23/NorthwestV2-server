@@ -1,5 +1,5 @@
 using JetBrains.Annotations;
-using NorthwestV2.Features.Features.Actions.Core.Application;
+using NorthwestV2.Features.Actions.Core.Application;
 using Xunit.Abstractions;
 
 namespace NorthwestV2.Integration.Features.Actions.Core;

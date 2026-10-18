@@ -1,8 +1,8 @@
 ﻿using Mediator;
-using NorthwestV2.Features.ApplicationsStuff.Repositories;
-using NorthwestV2.Features.Features.Shared.Entity;
+using NorthwestV2.ApplicationsStuff.Repositories;
+using NorthwestV2.Features.Shared.Entity;
 
-namespace NorthwestV2.Features.UseCases.OtherPlayers.Queries;
+namespace NorthwestV2.UseCases.OtherPlayers.Queries;
 
 public class GetOtherPlayersHandler : IRequestHandler<GetOtherPlayersRequest, GetOtherPlayersResponse>
 {

@@ -1,15 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Mediator;
 using Microsoft.AspNetCore.Mvc;
-using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.WithTargets;
-using NorthwestV2.Features.UseCases.GameActions.Command.ExecuteAction;
-using NorthwestV2.Features.UseCases.GameActions.Queries.GetActions;
-using NorthwestV2.Features.UseCases.GameLogs.Queries;
-using NorthwestV2.Features.UseCases.Items.Commands;
-using NorthwestV2.Features.UseCases.Items.Queries;
-using NorthwestV2.Features.UseCases.OtherPlayers.Queries;
-using NorthwestV2.Infrastructure;
-using NorthwestV2.Practical;
+using NorthwestV2.Features.Actions.Core.Domain.Availability.WithTargets;
+using NorthwestV2.UseCases.GameActions.Command.ExecuteAction;
+using NorthwestV2.UseCases.GameActions.Queries.GetActions;
+using NorthwestV2.UseCases.GameLogs.Queries;
+using NorthwestV2.UseCases.Items.Commands;
+using NorthwestV2.UseCases.Items.Queries;
+using NorthwestV2.UseCases.OtherPlayers.Queries;
 
 namespace NorthwestV2.Api.Controllers.GameControllers;
 

@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace NorthwestV2.Seed;
+namespace NorthwestV2.Seeding;
 
 public static class SeedServices
 {

@@ -1,6 +1,6 @@
 ﻿using Mediator;
 
-namespace NorthwestV2.Features.UseCases.MainMenu.Lobbies.Commands.JoinLobby;
+namespace NorthwestV2.UseCases.MainMenu.Lobbies.Commands.JoinLobby;
 
 public class JoinLobbyRequest : IRequest<Guid>
 {

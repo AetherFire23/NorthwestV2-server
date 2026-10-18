@@ -1,9 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using NorthwestV2.Features.ApplicationsStuff.Repositories;
-using NorthwestV2.Infrastructure.Repositories;
-using NorthwestV2.Practical;
+using NorthwestV2.ApplicationsStuff.Repositories;
+using NorthwestV2.Repositories;
 
-namespace NorthwestV2.Infrastructure.Contexts;
+namespace NorthwestV2.Contexts;
 
 public static class InfraInstaller
 {

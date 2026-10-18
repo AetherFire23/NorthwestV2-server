@@ -1,9 +1,9 @@
-﻿using NorthwestV2.Features.Features.Actions.Core.Domain;
-using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.Requirements;
-using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.WithTargets;
-using NorthwestV2.Features.Features.Shared.Entity;
+﻿using NorthwestV2.Features.Actions.Core.Domain;
+using NorthwestV2.Features.Actions.Core.Domain.Availability.Requirements;
+using NorthwestV2.Features.Actions.Core.Domain.Availability.WithTargets;
+using NorthwestV2.Features.Shared.Entity;
 
-namespace NorthwestV2.Features.Features.Actions.ActDeDebg.Targets;
+namespace NorthwestV2.Features.Actions.ActDeDebg.Targets;
 
 public class DebugTargetAction
 {

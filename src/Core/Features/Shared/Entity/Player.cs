@@ -1,9 +1,9 @@
-using System.ComponentModel.DataAnnotations.Schema;
-using NorthwestV2.Features.Features.Actions.Core.Domain;
-using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.WithTargets;
-using NorthwestV2.Features.Features.Actions.General.Combat.StartCombat.Domain;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using NorthwestV2.Features.Actions.Core.Domain;
+using NorthwestV2.Features.Actions.Core.Domain.Availability.WithTargets;
+using NorthwestV2.Features.Actions.General.Combat.StartCombat.Domain;
 
-namespace NorthwestV2.Features.Features.Shared.Entity;
+namespace NorthwestV2.Features.Shared.Entity;
 
 /// <summary>
 /// Represents a user playing in a game instance. A player is tied to:

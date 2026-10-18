@@ -1,4 +1,4 @@
-﻿namespace NorthwestV2.Features.Features;
+﻿namespace NorthwestV2.Features;
 
 /// <summary>
 /// Global game configuration constants. These values apply to all game sessions.

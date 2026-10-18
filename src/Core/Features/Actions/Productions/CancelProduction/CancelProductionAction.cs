@@ -1,10 +1,10 @@
-﻿using NorthwestV2.Features.Features.Actions.Core.Domain;
-using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.Requirements;
-using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.WithTargets;
-using NorthwestV2.Features.Features.Actions.Productions.Core.Entities;
-using NorthwestV2.Features.Features.Shared.Entity;
+﻿using NorthwestV2.Features.Actions.Core.Domain;
+using NorthwestV2.Features.Actions.Core.Domain.Availability.Requirements;
+using NorthwestV2.Features.Actions.Core.Domain.Availability.WithTargets;
+using NorthwestV2.Features.Actions.Productions.Core.Entities;
+using NorthwestV2.Features.Shared.Entity;
 
-namespace NorthwestV2.Features.Features.Actions.Productions.CancelProduction;
+namespace NorthwestV2.Features.Actions.Productions.CancelProduction;
 
 public class CancelProductionAction
 {

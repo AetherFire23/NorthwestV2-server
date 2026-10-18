@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using NorthwestV2.Features.Features.Shared.Entity;
+using NorthwestV2.Features.Shared.Entity;
 
-namespace NorthwestV2.Features.ApplicationsStuff.EfCoreExtensions;
+namespace NorthwestV2.ApplicationsStuff.EfCoreExtensions;
 
 /// <summary>
 /// HAve to use Context.Set<T>().FindById in order for this to work.

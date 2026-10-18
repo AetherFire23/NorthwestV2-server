@@ -1,7 +1,7 @@
 ﻿using Mediator;
-using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.WithTargets;
+using NorthwestV2.Features.Actions.Core.Domain.Availability.WithTargets;
 
-namespace NorthwestV2.Features.UseCases.GameActions.Command.ExecuteAction;
+namespace NorthwestV2.UseCases.GameActions.Command.ExecuteAction;
 
 public class ExecuteActionRequest : IRequest
 {

@@ -1,7 +1,7 @@
-﻿using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.Instant;
-using NorthwestV2.Features.UseCases.GameActions.Queries.GetActions;
+﻿using NorthwestV2.Features.Actions.Core.Domain.Availability.Instant;
+using NorthwestV2.UseCases.GameActions.Queries.GetActions;
 
-namespace NorthwestV2.Features.Features.Actions.Core.Application.Bases;
+namespace NorthwestV2.Features.Actions.Core.Application.Bases;
 
 /// <summary>
 /// Base class for actions that execute immediately and do not require target selection.

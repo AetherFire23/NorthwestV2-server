@@ -1,4 +1,4 @@
-namespace NorthwestV2.Infrastructure.Contexts;
+namespace NorthwestV2.Contexts;
 
 public class MissingConnectionStringException : Exception
 {

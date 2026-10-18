@@ -1,4 +1,4 @@
-﻿namespace NorthwestV2.Features.Features.Actions.Core.Domain.Availability.Instant;
+﻿namespace NorthwestV2.Features.Actions.Core.Domain.Availability.Instant;
 
 /// <summary>
 /// Represents the availability of a game action that can be executed immediately and doesn't require any task selection

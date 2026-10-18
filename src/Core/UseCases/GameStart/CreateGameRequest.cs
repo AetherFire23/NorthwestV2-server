@@ -1,6 +1,6 @@
 ﻿using Mediator;
 
-namespace NorthwestV2.Features.UseCases.GameStart;
+namespace NorthwestV2.UseCases.GameStart;
 
 /// <summary>
 /// Returns the created Game I'd 

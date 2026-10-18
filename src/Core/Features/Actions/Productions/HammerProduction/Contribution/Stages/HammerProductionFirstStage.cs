@@ -1,9 +1,9 @@
-﻿using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.Requirements;
-using NorthwestV2.Features.Features.Actions.Productions.Core;
-using NorthwestV2.Features.Features.Actions.Productions.HammerProduction.Initiation;
-using NorthwestV2.Features.Features.Shared.Entity;
+﻿using NorthwestV2.Features.Actions.Core.Domain.Availability.Requirements;
+using NorthwestV2.Features.Actions.Productions.Core;
+using NorthwestV2.Features.Actions.Productions.HammerProduction.Initiation;
+using NorthwestV2.Features.Shared.Entity;
 
-namespace NorthwestV2.Features.Features.Actions.Productions.HammerProduction.Contribution.Stages;
+namespace NorthwestV2.Features.Actions.Productions.HammerProduction.Contribution.Stages;
 
 public record HammerProductionFirstStage : StageContributionBase
 {

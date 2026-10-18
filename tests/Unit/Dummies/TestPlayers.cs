@@ -1,6 +1,6 @@
-﻿using NorthwestV2.Features.Features.Shared.Entity;
+﻿using NorthwestV2.Features.Shared.Entity;
 
-namespace ERP.Testing.Domain.Dummies;
+namespace NorthwestV2.Unit.Dummies;
 
 public static class TestPlayers
 {

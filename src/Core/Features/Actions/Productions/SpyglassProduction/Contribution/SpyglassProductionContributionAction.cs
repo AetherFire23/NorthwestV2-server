@@ -1,11 +1,11 @@
-using NorthwestV2.Features.Features.Actions.Core.Domain;
-using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.Requirements;
-using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.WithTargets;
-using NorthwestV2.Features.Features.Actions.Productions.Core;
-using NorthwestV2.Features.Features.Actions.Productions.SpyglassProduction.Items;
-using NorthwestV2.Features.Features.Shared.Entity;
+using NorthwestV2.Features.Actions.Core.Domain;
+using NorthwestV2.Features.Actions.Core.Domain.Availability.Requirements;
+using NorthwestV2.Features.Actions.Core.Domain.Availability.WithTargets;
+using NorthwestV2.Features.Actions.Productions.Core;
+using NorthwestV2.Features.Actions.Productions.SpyglassProduction.Items;
+using NorthwestV2.Features.Shared.Entity;
 
-namespace NorthwestV2.Features.Features.Actions.Productions.SpyglassProduction.Contribution;
+namespace NorthwestV2.Features.Actions.Productions.SpyglassProduction.Contribution;
 
 /// <summary>
 /// Contributing to a spyglass asks two things: which unfinished spyglass of the room, and which specialized TP quota

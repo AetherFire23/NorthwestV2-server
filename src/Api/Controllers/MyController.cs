@@ -1,8 +1,6 @@
 ﻿using Mediator;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using NorthwestV2.Infrastructure;
-using NorthwestV2.Practical;
 
 namespace NorthwestV2.Api.Controllers;
 

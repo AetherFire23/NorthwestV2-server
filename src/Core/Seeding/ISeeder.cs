@@ -1,4 +1,4 @@
-﻿namespace NorthwestV2.Seed;
+﻿namespace NorthwestV2.Seeding;
 
 /// <summary>
 /// Is injected inside the service provider. 

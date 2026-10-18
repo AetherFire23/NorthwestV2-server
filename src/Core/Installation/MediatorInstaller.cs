@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace NorthwestV2.Features.Installation;
+namespace NorthwestV2.Installation;
 
 public static class MediatorInstaller
 {

@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
-using NorthwestV2.Features.Features.GameStart.Domain.RoleInitializations;
-using NorthwestV2.Features.Features.Shared.Entity;
+using NorthwestV2.Features.GameStart.Domain.RoleInitializations;
+using NorthwestV2.Features.Shared.Entity;
 
-namespace NorthwestV2.Features.Features.GameStart.Domain;
+namespace NorthwestV2.Features.GameStart.Domain;
 
 //TODO: Maybe rename to InitialzePlayersForgameService
 public class PlayerFactory

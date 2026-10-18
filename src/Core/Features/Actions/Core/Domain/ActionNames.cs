@@ -1,4 +1,4 @@
-﻿namespace NorthwestV2.Features.Features.Actions.Core.Domain;
+﻿namespace NorthwestV2.Features.Actions.Core.Domain;
 
 /// <summary>
 /// Names for the descriptions. Also will be mapped to the executed action on the frontend.

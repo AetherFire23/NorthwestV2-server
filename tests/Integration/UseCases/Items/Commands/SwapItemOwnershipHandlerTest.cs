@@ -1,9 +1,9 @@
 ﻿using JetBrains.Annotations;
 using Mediator;
-using NorthwestV2.Features.ApplicationsStuff.EfCoreExtensions;
-using NorthwestV2.Features.Features.Actions.Productions.SpyglassProduction.Items;
-using NorthwestV2.Features.Features.Shared.Entity;
-using NorthwestV2.Features.UseCases.Items.Commands;
+using NorthwestV2.ApplicationsStuff.EfCoreExtensions;
+using NorthwestV2.Features.Actions.Productions.SpyglassProduction.Items;
+using NorthwestV2.Features.Shared.Entity;
+using NorthwestV2.UseCases.Items.Commands;
 using Xunit.Abstractions;
 
 namespace NorthwestV2.Integration.UseCases.Items.Commands;

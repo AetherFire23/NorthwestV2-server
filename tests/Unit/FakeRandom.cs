@@ -1,6 +1,4 @@
-﻿using NorthwestV2.Features;
-
-namespace ERP.Testing.Domain;
+﻿namespace NorthwestV2.Unit;
 
 public class FakeRandom : IRandomProvider
 {

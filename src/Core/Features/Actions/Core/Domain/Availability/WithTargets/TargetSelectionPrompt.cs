@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using NorthwestV2.Features.Features.Shared.Entity;
+using NorthwestV2.Features.Shared.Entity;
 
-namespace NorthwestV2.Features.Features.Actions.Core.Domain.Availability.WithTargets;
+namespace NorthwestV2.Features.Actions.Core.Domain.Availability.WithTargets;
 
 /// <summary>
 /// Represents a prompt instructing the user to select one or more valid action targets.

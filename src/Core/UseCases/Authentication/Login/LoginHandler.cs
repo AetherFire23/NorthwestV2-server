@@ -1,9 +1,9 @@
 ﻿using Mediator;
-using NorthwestV2.Features.ApplicationsStuff.Repositories;
-using NorthwestV2.Features.Features.Shared.Entity;
-using NorthwestV2.Features.UseCases.Authentication.Login.Tokens;
+using NorthwestV2.ApplicationsStuff.Repositories;
+using NorthwestV2.Features.Shared.Entity;
+using NorthwestV2.UseCases.Authentication.Login.Tokens;
 
-namespace NorthwestV2.Features.UseCases.Authentication.Login;
+namespace NorthwestV2.UseCases.Authentication.Login;
 
 /// <summary>
 /// Handles a <see cref="LoginRequest"/> by validating user credentials and

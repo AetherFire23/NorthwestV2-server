@@ -1,6 +1,6 @@
 ﻿using Mediator;
 
-namespace NorthwestV2.Features.UseCases.Authentication.Login;
+namespace NorthwestV2.UseCases.Authentication.Login;
 
 public class LoginRequest : IRequest<LoginResult>
 {

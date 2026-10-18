@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Xunit.Abstractions;
 
-namespace ERP.Testing.Domain;
+namespace NorthwestV2.Unit;
 
 public sealed class TestOutputLogger<T> : ILogger<T>
 {

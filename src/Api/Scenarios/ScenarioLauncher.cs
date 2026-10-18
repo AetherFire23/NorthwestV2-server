@@ -1,8 +1,7 @@
 ﻿using System.Reflection;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Playwright;
 
-namespace NorthwestV2.Scenarios;
+namespace NorthwestV2.Api.Scenarios;
 
 public class ScenarioLauncher
 {

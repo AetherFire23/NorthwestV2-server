@@ -1,4 +1,4 @@
-﻿namespace NorthwestV2.Features.UseCases.Items.Queries;
+﻿namespace NorthwestV2.UseCases.Items.Queries;
 
 public class GetAvailableItemsResponse
 {

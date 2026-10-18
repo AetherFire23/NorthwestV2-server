@@ -1,6 +1,6 @@
 ﻿using Mediator;
 
-namespace NorthwestV2.Features.UseCases.Items.Commands;
+namespace NorthwestV2.UseCases.Items.Commands;
 
 public class SwapItemOwnershipRequest : IRequest
 {

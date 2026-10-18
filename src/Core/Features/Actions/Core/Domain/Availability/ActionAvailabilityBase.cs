@@ -1,6 +1,6 @@
-﻿using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.Requirements;
+﻿using NorthwestV2.Features.Actions.Core.Domain.Availability.Requirements;
 
-namespace NorthwestV2.Features.Features.Actions.Core.Domain.Availability;
+namespace NorthwestV2.Features.Actions.Core.Domain.Availability;
 
 /// <summary>
 /// Represents the availability state of a game action, including its name

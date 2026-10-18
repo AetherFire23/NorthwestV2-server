@@ -1,7 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-using NorthwestV2.Features.ApplicationsStuff.Repositories;
+﻿using NorthwestV2.ApplicationsStuff.Repositories;
 
-namespace NorthwestV2.Infrastructure.Repositories;
+namespace NorthwestV2.Repositories;
 
 public class ProductionRepository : IProductionRepository
 {

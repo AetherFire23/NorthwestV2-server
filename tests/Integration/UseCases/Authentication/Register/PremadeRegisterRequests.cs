@@ -1,4 +1,4 @@
-﻿using NorthwestV2.Features.UseCases.Authentication.Register;
+﻿using NorthwestV2.UseCases.Authentication.Register;
 
 namespace NorthwestV2.Integration.UseCases.Authentication.Register;
 

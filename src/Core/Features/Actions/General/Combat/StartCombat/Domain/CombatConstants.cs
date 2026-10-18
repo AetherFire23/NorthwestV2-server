@@ -1,4 +1,4 @@
-namespace NorthwestV2.Features.Features.Actions.General.Combat.StartCombat.Domain;
+namespace NorthwestV2.Features.Actions.General.Combat.StartCombat.Domain;
 
 /// <summary>
 /// Numeric values behind the combat rules. docs/combat.md names these modifiers without giving numbers,

@@ -1,12 +1,12 @@
-﻿using NorthwestV2.Features.ApplicationsStuff.Repositories;
-using NorthwestV2.Features.Features.Actions.Core.Application.Bases;
-using NorthwestV2.Features.Features.Actions.Core.Domain;
-using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.Instant;
-using NorthwestV2.Features.Features.Shared.Entity;
-using NorthwestV2.Features.UseCases.GameActions.Command.ExecuteAction;
-using NorthwestV2.Features.UseCases.GameActions.Queries.GetActions;
+﻿using NorthwestV2.ApplicationsStuff.Repositories;
+using NorthwestV2.Features.Actions.Core.Application.Bases;
+using NorthwestV2.Features.Actions.Core.Domain;
+using NorthwestV2.Features.Actions.Core.Domain.Availability.Instant;
+using NorthwestV2.Features.Shared.Entity;
+using NorthwestV2.UseCases.GameActions.Command.ExecuteAction;
+using NorthwestV2.UseCases.GameActions.Queries.GetActions;
 
-namespace NorthwestV2.Features.Features.Actions.Productions.FishingPole.Contribution;
+namespace NorthwestV2.Features.Actions.Productions.FishingPole.Contribution;
 
 public class FishingPoleContributionApp : InstantActionBase
 {

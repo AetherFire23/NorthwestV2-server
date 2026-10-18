@@ -1,12 +1,11 @@
-using ERP.Testing.Domain.Dummies;
 using JetBrains.Annotations;
+using NorthwestV2.Features.Actions.Core.Domain;
 using NorthwestV2.Features.Actions.General.Combat.StartCombat.Domain;
-using NorthwestV2.Features.Features.Actions.Core.Domain;
-using NorthwestV2.Features.Features.Actions.General.Combat.StartCombat.Domain;
-using NorthwestV2.Features.Features.GameStart.Domain.RoleInitializations;
-using NorthwestV2.Features.Features.Shared.Entity;
+using NorthwestV2.Features.GameStart.Domain.RoleInitializations;
+using NorthwestV2.Features.Shared.Entity;
+using NorthwestV2.Unit.Dummies;
 
-namespace ERP.Testing.Domain.Features.Actions.General.Combat;
+namespace NorthwestV2.Unit.Features.Actions.General.Combat;
 
 /// <summary>
 /// "Stances" of docs/combat.md: hit-and-run, push hard, to the end.

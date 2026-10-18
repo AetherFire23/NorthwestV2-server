@@ -1,4 +1,4 @@
-﻿namespace NorthwestV2.Scenarios;
+﻿namespace NorthwestV2.Api.Scenarios;
 
 [AttributeUsage(AttributeTargets.Class)]
 public class ScenarioAttribute : Attribute

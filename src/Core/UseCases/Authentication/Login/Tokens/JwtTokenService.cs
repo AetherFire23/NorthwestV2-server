@@ -3,7 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 
-namespace NorthwestV2.Features.UseCases.Authentication.Login.Tokens;
+namespace NorthwestV2.UseCases.Authentication.Login.Tokens;
 
 public class JwtTokenService
 {

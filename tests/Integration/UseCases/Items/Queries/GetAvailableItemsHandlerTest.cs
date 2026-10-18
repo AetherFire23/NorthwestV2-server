@@ -1,7 +1,7 @@
 ﻿using JetBrains.Annotations;
-using NorthwestV2.Features.Features.Actions.Productions.SpyglassProduction.Items;
-using NorthwestV2.Features.Features.Shared.Entity;
-using NorthwestV2.Features.UseCases.Items.Queries;
+using NorthwestV2.Features.Actions.Productions.SpyglassProduction.Items;
+using NorthwestV2.Features.Shared.Entity;
+using NorthwestV2.UseCases.Items.Queries;
 using Xunit.Abstractions;
 
 namespace NorthwestV2.Integration.UseCases.Items.Queries;

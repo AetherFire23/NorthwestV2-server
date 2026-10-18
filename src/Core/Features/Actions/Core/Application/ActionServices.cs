@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using NorthwestV2.Features.Features.Actions.Core.Application.Bases;
-using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.Instant;
-using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.WithTargets;
-using NorthwestV2.Features.UseCases.GameActions.Queries.GetActions;
+using NorthwestV2.Features.Actions.Core.Application.Bases;
+using NorthwestV2.Features.Actions.Core.Domain.Availability.Instant;
+using NorthwestV2.Features.Actions.Core.Domain.Availability.WithTargets;
+using NorthwestV2.UseCases.GameActions.Queries.GetActions;
 
-namespace NorthwestV2.Features.Features.Actions.Core.Application;
+namespace NorthwestV2.Features.Actions.Core.Application;
 
 /// <summary>
 /// Provides utility methods for discovering and executing all game actions

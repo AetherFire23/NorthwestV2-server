@@ -1,4 +1,4 @@
-﻿namespace NorthwestV2.Features.Features.Shared.Entity;
+﻿namespace NorthwestV2.Features.Shared.Entity;
 
 public class User : EntityBase
 {

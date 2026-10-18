@@ -1,9 +1,7 @@
 ﻿using Mediator;
 using NorthwestV2.Features;
-using NorthwestV2.Features.Features;
-using NorthwestV2.Features.UseCases.Authentication.Register;
-using NorthwestV2.Features.UseCases.GameStart;
-using NorthwestV2.Infrastructure;
+using NorthwestV2.UseCases.Authentication.Register;
+using NorthwestV2.UseCases.GameStart;
 
 namespace NorthwestV2.Integration;
 

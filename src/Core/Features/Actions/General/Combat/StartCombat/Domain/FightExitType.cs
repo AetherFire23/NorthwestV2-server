@@ -1,4 +1,4 @@
-﻿namespace NorthwestV2.Features.Features.Actions.General.Combat.StartCombat.Domain;
+﻿namespace NorthwestV2.Features.Actions.General.Combat.StartCombat.Domain;
 
 public enum FightExitType
 {

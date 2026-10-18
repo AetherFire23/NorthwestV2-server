@@ -1,8 +1,8 @@
 using JetBrains.Annotations;
-using NorthwestV2.Features.Features.Actions.Core.Application;
-using NorthwestV2.Features.Features.Actions.Core.Application.Bases;
+using NorthwestV2.Features.Actions.Core.Application;
+using NorthwestV2.Features.Actions.Core.Application.Bases;
 
-namespace ERP.Testing.Domain.Features.Actions.Core;
+namespace NorthwestV2.Unit.Features.Actions.Core;
 
 [TestSubject(typeof(ActionCatalog))]
 public class ActionCatalogTest

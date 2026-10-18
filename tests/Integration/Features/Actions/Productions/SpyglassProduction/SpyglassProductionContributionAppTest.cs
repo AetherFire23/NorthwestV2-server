@@ -1,15 +1,15 @@
 ﻿using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using NorthwestV2.Features.ApplicationsStuff.Repositories;
-using NorthwestV2.Features.Features.Actions.Core.Domain;
-using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.WithTargets;
-using NorthwestV2.Features.Features.Actions.Productions.SpyglassProduction.Contribution.Stages;
-using NorthwestV2.Features.Features.Actions.Productions.SpyglassProduction.Initiation;
-using NorthwestV2.Features.Features.Actions.Productions.SpyglassProduction.Items;
-using NorthwestV2.Features.Features.Shared.Entity;
-using NorthwestV2.Features.UseCases.GameActions.Command.ExecuteAction;
-using NorthwestV2.Features.UseCases.GameActions.Queries.GetActions;
+using NorthwestV2.ApplicationsStuff.Repositories;
+using NorthwestV2.Features.Actions.Core.Domain;
+using NorthwestV2.Features.Actions.Core.Domain.Availability.WithTargets;
+using NorthwestV2.Features.Actions.Productions.SpyglassProduction.Contribution.Stages;
+using NorthwestV2.Features.Actions.Productions.SpyglassProduction.Initiation;
+using NorthwestV2.Features.Actions.Productions.SpyglassProduction.Items;
+using NorthwestV2.Features.Shared.Entity;
+using NorthwestV2.UseCases.GameActions.Command.ExecuteAction;
+using NorthwestV2.UseCases.GameActions.Queries.GetActions;
 using Xunit.Abstractions;
 
 namespace NorthwestV2.Integration.Features.Actions.Productions.SpyglassProduction;

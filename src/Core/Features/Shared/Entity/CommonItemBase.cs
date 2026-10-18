@@ -1,6 +1,6 @@
-using NorthwestV2.Features.Features.Actions.Productions.Core.Entities;
+using NorthwestV2.Features.Actions.Productions.Core.Entities;
 
-namespace NorthwestV2.Features.Features.Shared.Entity;
+namespace NorthwestV2.Features.Shared.Entity;
 
 /// <summary>
 /// Normal components may be components for productions. 

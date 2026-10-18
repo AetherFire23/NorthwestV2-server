@@ -1,7 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Playwright;
+﻿using Microsoft.Playwright;
 
-namespace NorthwestV2.Scenarios;
+namespace NorthwestV2.Api.Scenarios;
 
 public abstract class ScenarioBase
 {

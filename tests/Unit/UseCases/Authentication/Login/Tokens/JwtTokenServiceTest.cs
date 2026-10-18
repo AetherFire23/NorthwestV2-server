@@ -1,8 +1,7 @@
-﻿using System.Security.Claims;
-using JetBrains.Annotations;
-using NorthwestV2.Features.UseCases.Authentication.Login.Tokens;
+﻿using JetBrains.Annotations;
+using NorthwestV2.UseCases.Authentication.Login.Tokens;
 
-namespace ERP.Testing.Domain.UseCases.Authentication.Login.Tokens;
+namespace NorthwestV2.Unit.UseCases.Authentication.Login.Tokens;
 
 [TestSubject(typeof(JwtTokenService))]
 public class JwtTokenServiceTest

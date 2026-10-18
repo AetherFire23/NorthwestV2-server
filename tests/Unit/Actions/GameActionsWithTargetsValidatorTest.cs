@@ -1,9 +1,9 @@
 ﻿using JetBrains.Annotations;
-using NorthwestV2.Features.Features.Actions.Core.Domain;
-using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.Requirements;
-using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.WithTargets;
+using NorthwestV2.Features.Actions.Core.Domain;
+using NorthwestV2.Features.Actions.Core.Domain.Availability.Requirements;
+using NorthwestV2.Features.Actions.Core.Domain.Availability.WithTargets;
 
-namespace ERP.Testing.Domain.Actions;
+namespace NorthwestV2.Unit.Actions;
 
 [TestSubject(typeof(GameActionsWithTargetsValidator))]
 public class GameActionsWithTargetsValidatorTest

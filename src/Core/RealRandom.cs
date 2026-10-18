@@ -1,4 +1,4 @@
-﻿namespace NorthwestV2.Features;
+﻿namespace NorthwestV2;
 
 public class RealRandom : IRandomProvider
 {

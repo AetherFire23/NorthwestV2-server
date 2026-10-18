@@ -1,12 +1,12 @@
 ﻿using Mediator;
-using NorthwestV2.Features.Features.Actions.Core.Application;
-using NorthwestV2.Features.Features.Actions.Core.Application.Bases;
-using NorthwestV2.Features.Features.Actions.Core.Domain;
-using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.Instant;
-using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.WithTargets;
-using NorthwestV2.Features.UseCases.GameActions.Queries.GetActions;
+using NorthwestV2.Features.Actions.Core.Application;
+using NorthwestV2.Features.Actions.Core.Application.Bases;
+using NorthwestV2.Features.Actions.Core.Domain;
+using NorthwestV2.Features.Actions.Core.Domain.Availability.Instant;
+using NorthwestV2.Features.Actions.Core.Domain.Availability.WithTargets;
+using NorthwestV2.UseCases.GameActions.Queries.GetActions;
 
-namespace NorthwestV2.Features.UseCases.GameActions.Command.ExecuteAction;
+namespace NorthwestV2.UseCases.GameActions.Command.ExecuteAction;
 
 /// <summary>
 /// Handles the execution of a game action requested by a player.

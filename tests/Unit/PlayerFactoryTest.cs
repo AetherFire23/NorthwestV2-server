@@ -1,14 +1,12 @@
 ﻿using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 using NorthwestV2.Features;
-using NorthwestV2.Features.Features;
-using NorthwestV2.Features.Features.GameStart;
-using NorthwestV2.Features.Features.GameStart.Domain;
-using NorthwestV2.Features.Features.GameStart.Domain.RoleInitializations;
-using NorthwestV2.Features.Features.Shared.Entity;
+using NorthwestV2.Features.GameStart.Domain;
+using NorthwestV2.Features.GameStart.Domain.RoleInitializations;
+using NorthwestV2.Features.Shared.Entity;
 using Xunit.Abstractions;
 
-namespace ERP.Testing.Domain;
+namespace NorthwestV2.Unit;
 
 [TestSubject(typeof(PlayerFactory))]
 public class PlayerFactoryTest

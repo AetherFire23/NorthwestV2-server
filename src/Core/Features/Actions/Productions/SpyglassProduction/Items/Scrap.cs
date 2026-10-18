@@ -1,6 +1,6 @@
-﻿using NorthwestV2.Features.Features.Shared.Entity;
+﻿using NorthwestV2.Features.Shared.Entity;
 
-namespace NorthwestV2.Features.Features.Actions.Productions.SpyglassProduction.Items;
+namespace NorthwestV2.Features.Actions.Productions.SpyglassProduction.Items;
 
 public class Scrap : CommonItemBase
 {

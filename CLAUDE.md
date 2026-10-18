@@ -35,7 +35,54 @@ The `http` launch profile passes `--seed SeededCompany --scenario SeededCompany`
 | `tests/Unit` | Pure domain/handler tests with hand-built objects; references Core only |
 | `tests/Integration` | Real DI graph on a real Postgres container |
 
-**Namespaces do not match folders in Core.** Files kept their pre-merge namespaces: domain and use cases are `NorthwestV2.Features.*`, EF/repositories are `NorthwestV2.Infrastructure.*`, seeding is `NorthwestV2.Seed`, scenarios are `NorthwestV2.Scenarios`. Keep new files consistent with their neighbours rather than "fixing" a single file.
+**Namespaces match folders.** Root namespaces: Api `NorthwestV2.Api`, Core `NorthwestV2`, Unit `NorthwestV2.Unit`, Integration `NorthwestV2.Integration`; the rest is the folder path (e.g. `src/Core/Features/Shared/Entity` is `NorthwestV2.Features.Shared.Entity`, `src/Core/Repositories` is `NorthwestV2.Repositories`). Keep new files consistent with their folder.
+
+### Where things live (inside `src/Core`)
+
+| Path | What |
+|---|---|
+| `Features/Shared/Entity/` | EF entities and enums: `Game`, `Player`, `Room`, `Inventory`, `ItemBase`, `GameLog`, `User`, `Lobby`, `Roles`, `RoomEnum`, `ItemTypes` |
+| `Features/Actions/Core/Application/` | `ActionBase` -> `InstantActionBase` / `ActionWithTargetsBase`, `ActionCatalog`, `ActionServices` |
+| `Features/Actions/Core/Domain/` | `ActionNames`, availability + requirement classes, target prompts, `GameActionsWithTargetsValidator` |
+| `Features/Actions/General/{Combat,Movement}` | Combat and room-change actions |
+| `Features/Actions/Productions/` | `Core/` (`Production`, `StageContributionBase`) plus one folder per product: `SpyglassProduction`, `HammerProduction`, `FishingPole`, `CancelProduction` (each split into `Initiation/` and `Contribution/`, plus `Items/`) |
+| `Features/Actions/ActDeDebg/` | Debug actions (`Instant`, `Targets`) |
+| `Features/GameStart/Domain/` | Room, player and role factories/initializers |
+| `UseCases/<Area>/...` | `Authentication`, `GameActions` (`Command/ExecuteAction`, `Queries/GetActions`), `GameLogs`, `GameStart`, `Items`, `MainMenu`, `OtherPlayers` |
+| `ApplicationsStuff/Repositories/` | Repository **interfaces** (`IPlayerRepository`, ...); implementations are in `Repositories/`. `IUnitOfWork`, `IRandomProvider`, `NorthwestContext` sit at the root of `src/Core` |
+| `Seeding/`, `Installation/`, `Contexts/` | Seeders, DI installers, DbContext setup |
+
+Tests mirror this: `tests/Unit/{Actions,Features,UseCases,Dummies}`, `tests/Integration/{Features,UseCases,Helpers,Tooling}`.
+
+### Which doc to read
+
+| Topic | File |
+|---|---|
+| Combat rules / what is implemented | `docs/combat.md`, `docs/combat-spec-vs-code.md` |
+| Productions (TP, stages, unfinished items) | `docs/productions.md` |
+| Action system design | `docs/actions.md` |
+| Map and room adjacency | `docs/room-connections.md`, `docs/map-with-names.png` |
+| Overall game spec | `docs/specs.md` |
+| Dated change notes | `docs/changes/<date>.md` |
+
+Ignore `Temp.txt`, `package-lock.json`, `docs/*.vsdx` and `docs/dropbox.url`; they are not part of the build.
+
+### Adding a game action (most common task)
+
+An action is a domain class plus an `*App` class. Copy `Features/Actions/Productions/SpyglassProduction/Initiation/`.
+
+1. Domain class (e.g. `XAction`): pure logic, `DetermineAvailability(player)` plus the state change. Register it in `DomainInstaller`.
+2. `XActionApp : InstantActionBase` (or `ActionWithTargetsBase` for target prompts): passes an `ActionNames` constant to the base ctor, implements `GetAvailabilityResult` and `Execute` (load via repository, call the domain class, `IUnitOfWork.SaveChangesAsync`). Register it in `ApplicationInstaller`.
+3. Add the name to `ActionNames`.
+4. No controller or handler change: `GetActionsHandler` / `ExecuteActionHandler` find actions through `ActionCatalog`, which scans the assembly for concrete `ActionBase` subclasses. `ActionCatalog.Initialize` resolves every action at boot, so a missing DI registration or duplicate `ActionName` fails at startup.
+5. Tests: unit test the domain class; integration test through `Mediator.Send(new ExecuteActionRequest ...)`.
+
+### Glossary
+
+- **Instant action** vs **action with targets**: instant runs directly; with-targets exposes ordered `TargetSelectionPrompt`s the client must answer (validated by `GameActionsWithTargetsValidator`). The frontend branches on `ActionKinds`.
+- **Availability**: per-player result of an action's `ActionRequirement`s; `ExecuteActionHandler` re-checks it before executing.
+- **Production / unfinished item**: multi-stage crafting; each stage has a TP quota and a room. See `docs/productions.md`.
+- **TP**: time points a player spends on actions; role-specialized TP cost more when spent by non-specialists.
 
 ## Architecture
 
@@ -90,5 +137,4 @@ Match the surrounding code; observed conventions:
 
 - `UseSession` runs before `MapControllers` now; keep it that way or `HttpContext.Session` throws.
 - CORS origins (`localhost:5173`, `192.168.2.100:5173`) and the Kestrel port 5272 are hard-coded in `Program`.
-- `AGENTS.md` is a shorter overlapping summary; keep both in sync if you change commands or layout.
 - Commit messages in this repo are informal English; use the attribution lines the harness specifies.

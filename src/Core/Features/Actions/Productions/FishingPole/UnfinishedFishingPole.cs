@@ -1,8 +1,8 @@
-﻿using NorthwestV2.Features.Features.Actions.Productions.Core.Entities;
-using NorthwestV2.Features.Features.Actions.Productions.FishingPole.Contribution;
-using NorthwestV2.Features.Features.Shared.Entity;
+﻿using NorthwestV2.Features.Actions.Productions.Core.Entities;
+using NorthwestV2.Features.Actions.Productions.FishingPole.Contribution;
+using NorthwestV2.Features.Shared.Entity;
 
-namespace NorthwestV2.Features.Features.Actions.Productions.FishingPole;
+namespace NorthwestV2.Features.Actions.Productions.FishingPole;
 
 public class UnfinishedFishingPole : ProductionItemBase
 {

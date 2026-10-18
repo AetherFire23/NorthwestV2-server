@@ -1,6 +1,6 @@
-﻿using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.WithTargets;
+﻿using NorthwestV2.Features.Actions.Core.Domain.Availability.WithTargets;
 
-namespace NorthwestV2.Features.Features.Shared.Entity;
+namespace NorthwestV2.Features.Shared.Entity;
 
 /// <summary>
 /// A location in the game map. Each room belongs to one <see cref="Game"/> and has:

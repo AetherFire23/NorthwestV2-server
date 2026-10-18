@@ -1,6 +1,6 @@
-using NorthwestV2.Features.Features.Shared.Entity;
+﻿using NorthwestV2.Features.Shared.Entity;
 
-namespace NorthwestV2.Features.Features.Actions.General.Combat.StartCombat.Domain;
+namespace NorthwestV2.Features.Actions.General.Combat.StartCombat.Domain;
 
 public class FightResult
 {

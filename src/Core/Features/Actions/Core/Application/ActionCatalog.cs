@@ -1,8 +1,8 @@
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
-using NorthwestV2.Features.Features.Actions.Core.Application.Bases;
+using NorthwestV2.Features.Actions.Core.Application.Bases;
 
-namespace NorthwestV2.Features.Features.Actions.Core.Application;
+namespace NorthwestV2.Features.Actions.Core.Application;
 
 /// <summary>
 /// Startup-time registry of every concrete game action type.
