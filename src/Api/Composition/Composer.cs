@@ -1,4 +1,5 @@
 using NorthwestV2.Features;
+using NorthwestV2.Features.Features.Actions.Core.Application;
 using NorthwestV2.Features.Installation;
 using NorthwestV2.Infrastructure.Contexts;
 
@@ -18,5 +19,6 @@ public static class Composer
     public static async Task InitializeServices(this IServiceProvider serviceProvider, IConfiguration configuration)
     {
         await NorthwestContextInstaller.Initialize(serviceProvider);
+        serviceProvider.GetRequiredService<ActionCatalog>().Initialize(serviceProvider);
     }
 }

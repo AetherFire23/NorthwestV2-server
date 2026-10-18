@@ -22,6 +22,7 @@ public class ApplicationInstaller
 {
     public static void Install(IServiceCollection serviceCollection)
     {
+        serviceCollection.AddSingleton(ActionCatalog.Scan(typeof(ActionCatalog).Assembly));
         serviceCollection.AddScoped<ActionServices>();
         serviceCollection.AddScoped<ChooseDefensiveCounterApp>();
         serviceCollection.AddScoped<CombatActionApp>();

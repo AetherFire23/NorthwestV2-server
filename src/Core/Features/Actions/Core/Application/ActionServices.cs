@@ -16,10 +16,12 @@ namespace NorthwestV2.Features.Features.Actions.Core.Application;
 public class ActionServices
 {
     private readonly IServiceProvider _serviceProvider;
+    private readonly ActionCatalog _actionCatalog;
 
-    public ActionServices(IServiceProvider serviceProvider)
+    public ActionServices(IServiceProvider serviceProvider, ActionCatalog actionCatalog)
     {
         _serviceProvider = serviceProvider;
+        _actionCatalog = actionCatalog;
     }
 
     public async Task<List<InstantActionAvailability>> GetInstantActionAvailabilityResults(GetActionsRequest request)
@@ -46,12 +48,8 @@ public class ActionServices
 
     public IEnumerable<InstantActionBase> GetInstantActions()
     {
-        List<Type> types = typeof(GetActionsHandler).Assembly
-            .GetTypes()
-            .Where(x => !x.IsAbstract && typeof(InstantActionBase).IsAssignableFrom(x)).ToList();
-
         IEnumerable<InstantActionBase> services =
-            types.Select(t => (InstantActionBase)_serviceProvider.GetRequiredService(t));
+            _actionCatalog.InstantActionTypes.Select(t => (InstantActionBase)_serviceProvider.GetRequiredService(t));
         return services;
     }
 
@@ -80,12 +78,8 @@ public class ActionServices
 
     public IEnumerable<ActionWithTargetsBase> GetActionsWithTargets()
     {
-        List<Type> types = typeof(GetActionsHandler).Assembly
-            .GetTypes()
-            .Where(x => !x.IsAbstract && typeof(ActionWithTargetsBase).IsAssignableFrom(x)).ToList();
-
         IEnumerable<ActionWithTargetsBase> services =
-            types.Select(t => (ActionWithTargetsBase)_serviceProvider.GetRequiredService(t));
+            _actionCatalog.ActionWithTargetsTypes.Select(t => (ActionWithTargetsBase)_serviceProvider.GetRequiredService(t));
         return services;
     }
 
@@ -97,14 +91,11 @@ public class ActionServices
     /// <returns></returns>
     public async Task<ActionBase> GetActionFromName(string actionName)
     {
-        List<Type> types = typeof(GetActionsHandler).Assembly
-            .GetTypes()
-            .Where(x => !x.IsAbstract && typeof(ActionBase).IsAssignableFrom(x)).ToList();
+        if (!_actionCatalog.ActionTypesByName.TryGetValue(actionName, out Type? type))
+        {
+            throw new InvalidOperationException($"No action named '{actionName}'.");
+        }
 
-        IEnumerable<ActionBase> bases = types.Select(x => (ActionBase)_serviceProvider.GetRequiredService(x));
-
-        ActionBase actionBase = bases.First(x => x.ActionName == actionName);
-
-        return actionBase;
+        return (ActionBase)_serviceProvider.GetRequiredService(type);
     }
 }
