@@ -1,4 +1,4 @@
-﻿using NorthwestV2.Features.ApplicationsStuff.Repositories;
+using NorthwestV2.Features.ApplicationsStuff.Repositories;
 using NorthwestV2.Features.Features.Actions.Core.Application.Bases;
 using NorthwestV2.Features.Features.Actions.Core.Domain;
 using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.Requirements;
@@ -16,16 +16,14 @@ public class ChooseDefensiveCounterApp : ActionWithTargetsBase
 
     private readonly IUnitOfWork _unitOfWork;
     private readonly IPlayerRepository _playerRepository;
-    private readonly ChooseDefensiveCounter chooseDefensiveCounter1;
 
     public ChooseDefensiveCounterApp(ChooseDefensiveCounter chooseDefensiveCounter, IUnitOfWork unitOfWork,
-        IPlayerRepository playerRepository, ChooseDefensiveCounter chooseDefensiveCounter1) : base(
+        IPlayerRepository playerRepository) : base(
         ActionNames.ChooseDefensiveStance)
     {
         _chooseDefensiveCounter = chooseDefensiveCounter;
         _unitOfWork = unitOfWork;
         _playerRepository = playerRepository;
-        this.chooseDefensiveCounter1 = chooseDefensiveCounter1;
     }
 
     // TODO: Doing too much; move to domain layer plz 

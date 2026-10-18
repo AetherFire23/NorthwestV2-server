@@ -1,4 +1,5 @@
-﻿using NorthwestV2.Features.ApplicationsStuff.Repositories;
+using NorthwestV2.Features.Actions.General.Combat.StartCombat.Domain;
+using NorthwestV2.Features.ApplicationsStuff.Repositories;
 using NorthwestV2.Features.Features.Actions.Core.Application.Bases;
 using NorthwestV2.Features.Features.Actions.Core.Domain;
 using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.WithTargets;
@@ -17,13 +18,16 @@ public class CombatActionApp : ActionWithTargetsBase
 {
     private readonly IPlayerRepository _playerRepository;
     private readonly CombatAction _combatAction;
+    private readonly CombatAftermath _combatAftermath;
     private readonly IUnitOfWork _unitOfWork;
 
-    public CombatActionApp(IPlayerRepository playerRepository, CombatAction combatAction, IUnitOfWork unitOfWork) :
+    public CombatActionApp(IPlayerRepository playerRepository, CombatAction combatAction,
+        CombatAftermath combatAftermath, IUnitOfWork unitOfWork) :
         base(ActionNames.CombatAction)
     {
         _playerRepository = playerRepository;
         _combatAction = combatAction;
+        _combatAftermath = combatAftermath;
         _unitOfWork = unitOfWork;
     }
 
@@ -46,22 +50,40 @@ public class CombatActionApp : ActionWithTargetsBase
 
     public override async Task Execute(ExecuteActionRequest request)
     {
-        // Get attacker
         Player attackerPlayer = await _playerRepository.GetPlayer(request.PlayerId);
 
-
-        // get defender
         Guid defenderPlayerId = _combatAction.DetermineDefenderPlayer(request.ActionTargets);
-        Player player = await _playerRepository.GetPlayer(defenderPlayerId);
-
-        // Determine AttackerStance 
+        Player defenderPlayer = await _playerRepository.GetPlayer(defenderPlayerId);
 
         AttackerStances attackerStance = _combatAction.DetermineAttackerStance(request.ActionTargets);
+        attackerPlayer.AttackTypes = _combatAction.DetermineAttackType(request.ActionTargets);
 
-        FightResult fightResult = _combatAction.MakeTwoPlayerFightTogether(attackerPlayer, player, attackerStance);
-        
-        
+        // Everyone else in the room sees the fight.
+        List<Player> witnesses = (await _playerRepository.GetPlayersInSameRoom(request.PlayerId))
+            .Where(x => x.Id != defenderPlayerId)
+            .ToList();
+
+        FightResult fightResult = _combatAction.MakeTwoPlayerFightTogether(attackerPlayer, defenderPlayer, attackerStance);
+
+        List<CombatReport> reports = _combatAftermath.CreateReports(fightResult, witnesses);
+        AddReportsToGameLogs(reports);
 
         await _unitOfWork.SaveChangesAsync();
+    }
+
+    private static void AddReportsToGameLogs(List<CombatReport> reports)
+    {
+        foreach (CombatReport report in reports)
+        {
+            GameLog gameLog = new GameLog
+            {
+                Message = report.Message,
+            };
+
+            foreach (Player recipient in report.Recipients)
+            {
+                recipient.GameLogs.Add(gameLog);
+            }
+        }
     }
 }

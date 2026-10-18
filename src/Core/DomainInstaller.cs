@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using NorthwestV2.Features.Actions.General.Combat.StartCombat.Domain;
 using NorthwestV2.Features.Features.Actions.ActDeDebg.Instant;
 using NorthwestV2.Features.Features.Actions.ActDeDebg.Targets;
 using NorthwestV2.Features.Features.Actions.Core.Domain;
@@ -31,6 +32,7 @@ public static class DomainInstaller
         serviceCollection.AddScoped<RoomFactory>();
         serviceCollection.AddScoped<GameActionsWithTargetsValidator>();
         serviceCollection.AddScoped<CombatAction>();
+        serviceCollection.AddScoped<CombatAftermath>();
         serviceCollection.AddScoped<DebugTargetAction>();
         serviceCollection.AddScoped<DebugInstantAction>();
         serviceCollection.AddScoped<ChangeRoomAction>();

@@ -1,19 +1,23 @@
-﻿using NorthwestV2.Features.Features.Actions.Core.Domain;
+using NorthwestV2.Features.Features.Actions.Core.Domain;
 using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.Requirements;
 using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.WithTargets;
+using NorthwestV2.Features.Features.Actions.General.Combat.StartCombat;
+using NorthwestV2.Features.Features.Actions.General.Combat.StartCombat.Domain;
 using NorthwestV2.Features.Features.Shared.Entity;
 
-namespace NorthwestV2.Features.Features.Actions.General.Combat.StartCombat.Domain;
+namespace NorthwestV2.Features.Actions.General.Combat.StartCombat.Domain;
 
 /// <summary>
 /// Domain logic for combat resolution. Contains the fight loop, stance mechanics, and damage calculation.
-/// Does not persist data - only computes results. Use <see cref="CombatActionApp"/> for persistence.
+/// Mutates the players it is given but does not save anything. Use <see cref="CombatActionApp"/> for persistence.
 /// </summary>
 public class CombatAction
 {
     public const int PLAYER_PROMPT_INDEX = 0;
 
     public const int ATTACKERSTANCE_PROMPT_INDEX = 1;
+
+    public const int ATTACKTYPE_PROMPT_INDEX = 2;
 
     /*
      * Attack types
@@ -69,129 +73,114 @@ public class CombatAction
             "Pick your attacker stance"
         );
 
-        return [targetSelection, selectAttackerStance];
+        TargetSelectionPrompt selectAttackType = TargetSelectionPrompt.FromEnum<AttackTypes>(
+            "Pick your attack type"
+        );
+
+        return [targetSelection, selectAttackerStance, selectAttackType];
     }
 
     /// <summary>
-    /// Represents a single offensive action initiated by a player during combat.
-    /// A <see cref="CombatAction"/> encapsulates:
-    /// 
-    /// • The attacker’s chosen <see cref="CombatStances"/> (HitAndRun, PushHard, ToTheEnd)  
-    /// • The defender being targeted  
-    /// • The temporary combat stats used for the resolution loop  
-    /// • The resulting outcome (<see cref="FightResult"/>) including winner, loser, and exit type  
-    /// 
-    /// This class contains the full combat resolution flow:
-    /// - Early‑exit checks (e.g., Hit‑and‑Run disengage)  
-    /// - Iterative toughness exchanges and health damage  
-    /// - Special stance logic (PushHard premature exit, ToTheEnd refusal to flee)  
-    /// - Determination of death, victory, and post‑fight effects  
+    /// Resolves a fight between two players and applies the outcome (Health and life status) to both entities.
+    /// Persisting is up to the caller (<see cref="CombatActionApp"/>).
+    ///
+    /// Resolution:
+    /// - Early exit when a hit-and-run attacker is weaker than the defender
+    /// - Each round both sides apply their Strength to the other's toughness at the same time
+    /// - A combatant whose toughness reaches 0 loses Health and gets its toughness back
+    /// - PushHard attackers flee once the next blow would kill them; ToTheEnd attackers never flee
+    /// - At 0 Health a combatant dies if the opponent was lethal, and is stunned otherwise
     /// </summary>
     public FightResult MakeTwoPlayerFightTogether(
         Player attackerPlayer,
         Player defenderPlayer, AttackerStances attackerStance)
     {
-        /*
-         * Extract the attacker's stance
-         */
-
-
-        // TODO: Ask waht "vigilance" means. I don't see anything anywhere. 
-        // Build temporary combat stats for both players.
-        // 'true' marks the attacker so stance logic so that Strength modifier can be calculated correctly. (ToTheEnd) 
+        // TODO: Ask waht "vigilance" means. I don't see anything anywhere.
+        // 'true' marks the attacker so stance logic so that Strength modifier can be calculated correctly. (ToTheEnd)
         PlayerTempFightStats attackerStats = attackerPlayer.GetPlayerTempFightStats(true, attackerStance);
         PlayerTempFightStats defenderStats = defenderPlayer.GetPlayerTempFightStats(false, attackerStance);
 
-        // Check if the attacker should immediately disengage due to Hit‑and‑Run rules.
-        // If so, return the early‑exit result without entering the fight loop.
         if (MustEarlyExitBecauseOfHitAndRun(attackerStats, defenderStats, out FightResult earlyExitFightResult))
         {
+            earlyExitFightResult.AttackerFightStats = attackerStats;
+            earlyExitFightResult.DefenderFightStats = defenderStats;
+            earlyExitFightResult.AttackerIdentified = false;
+
             return earlyExitFightResult;
         }
 
-        // Determine the initial fight state (usually Ongoing unless PushHard triggers early).
         FightExitType fightExitType = EvaluateIfMustExitLoopOrContinue(attackerStats, defenderStats);
 
-        // Main combat loop: continues until a stance or death condition ends the fight.
         while (fightExitType == FightExitType.Ongoing)
         {
             // Both players simultaneously reduce each other's toughness by their Strength.
             defenderStats.CurrentToughness -= attackerStats.Strength;
             attackerStats.CurrentToughness -= defenderStats.Strength;
 
-            // If toughness hits zero, convert that into health damage and reset toughness.
             DealDamageIfToughnessAtZero(attackerStats, defenderStats);
             DealDamageIfToughnessAtZero(defenderStats, attackerStats);
 
-            // Re‑evaluate whether the fight should continue or exit.
             fightExitType = EvaluateIfMustExitLoopOrContinue(attackerStats, defenderStats);
         }
 
-        // Special case: PushHard causes the attacker to flee when death is imminent.
-        // In this scenario, the attacker always loses.
+        FightResult fightResult = new FightResult
+        {
+            AttackerFightStats = attackerStats,
+            DefenderFightStats = defenderStats,
+            FightExitType = fightExitType,
+        };
+
         if (fightExitType == FightExitType.ExittedBecauseOfPushHard)
         {
-            FightResult fightResult = new FightResult
-            {
-                // Winner = defenderPlayer,
-                // Loser = attackerPlayer,
-                AttackerFightStats = attackerStats,
-                DefenderFightStats = defenderStats,
-                FightExitType = fightExitType,
-            };
-
+            // The attacker flees without finishing the defender, so they are identified.
+            ApplyEndFightConditions(fightResult);
             return fightResult;
         }
 
-        // If we reach this point, someone has died—no other exit conditions remain.
-        // Determine winner/loser based on remaining health.
-        PlayerTempFightStats winner = attackerStats.CurrentHealth >= 0
-            ? attackerStats
-            : defenderStats;
+        bool isAttackLethal = attackerStats.AttackType == AttackTypes.Kill;
+        bool isCounterLethal = isAttackLethal || defenderStats.DefensiveCounter == DefensiveCounters.Override;
 
-        PlayerTempFightStats loser = attackerStats.CurrentHealth >= 0
-            ? defenderStats
-            : attackerStats;
+        fightResult.AttackerStatus = DetermineStatusAfterFight(attackerStats, isCounterLethal);
+        fightResult.DefenderStatus = DetermineStatusAfterFight(defenderStats, isAttackLethal);
+        fightResult.SurvivingPlayer = new[] { attackerStats, defenderStats }
+            .SingleOrDefault(x => x.CurrentHealth > 0);
 
-        // TODO: remember to apply death effect / create a domain Event
+        ApplyEndFightConditions(fightResult);
+        return fightResult;
+    }
 
-        FightResult endFightResult = new()
+    /// <summary>
+    /// A combatant at 0 Health is dead if the blows that took them down were lethal, and stunned otherwise.
+    /// The attacker's blows are lethal with <see cref="AttackTypes.Kill"/>. The defender's blows are lethal when
+    /// the attack is, or when they chose the <see cref="DefensiveCounters.Override"/> kill counter.
+    /// </summary>
+    private static PlayerLifeStatus DetermineStatusAfterFight(PlayerTempFightStats combatant,
+        bool areOpponentBlowsLethal)
+    {
+        if (combatant.CurrentHealth > 0)
         {
-            SurvivingPlayer = winner,
-        };
+            return PlayerLifeStatus.Alive;
+        }
 
-        ApplyEndFightConditions(endFightResult);
-        return endFightResult;
+        return areOpponentBlowsLethal ? PlayerLifeStatus.Dead : PlayerLifeStatus.Stunned;
     }
 
     /// <summary>
     /// Determines whether the attacker should immediately disengage due to the
     /// <see cref="AttackerStances.HitAndRun"/> stance.
-    /// 
+    ///
     /// Hit‑and‑Run only happends when the attacker is weaker than the defender.
     /// If the conditions are met, the fight exits before any damage is exchanged.
     /// </summary>
-    /// <param name="attackerStats">Temporary combat stats for the attacker.</param>
-    /// <param name="defenderStats">Temporary combat stats for the defender.</param>
-    /// <param name="fightResult">
-    /// Output parameter containing the early‑exit <see cref="FightResult"/> 
-    /// when Hit‑and‑Run triggers; otherwise an empty result.
-    /// </param>
-    /// <returns>
-    /// <c>true</c> if the fight should end immediately due to Hit‑and‑Run; 
-    /// otherwise <c>false</c>.
-    /// </returns>
     private static bool MustEarlyExitBecauseOfHitAndRun(PlayerTempFightStats attackerStats,
         PlayerTempFightStats defenderStats,
         out FightResult fightResult)
     {
-        // Attacker must have chosen explicitlykm.l,  Hit‑and‑Run.
         bool isHitAndRunStance = attackerStats.AttackerStance == AttackerStances.HitAndRun;
 
         // Hit‑and‑Run only works when the attacker is weaker than the defender.
         bool isDefenderStrengthTooHigh = attackerStats.Strength < defenderStats.Strength;
 
-        // If both conditions are true, the attacker disengages before combat begins.
         if (isHitAndRunStance && isDefenderStrengthTooHigh)
         {
             fightResult = new FightResult
@@ -202,40 +191,31 @@ public class CombatAction
             return true;
         }
 
-        // No early exit — return a default result and continue the fight.
         fightResult = new FightResult();
         return false;
     }
 
     /// <summary>
-    /// If Toughness drops to 0, they lose Hleath and their toughness is restored to full
+    /// If Toughness drops to 0, they lose Health and their toughness is restored to full
     /// </summary>
-    private void DealDamageIfToughnessAtZero(PlayerTempFightStats player, PlayerTempFightStats defender)
+    private void DealDamageIfToughnessAtZero(PlayerTempFightStats player, PlayerTempFightStats opponent)
     {
         if (player.CurrentToughness <= 0)
         {
-            // Reset toughness
             player.CurrentToughness = player.BaseToughness;
-
-            // Apply damage to health.
-            player.CurrentHealth -= defender.Strength;
+            player.CurrentHealth -= opponent.Strength;
         }
     }
 
     /// <summary>
     /// Evaluates the current state of the fight loop and determines whether combat
-    /// should continue or exit.  
-    /// 
+    /// should continue or exit.
+    ///
     /// Exit conditions:
-    /// • <see cref="FightExitType.ExittedBecauseOfPushHard"/> — attacker is about to die while using PushHard  
-    /// • <see cref="FightExitType.ExittedBecauseOfPlayerDeath"/> — either combatant has reached zero (or below) health  
-    /// • <see cref="FightExitType.Ongoing"/> — no exit condition met; continue the loop  
+    /// • <see cref="FightExitType.ExittedBecauseOfPushHard"/> — attacker is about to die while using PushHard
+    /// • <see cref="FightExitType.ExittedBecauseOfPlayerDeath"/> — either combatant has reached zero (or below) health
+    /// • <see cref="FightExitType.Ongoing"/> — no exit condition met; continue the loop
     /// </summary>
-    /// <param name="attacker">The attacker's temporary combat stats.</param>
-    /// <param name="defender">The defender's temporary combat stats.</param>
-    /// <returns>
-    /// A <see cref="FightExitType"/> describing whether the fight continues or ends.
-    /// </returns>
     private FightExitType EvaluateIfMustExitLoopOrContinue(PlayerTempFightStats attacker, PlayerTempFightStats defender)
     {
         bool isAttackerStancePushHard = attacker.AttackerStance == AttackerStances.PushHard;
@@ -245,9 +225,9 @@ public class CombatAction
             return FightExitType.ExittedBecauseOfPushHard;
         }
 
-        bool isPlayerDead = attacker.CurrentHealth <= 0 || defender.CurrentHealth < 0;
+        bool isPlayerDown = attacker.CurrentHealth <= 0 || defender.CurrentHealth <= 0;
 
-        if (isPlayerDead)
+        if (isPlayerDown)
         {
             return FightExitType.ExittedBecauseOfPlayerDeath;
         }
@@ -273,8 +253,29 @@ public class CombatAction
         return attackerStance;
     }
 
+    public AttackTypes DetermineAttackType(List<List<ActionTarget>> requestActionTargets)
+    {
+        string attackTypeValue = requestActionTargets[ATTACKTYPE_PROMPT_INDEX].First().Value ??
+                                 throw new Exception("Must select an attack type ");
+
+        AttackTypes attackType = Enum.Parse<AttackTypes>(attackTypeValue);
+
+        return attackType;
+    }
+
+    /// <summary>
+    /// Writes the outcome back to the players. Only Health and life status outlive the fight:
+    /// toughness lives in <see cref="PlayerTempFightStats"/> and is therefore full again next fight.
+    /// </summary>
     public void ApplyEndFightConditions(FightResult fightResult)
     {
-        Console.WriteLine("End of fight conditions not implemented yet ");
+        ApplyToPlayer(fightResult.AttackerFightStats, fightResult.AttackerStatus);
+        ApplyToPlayer(fightResult.DefenderFightStats, fightResult.DefenderStatus);
+    }
+
+    private static void ApplyToPlayer(PlayerTempFightStats stats, PlayerLifeStatus status)
+    {
+        stats.Player.Health = Math.Max(0, stats.CurrentHealth);
+        stats.Player.LifeStatus = status;
     }
 }

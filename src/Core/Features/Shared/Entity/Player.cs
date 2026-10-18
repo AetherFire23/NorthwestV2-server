@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations.Schema;
 using NorthwestV2.Features.Features.Actions.Core.Domain;
 using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.WithTargets;
 using NorthwestV2.Features.Features.Actions.General.Combat.StartCombat.Domain;
@@ -47,6 +47,8 @@ public class Player : EntityBase
     /// </summary>
     public required int BaseToughness { get; set; }
 
+    public PlayerLifeStatus LifeStatus { get; set; } = PlayerLifeStatus.Alive;
+
     public DefensiveCounters DefensiveCounter { get; set; } = DefensiveCounters.DefaultVsStun;
 
     public AttackTypes AttackTypes { get; set; } = AttackTypes.Kill;
@@ -93,6 +95,8 @@ public class Player : EntityBase
     /// Strength = Toughness + Weapon + Various Modifiers
     ///  + Weakness caused by Sanity 
     /// + Stance bonus ( ToTheEnd ) 
+    /// - Stun penalty (attacker using <see cref="AttackTypes.Stun"/>)
+    /// + Kill counter bonus (defender using <see cref="DefensiveCounters.Override"/>)
     /// </summary>
     /// <returns></returns>
     public int CalculateStrength(bool isAttacker, AttackerStances attackerStance)
@@ -109,7 +113,17 @@ public class Player : EntityBase
 
         if (attackerStance == AttackerStances.ToTheEnd && isAttacker)
         {
-            strength += 1;
+            strength += CombatConstants.TO_THE_END_STRENGTH_BONUS;
+        }
+
+        if (isAttacker && this.AttackTypes == AttackTypes.Stun)
+        {
+            strength = Math.Max(1, strength - CombatConstants.STUN_STRENGTH_PENALTY);
+        }
+
+        if (!isAttacker && this.DefensiveCounter == DefensiveCounters.Override)
+        {
+            strength += CombatConstants.KILL_COUNTER_STRENGTH_BONUS;
         }
 
         return strength;
@@ -134,7 +148,9 @@ public class Player : EntityBase
                 this.Health,
                 this.BaseToughness, attackerStance)
             {
-                Player = this
+                Player = this,
+                AttackType = this.AttackTypes,
+                DefensiveCounter = this.DefensiveCounter,
             };
 
         return player1Strength;

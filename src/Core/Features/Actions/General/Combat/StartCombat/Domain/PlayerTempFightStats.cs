@@ -1,4 +1,4 @@
-﻿using NorthwestV2.Features.Features.Actions.Core.Domain;
+using NorthwestV2.Features.Features.Actions.Core.Domain;
 using NorthwestV2.Features.Features.Shared.Entity;
 
 namespace NorthwestV2.Features.Features.Actions.General.Combat.StartCombat.Domain;
@@ -11,6 +11,8 @@ public class PlayerTempFightStats
     public int CurrentToughness { get; set; }
     public int CurrentHealth { get; set; }
     public AttackerStances AttackerStance { get; set; }
+    public AttackTypes AttackType { get; set; } = AttackTypes.Kill;
+    public DefensiveCounters DefensiveCounter { get; set; } = DefensiveCounters.DefaultVsStun;
 
     public PlayerTempFightStats(int strength, int currentToughness, int currentHealth, int baseToughness,
         AttackerStances attackerStance)
