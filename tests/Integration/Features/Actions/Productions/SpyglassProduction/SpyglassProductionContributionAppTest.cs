@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NorthwestV2.Features.ApplicationsStuff.Repositories;
 using NorthwestV2.Features.Features.Actions.Core.Domain;
+using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.WithTargets;
 using NorthwestV2.Features.Features.Actions.Productions.SpyglassProduction.Contribution.Stages;
 using NorthwestV2.Features.Features.Actions.Productions.SpyglassProduction.Initiation;
 using NorthwestV2.Features.Features.Actions.Productions.SpyglassProduction.Items;
@@ -74,11 +75,7 @@ public class SpyglassProductionContributionAppTest : NorthwestTestBase
             PlayerId = playerId,
         });
 
-        await Mediator.Send(new ExecuteActionRequest
-        {
-            ActionName = ActionNames.SpyglassContribution,
-            PlayerId = playerId,
-        });
+        await Contribute(playerId);
 
         this.Scope = this.RootServiceProvider.CreateScope();
         Player playerAfter = Context.Players.First(x => x.Id == playerId);
@@ -109,11 +106,7 @@ public class SpyglassProductionContributionAppTest : NorthwestTestBase
         });
         for (int i = 0; i < SpyglassFirstStageContributionData.SPYGLASS_FIRST_STAGE_CONTRIBUTION_LIMIT; i++)
         {
-            await Mediator.Send(new ExecuteActionRequest
-            {
-                ActionName = ActionNames.SpyglassContribution,
-                PlayerId = playerId,
-            });
+            await Contribute(playerId);
         }
 
         GetActionsResult actions = await Mediator.Send(new GetActionsRequest
@@ -141,22 +134,14 @@ public class SpyglassProductionContributionAppTest : NorthwestTestBase
 
         for (int i = 0; i < SpyglassFirstStageContributionData.SPYGLASS_FIRST_STAGE_CONTRIBUTION_LIMIT; i++)
         {
-            await Mediator.Send(new ExecuteActionRequest
-            {
-                ActionName = ActionNames.SpyglassContribution,
-                PlayerId = playerId,
-            });
+            await Contribute(playerId);
         }
 
         await TeleportPlayerToRoom(playerId, SpyglassSecondStageContributionData.REQUIRED_ROOM);
 
         for (int i = 0; i < SpyglassSecondStageContributionData.SPYGLASS_SECOND_STAGE_CONTRIBUTION_LIMIT; i++)
         {
-            await Mediator.Send(new ExecuteActionRequest
-            {
-                ActionName = ActionNames.SpyglassContribution,
-                PlayerId = playerId,
-            });
+            await Contribute(playerId);
         }
 
         await ContributeSentryQuota(playerId);
@@ -188,22 +173,14 @@ public class SpyglassProductionContributionAppTest : NorthwestTestBase
 
         for (int i = 0; i < SpyglassFirstStageContributionData.SPYGLASS_FIRST_STAGE_CONTRIBUTION_LIMIT; i++)
         {
-            await Mediator.Send(new ExecuteActionRequest
-            {
-                ActionName = ActionNames.SpyglassContribution,
-                PlayerId = playerId,
-            });
+            await Contribute(playerId);
         }
 
         await TeleportPlayerToRoom(playerId, SpyglassSecondStageContributionData.REQUIRED_ROOM);
 
         for (int i = 0; i < SpyglassSecondStageContributionData.SPYGLASS_SECOND_STAGE_CONTRIBUTION_LIMIT; i++)
         {
-            await Mediator.Send(new ExecuteActionRequest
-            {
-                ActionName = ActionNames.SpyglassContribution,
-                PlayerId = playerId,
-            });
+            await Contribute(playerId);
         }
 
         await ContributeSentryQuota(playerId);
@@ -244,15 +221,13 @@ public class SpyglassProductionContributionAppTest : NorthwestTestBase
 
         for (int i = 0; i < SpyglassFirstStageContributionData.SPYGLASS_FIRST_STAGE_CONTRIBUTION_LIMIT; i++)
         {
-            await Mediator.Send(new ExecuteActionRequest
-                { ActionName = ActionNames.SpyglassContribution, PlayerId = playerId });
+            await Contribute(playerId);
         }
 
         await TeleportPlayerToRoom(playerId, SpyglassSecondStageContributionData.REQUIRED_ROOM);
         for (int i = 0; i < SpyglassSecondStageContributionData.SPYGLASS_SECOND_STAGE_CONTRIBUTION_LIMIT; i++)
         {
-            await Mediator.Send(new ExecuteActionRequest
-                { ActionName = ActionNames.SpyglassContribution, PlayerId = playerId });
+            await Contribute(playerId);
         }
 
         await ContributeSentryQuota(playerId);
@@ -260,8 +235,7 @@ public class SpyglassProductionContributionAppTest : NorthwestTestBase
         await TeleportPlayerToRoom(playerId, SpyglassProductionThirdStageContributionData.REQUIRED_ROOM);
         for (int i = 0; i < SpyglassProductionThirdStageContributionData.SPYGLASS_THIRD_STAGE_CONTRIBUTION_LIMIT; i++)
         {
-            await Mediator.Send(new ExecuteActionRequest
-                { ActionName = ActionNames.SpyglassContribution, PlayerId = playerId });
+            await Contribute(playerId);
         }
 
         this.Scope = this.RootServiceProvider.CreateScope();
@@ -332,7 +306,6 @@ public class SpyglassProductionContributionAppTest : NorthwestTestBase
         await TeleportPlayerToRoom(playerId, SpyglassSecondStageContributionData.REQUIRED_ROOM);
 
         await ContributeUntillError(playerId);
-        await ContributeSentryQuota(playerId);
         await TeleportPlayerToRoom(playerId, SpyglassProductionThirdStageContributionData.REQUIRED_ROOM);
 
         await ContributeUntillError(playerId);
@@ -350,8 +323,7 @@ public class SpyglassProductionContributionAppTest : NorthwestTestBase
         {
             while (!pBefore.Inventory.Has<Spyglass>())
             {
-                await Mediator.Send(new ExecuteActionRequest
-                    { ActionName = ActionNames.SpyglassContribution, PlayerId = playerId });
+                await Contribute(playerId);
 
                 pBefore =
                     await this.GetServiceFromScope<IPlayerRepository>().GetPlayerAndRoomAndInventoryAndGame(playerId);
@@ -390,8 +362,7 @@ public class SpyglassProductionContributionAppTest : NorthwestTestBase
             Assert.True(contributionAction.Requirements.All(r => r.IsFulfilled), $"First stage, contribution {i + 1}");
             Assert.Equal(SpyglassFirstStageContributionData.DESCRIPTION, contributionAction.Description);
 
-            await Mediator.Send(new ExecuteActionRequest
-                { ActionName = ActionNames.SpyglassContribution, PlayerId = playerId });
+            await Contribute(playerId);
         }
 
         await TeleportPlayerToRoom(playerId, SpyglassSecondStageContributionData.REQUIRED_ROOM);
@@ -403,8 +374,7 @@ public class SpyglassProductionContributionAppTest : NorthwestTestBase
             Assert.True(contributionAction.Requirements.All(r => r.IsFulfilled), $"Second stage, contribution {i + 1}");
             Assert.Equal(SpyglassSecondStageContributionData.DESCRIPTION, contributionAction.Description);
 
-            await Mediator.Send(new ExecuteActionRequest
-                { ActionName = ActionNames.SpyglassContribution, PlayerId = playerId });
+            await Contribute(playerId);
         }
 
         await ContributeSentryQuota(playerId);
@@ -418,8 +388,7 @@ public class SpyglassProductionContributionAppTest : NorthwestTestBase
             Assert.True(contributionAction.Requirements.All(r => r.IsFulfilled), $"Third stage, contribution {i + 1}");
             Assert.Equal(SpyglassProductionThirdStageContributionData.DESCRIPTION, contributionAction.Description);
 
-            await Mediator.Send(new ExecuteActionRequest
-                { ActionName = ActionNames.SpyglassContribution, PlayerId = playerId });
+            await Contribute(playerId);
         }
 
         this.Scope = this.RootServiceProvider.CreateScope();
@@ -432,7 +401,7 @@ public class SpyglassProductionContributionAppTest : NorthwestTestBase
     }
 
     [Fact]
-    public async Task GivenSecondStage_WhenGetActions_ThenSentryContributionIsOffered()
+    public async Task GivenSecondStage_WhenGetActions_ThenQuotaPromptOffersSentry()
     {
         Guid playerId = await SetupForSpyglassStartAction();
         await Mediator.Send(new ExecuteActionRequest { ActionName = ActionNames.SpyglassProductionStart, PlayerId = playerId });
@@ -441,18 +410,18 @@ public class SpyglassProductionContributionAppTest : NorthwestTestBase
 
         GetActionsResult actions = await Mediator.Send(new GetActionsRequest { PlayerId = playerId });
 
-        Assert.Contains(actions.Actions, x => x.Name == ActionNames.SpyglassSentryContribution);
+        Assert.Contains(QuotaRoles(actions), x => x == Roles.Sentry);
     }
 
     [Fact]
-    public async Task GivenFirstStage_WhenGetActions_ThenSentryContributionIsNotOffered()
+    public async Task GivenFirstStage_WhenGetActions_ThenQuotaPromptDoesNotOfferSentry()
     {
         Guid playerId = await SetupForSpyglassStartAction();
         await Mediator.Send(new ExecuteActionRequest { ActionName = ActionNames.SpyglassProductionStart, PlayerId = playerId });
 
         GetActionsResult actions = await Mediator.Send(new GetActionsRequest { PlayerId = playerId });
 
-        Assert.DoesNotContain(actions.Actions, x => x.Name == ActionNames.SpyglassSentryContribution);
+        Assert.DoesNotContain(QuotaRoles(actions), x => x == Roles.Sentry);
     }
 
     [Fact]
@@ -465,12 +434,28 @@ public class SpyglassProductionContributionAppTest : NorthwestTestBase
         await Context.SaveChangesAsync();
         await Mediator.Send(new ExecuteActionRequest { ActionName = ActionNames.SpyglassProductionStart, PlayerId = playerId });
 
-        await Assert.ThrowsAnyAsync<Exception>(() => Mediator.Send(new ExecuteActionRequest
-            { ActionName = ActionNames.SpyglassContribution, PlayerId = playerId }).AsTask());
+        await Assert.ThrowsAnyAsync<Exception>(() => Contribute(playerId));
 
         this.Scope = this.RootServiceProvider.CreateScope();
         Player playerAfter = Context.Players.First(x => x.Id == playerId);
         Assert.Equal(2, playerAfter.ActionPoints);
+    }
+
+    [Fact]
+    public async Task GivenFirstStage_WhenContributingToAQuotaThatIsNotOffered_ThenIsRejected()
+    {
+        Guid playerId = await SetupForSpyglassStartAction();
+        await Mediator.Send(new ExecuteActionRequest { ActionName = ActionNames.SpyglassProductionStart, PlayerId = playerId });
+        GetActionsResult actions = await Mediator.Send(new GetActionsRequest { PlayerId = playerId });
+        ActionDto contributionAction = actions.Actions.First(x => x.Name == ActionNames.SpyglassContribution);
+        ActionTarget sentryQuota = new() { Name = "Sentry TP", Value = Roles.Sentry.ToString(), TargetId = Guid.Empty };
+
+        await Assert.ThrowsAnyAsync<Exception>(() => Mediator.Send(new ExecuteActionRequest
+        {
+            ActionName = ActionNames.SpyglassContribution,
+            PlayerId = playerId,
+            ActionTargets = [[contributionAction.Prompts[0].ValidTargets.First()], [sentryQuota]],
+        }).AsTask());
     }
 
     private async Task ContributeFirstStageQuota(Guid playerId)
@@ -480,17 +465,42 @@ public class SpyglassProductionContributionAppTest : NorthwestTestBase
         await Context.SaveChangesAsync();
         for (int i = 0; i < SpyglassFirstStageContributionData.SPYGLASS_FIRST_STAGE_CONTRIBUTION_LIMIT; i++)
         {
-            await Mediator.Send(new ExecuteActionRequest
-                { ActionName = ActionNames.SpyglassContribution, PlayerId = playerId });
+            await Contribute(playerId);
         }
+    }
+
+    /// <summary>
+    /// Contributes the way a client does: picks the spyglass and the quota from the prompts of the action.
+    /// Without a quota, it takes the first one offered.
+    /// </summary>
+    private async Task Contribute(Guid playerId, Roles? quotaRole = null)
+    {
+        GetActionsResult actions = await Mediator.Send(new GetActionsRequest { PlayerId = playerId });
+        ActionDto contributionAction = actions.Actions.First(x => x.Name == ActionNames.SpyglassContribution);
+        ActionTarget spyglass = contributionAction.Prompts[0].ValidTargets.First();
+        ActionTarget quota = quotaRole is null
+            ? contributionAction.Prompts[1].ValidTargets.First()
+            : contributionAction.Prompts[1].ValidTargets.First(x => x.Value == quotaRole.ToString());
+
+        await Mediator.Send(new ExecuteActionRequest
+        {
+            ActionName = ActionNames.SpyglassContribution,
+            PlayerId = playerId,
+            ActionTargets = [[spyglass], [quota]],
+        });
+    }
+
+    private static List<Roles> QuotaRoles(GetActionsResult actions)
+    {
+        ActionDto contributionAction = actions.Actions.First(x => x.Name == ActionNames.SpyglassContribution);
+        return contributionAction.Prompts[1].ValidTargets.Select(x => Enum.Parse<Roles>(x.Value!)).ToList();
     }
 
     private async Task ContributeSentryQuota(Guid playerId)
     {
         for (int i = 0; i < SpyglassSecondStageContributionData.SPYGLASS_SECOND_STAGE_SENTRY_CONTRIBUTION_LIMIT; i++)
         {
-            await Mediator.Send(new ExecuteActionRequest
-                { ActionName = ActionNames.SpyglassSentryContribution, PlayerId = playerId });
+            await Contribute(playerId, Roles.Sentry);
         }
     }
 
@@ -498,15 +508,13 @@ public class SpyglassProductionContributionAppTest : NorthwestTestBase
     {
         for (int i = 0; i < SpyglassFirstStageContributionData.SPYGLASS_FIRST_STAGE_CONTRIBUTION_LIMIT; i++)
         {
-            await Mediator.Send(new ExecuteActionRequest
-                { ActionName = ActionNames.SpyglassContribution, PlayerId = playerId });
+            await Contribute(playerId);
         }
 
         await TeleportPlayerToRoom(playerId, SpyglassSecondStageContributionData.REQUIRED_ROOM);
         for (int i = 0; i < SpyglassSecondStageContributionData.SPYGLASS_SECOND_STAGE_CONTRIBUTION_LIMIT; i++)
         {
-            await Mediator.Send(new ExecuteActionRequest
-                { ActionName = ActionNames.SpyglassContribution, PlayerId = playerId });
+            await Contribute(playerId);
         }
 
         await ContributeSentryQuota(playerId);
@@ -514,8 +522,7 @@ public class SpyglassProductionContributionAppTest : NorthwestTestBase
         await TeleportPlayerToRoom(playerId, SpyglassProductionThirdStageContributionData.REQUIRED_ROOM);
         for (int i = 0; i < SpyglassProductionThirdStageContributionData.SPYGLASS_THIRD_STAGE_CONTRIBUTION_LIMIT; i++)
         {
-            await Mediator.Send(new ExecuteActionRequest
-                { ActionName = ActionNames.SpyglassContribution, PlayerId = playerId });
+            await Contribute(playerId);
         }
     }
 

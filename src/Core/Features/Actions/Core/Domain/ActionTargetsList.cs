@@ -19,6 +19,16 @@ public class ActionTargetsList
     }
 
     /// <summary>
+    /// The single target selected for the prompt at <paramref name="promptIndex"/>.
+    /// </summary>
+    public ActionTarget At(int promptIndex)
+    {
+        ActionTarget target = _targets[promptIndex].First();
+
+        return target;
+    }
+
+    /// <summary>
     /// When an actionsTargetList has just one target, it should only have a single target.
     /// </summary>
     /// <returns></returns>

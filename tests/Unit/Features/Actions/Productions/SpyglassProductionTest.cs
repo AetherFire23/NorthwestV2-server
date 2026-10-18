@@ -1,6 +1,6 @@
 using ERP.Testing.Domain.Dummies;
 using NorthwestV2.Features.Features.Actions.Core.Domain;
-using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.Instant;
+using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.WithTargets;
 using NorthwestV2.Features.Features.Actions.Productions.SpyglassProduction.Contribution;
 using NorthwestV2.Features.Features.Actions.Productions.SpyglassProduction.Contribution.Stages;
 using NorthwestV2.Features.Features.Actions.Productions.SpyglassProduction.Items;
@@ -23,7 +23,8 @@ public class SpyglassProductionTest
     {
         return new UnfinishedSpyglass
         {
-            ItemType = ItemTypes.UnfinishedSpyglass, CurrentStageContribution = new SpyglassFirstStageContributionData()
+            Id = Guid.NewGuid(), ItemType = ItemTypes.UnfinishedSpyglass,
+            CurrentStageContribution = new SpyglassFirstStageContributionData()
         };
     }
 
@@ -31,7 +32,8 @@ public class SpyglassProductionTest
     {
         return new UnfinishedSpyglass
         {
-            ItemType = ItemTypes.UnfinishedSpyglass, CurrentStageContribution = new SpyglassSecondStageContributionData()
+            Id = Guid.NewGuid(), ItemType = ItemTypes.UnfinishedSpyglass,
+            CurrentStageContribution = new SpyglassSecondStageContributionData()
         };
     }
 
@@ -147,34 +149,60 @@ public class SpyglassProductionTest
         Assert.ThrowsAny<Exception>(() => spyglass.Contribute(sentry, Roles.Sentry));
     }
 
-    [Fact]
-    public void GivenSecondStage_WhenGettingSentryAvailability_ThenIsExecutable()
+    private static ActionTargetsList TargetsFor(UnfinishedSpyglass spyglass, Roles quotaRole)
     {
-        Player sentry = CreatePlayer(Roles.Sentry, RoomEnum.ForeCastle);
-        sentry.Room.Inventory.Add(CreateSpyglassAtSecondStage());
-        SpyglassProductionContributionAction action = new();
+        return ActionTargetsList.From(
+        [
+            [spyglass.ToTarget()],
+            [new ActionTarget { Name = quotaRole.ToString(), Value = quotaRole.ToString(), TargetId = Guid.Empty }]
+        ]);
+    }
 
-        InstantActionAvailability? availability = action.DetermineSentryAvailability(sentry);
-
-        Assert.NotNull(availability);
-        Assert.Equal(ActionNames.SpyglassSentryContribution, availability.ActionName);
-        Assert.True(availability.CanExecute);
+    private static List<Roles> QuotaPromptRoles(ActionWithTargetsAvailability availability)
+    {
+        return availability.TargetSelectionPrompts[SpyglassProductionContributionAction.QUOTA_PROMPT_INDEX]
+            .ValidTargets.Select(x => Enum.Parse<Roles>(x.Value!)).ToList();
     }
 
     [Fact]
-    public void GivenFirstStage_WhenGettingSentryAvailability_ThenIsNotOffered()
+    public void GivenNoUnfinishedSpyglassInRoom_WhenGettingAvailability_ThenIsNotOffered()
     {
-        Player sentry = CreatePlayer(Roles.Sentry, RoomEnum.Workshop);
-        sentry.Room.Inventory.Add(CreateSpyglassAtFirstStage());
-        SpyglassProductionContributionAction action = new();
+        Player engineer = CreatePlayer(Roles.Engineer, RoomEnum.Workshop);
 
-        InstantActionAvailability? availability = action.DetermineSentryAvailability(sentry);
+        ActionWithTargetsAvailability? availability = new SpyglassProductionContributionAction().DetermineAvailability(engineer);
 
         Assert.Null(availability);
     }
 
     [Fact]
-    public void GivenSecondStageWithFullScholarQuota_WhenGettingScholarAvailability_ThenCannotExecute()
+    public void GivenFirstStage_WhenGettingAvailability_ThenQuotaPromptOffersOnlyEngineer()
+    {
+        Player engineer = CreatePlayer(Roles.Engineer, RoomEnum.Workshop);
+        engineer.Room.Inventory.Add(CreateSpyglassAtFirstStage());
+
+        ActionWithTargetsAvailability availability =
+            new SpyglassProductionContributionAction().DetermineAvailability(engineer)!;
+
+        Assert.Equal([Roles.Engineer], QuotaPromptRoles(availability));
+        Assert.True(availability.CanExecute);
+    }
+
+    [Fact]
+    public void GivenSecondStage_WhenGettingAvailability_ThenQuotaPromptOffersScholarAndSentry()
+    {
+        Player sentry = CreatePlayer(Roles.Sentry, RoomEnum.ForeCastle);
+        sentry.Room.Inventory.Add(CreateSpyglassAtSecondStage());
+
+        ActionWithTargetsAvailability availability =
+            new SpyglassProductionContributionAction().DetermineAvailability(sentry)!;
+
+        Assert.Equal([Roles.Scholar, Roles.Sentry], QuotaPromptRoles(availability));
+        Assert.True(availability.CanExecute);
+        Assert.Equal(SpyglassSecondStageContributionData.DESCRIPTION, availability.DisplayName);
+    }
+
+    [Fact]
+    public void GivenSecondStageWithFullScholarQuota_WhenGettingAvailability_ThenQuotaPromptOffersOnlySentry()
     {
         Player scholar = CreatePlayer(Roles.Scholar, RoomEnum.ForeCastle);
         UnfinishedSpyglass spyglass = CreateSpyglassAtSecondStage();
@@ -184,11 +212,73 @@ public class SpyglassProductionTest
             spyglass.Contribute(scholar, Roles.Scholar);
         }
 
-        SpyglassProductionContributionAction action = new();
+        ActionWithTargetsAvailability availability =
+            new SpyglassProductionContributionAction().DetermineAvailability(scholar)!;
 
-        InstantActionAvailability? availability = action.DetermineAvailability(scholar);
+        Assert.Equal([Roles.Sentry], QuotaPromptRoles(availability));
+    }
 
-        Assert.NotNull(availability);
+    [Fact]
+    public void GivenTwoUnfinishedSpyglasses_WhenGettingAvailability_ThenSpyglassPromptListsBoth()
+    {
+        Player engineer = CreatePlayer(Roles.Engineer, RoomEnum.Workshop);
+        engineer.Room.Inventory.Add(CreateSpyglassAtFirstStage());
+        engineer.Room.Inventory.Add(CreateSpyglassAtFirstStage());
+
+        ActionWithTargetsAvailability availability =
+            new SpyglassProductionContributionAction().DetermineAvailability(engineer)!;
+
+        Assert.Equal(2,
+            availability.TargetSelectionPrompts[SpyglassProductionContributionAction.SPYGLASS_PROMPT_INDEX]
+                .ValidTargets.Count);
+    }
+
+    [Fact]
+    public void GivenPlayerWithoutEnoughPointsForTheCheapestQuota_WhenGettingAvailability_ThenCannotExecute()
+    {
+        Player cook = CreatePlayer(Roles.Cook, RoomEnum.Workshop, actionPoints: 2);
+        cook.Room.Inventory.Add(CreateSpyglassAtFirstStage());
+
+        ActionWithTargetsAvailability availability =
+            new SpyglassProductionContributionAction().DetermineAvailability(cook)!;
+
         Assert.False(availability.CanExecute);
+    }
+
+    [Fact]
+    public void GivenPlayerInTheWrongRoom_WhenGettingAvailability_ThenCannotExecute()
+    {
+        Player scholar = CreatePlayer(Roles.Scholar, RoomEnum.Workshop);
+        scholar.Room.Inventory.Add(CreateSpyglassAtSecondStage());
+
+        ActionWithTargetsAvailability availability =
+            new SpyglassProductionContributionAction().DetermineAvailability(scholar)!;
+
+        Assert.False(availability.CanExecute);
+    }
+
+    [Fact]
+    public void GivenSelectedSpyglassAndSentryQuota_WhenContributing_ThenOnlySentryQuotaAdvances()
+    {
+        Player sentry = CreatePlayer(Roles.Sentry, RoomEnum.ForeCastle);
+        UnfinishedSpyglass spyglass = CreateSpyglassAtSecondStage();
+        sentry.Room.Inventory.Add(spyglass);
+
+        new SpyglassProductionContributionAction().Contribute(sentry, TargetsFor(spyglass, Roles.Sentry));
+
+        var stage = (SpyglassSecondStageContributionData)spyglass.CurrentStageContribution;
+        Assert.Equal(1, stage.SentryContributions);
+        Assert.Equal(0, stage.RequiredContributions);
+    }
+
+    [Fact]
+    public void GivenSelectedQuotaNotOfferedByStage_WhenContributing_ThenThrows()
+    {
+        Player sentry = CreatePlayer(Roles.Sentry, RoomEnum.Workshop);
+        UnfinishedSpyglass spyglass = CreateSpyglassAtFirstStage();
+        sentry.Room.Inventory.Add(spyglass);
+
+        Assert.ThrowsAny<Exception>(() =>
+            new SpyglassProductionContributionAction().Contribute(sentry, TargetsFor(spyglass, Roles.Sentry)));
     }
 }

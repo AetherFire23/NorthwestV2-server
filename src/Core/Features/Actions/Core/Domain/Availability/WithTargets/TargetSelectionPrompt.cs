@@ -66,13 +66,14 @@ public class TargetSelectionPrompt
         return prompt;
     }
 
-    public static TargetSelectionPrompt FromItems(List<ItemBase> items)
+    public static TargetSelectionPrompt FromItems(List<ItemBase> items,
+        string description = "Selection a production to cancel. ")
     {
         List<ActionTarget> targets = items.Select(x => x.ToTarget()).ToList();
 
         TargetSelectionPrompt prompt = new TargetSelectionPrompt
         {
-            Description = "Selection a production to cancel. ",
+            Description = description,
             ValidTargets = targets,
         };
 

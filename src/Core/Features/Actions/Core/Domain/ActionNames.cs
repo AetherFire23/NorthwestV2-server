@@ -16,7 +16,6 @@ public static class ActionNames
     public const string SpyglassProductionStart = "Start Spyglass Production";
     public const string SpyglassProductionSecond = "Secon dstage production";
     public const string SpyglassContribution = "SpyglassContribution";
-    public const string SpyglassSentryContribution = "SpyglassSentryContribution";
 
     // public const string SpyglassProduction = "Spyglass Production";
     public static string HammerProductionInitiation => "Initiate hammer production";

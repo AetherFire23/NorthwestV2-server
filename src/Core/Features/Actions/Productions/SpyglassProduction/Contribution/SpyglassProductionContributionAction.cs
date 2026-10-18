@@ -1,79 +1,95 @@
 using NorthwestV2.Features.Features.Actions.Core.Domain;
-using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.Instant;
 using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.Requirements;
+using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.WithTargets;
 using NorthwestV2.Features.Features.Actions.Productions.Core;
-using NorthwestV2.Features.Features.Actions.Productions.SpyglassProduction.Contribution.Stages;
 using NorthwestV2.Features.Features.Actions.Productions.SpyglassProduction.Items;
 using NorthwestV2.Features.Features.Shared.Entity;
 
 namespace NorthwestV2.Features.Features.Actions.Productions.SpyglassProduction.Contribution;
 
+/// <summary>
+/// Contributing to a spyglass asks two things: which unfinished spyglass of the room, and which specialized TP quota
+/// to pay. Most stages have a single quota; the second one has Scholar and Sentry.
+/// </summary>
 public class SpyglassProductionContributionAction
 {
-    public InstantActionAvailability? DetermineAvailability(Player player)
+    public const int SPYGLASS_PROMPT_INDEX = 0;
+    public const int QUOTA_PROMPT_INDEX = 1;
+
+    public ActionWithTargetsAvailability? DetermineAvailability(Player player)
     {
-        bool hasUnfinishedSPyglass =
-            player.Room.Inventory.Items.Any(x => x.ItemType == ItemTypes.UnfinishedSpyglass);
-        if (!hasUnfinishedSPyglass)
+        List<UnfinishedSpyglass> unfinishedSpyglasses = GetUnfinishedSpyglasses(player);
+        if (unfinishedSpyglasses.Count == 0)
         {
             return null;
         }
 
         /*
-         *  There is an issue where tehre could be 2 different unfinishedSpyglasess.
-         * It's highly unlikely that this would be the case, however, in that case I am just picking the spyglass with
-         * the highest Contributions.
-         * Since there is just one spyglass production' there is an increased responsibility to build the
-         * appropraite availability. ie :
+         * The requirements describe the first spyglass of the room; the prompts let the player pick any of them.
+         * Contribute() rejects a quota the picked spyglass does not accept.
          */
+        StageContributionBase stage = unfinishedSpyglasses.First().CurrentStageContribution;
 
-        UnfinishedSpyglass unfinishedSpyglass = player.Room.Inventory.Find<UnfinishedSpyglass>();
+        List<Roles> openRoles = unfinishedSpyglasses
+            .SelectMany(x => x.CurrentStageContribution.ContributionRoles
+                .Where(role => x.CurrentStageContribution.IsQuotaOpen(role)))
+            .Distinct()
+            .ToList();
 
-        StageContributionBase contributions = unfinishedSpyglass.CurrentStageContribution;
+        // The cheapest open quota is the one that tells whether the player can afford to contribute at all.
+        Roles referenceRole = openRoles
+            .OrderBy(role => stage.CalculateCostForContribution(player, role))
+            .DefaultIfEmpty(stage.RequiredRole)
+            .First();
 
-        List<ActionRequirement> currentRequirements = contributions.GetRequirements(player);
+        List<ActionRequirement> requirements = stage.GetRequirements(player, referenceRole);
+        requirements.Add(new ActionRequirement("At least one TP quota of the spyglass is still open.",
+            openRoles.Count > 0));
 
-        InstantActionAvailability availability = new InstantActionAvailability
+        TargetSelectionPrompt spyglassPrompt = TargetSelectionPrompt.FromItems(
+            unfinishedSpyglasses.Cast<ItemBase>().ToList(), "Choose the unfinished spyglass to contribute to.");
+
+        TargetSelectionPrompt quotaPrompt = new()
+        {
+            Description = "Choose the specialized TP to contribute.",
+            ValidTargets = openRoles.Select(CreateQuotaTarget).ToList(),
+        };
+
+        ActionWithTargetsAvailability availability = new()
         {
             ActionName = ActionNames.SpyglassContribution,
-            DisplayName = contributions.StageName,
-            ActionRequirements = currentRequirements,
+            DisplayName = stage.StageName,
+            ActionRequirements = requirements,
+            TargetSelectionPrompts = [spyglassPrompt, quotaPrompt],
         };
 
         return availability;
     }
 
-    /// <summary>
-    /// Only the stages that ask for Sentry TP (the second one) offer this action.
-    /// </summary>
-    public InstantActionAvailability? DetermineSentryAvailability(Player player)
+    public void Contribute(Player player, ActionTargetsList actionTargets)
     {
-        UnfinishedSpyglass? unfinishedSpyglass =
-            player.Room.Inventory.Items.OfType<UnfinishedSpyglass>().FirstOrDefault();
-        if (unfinishedSpyglass?.CurrentStageContribution is not SpyglassSecondStageContributionData secondStage)
-        {
-            return null;
-        }
+        ActionTarget spyglassTarget = actionTargets.At(SPYGLASS_PROMPT_INDEX);
+        ActionTarget quotaTarget = actionTargets.At(QUOTA_PROMPT_INDEX);
 
-        InstantActionAvailability availability = new InstantActionAvailability
+        UnfinishedSpyglass unfinishedSpyglass = (UnfinishedSpyglass)player.Room.Inventory
+            .FindById(spyglassTarget.TargetId!.Value);
+        Roles quotaRole = Enum.Parse<Roles>(quotaTarget.Value!);
+
+        unfinishedSpyglass.Contribute(player, quotaRole);
+    }
+
+    private static List<UnfinishedSpyglass> GetUnfinishedSpyglasses(Player player)
+    {
+        return player.Room.Inventory.Items.OfType<UnfinishedSpyglass>().ToList();
+    }
+
+    private static ActionTarget CreateQuotaTarget(Roles role)
+    {
+        return new ActionTarget
         {
-            ActionName = ActionNames.SpyglassSentryContribution,
-            DisplayName = $"{secondStage.StageName} (Sentry TP)",
-            ActionRequirements = secondStage.GetRequirements(player, Roles.Sentry),
+            Name = $"{role} TP",
+            Value = role.ToString(),
+            TargetId = Guid.Empty,
         };
-
-        return availability;
-    }
-
-    public void ContributeSentry(Player player)
-    {
-        UnfinishedSpyglass unfinishedSpyglass = player.Room.Inventory.Find<UnfinishedSpyglass>();
-        unfinishedSpyglass.Contribute(player, Roles.Sentry);
-    }
-
-    public void Contribute(Player player)
-    {
-        UnfinishedSpyglass unfinishedSpyglass = player.Room.Inventory.Find<UnfinishedSpyglass>();
-        unfinishedSpyglass.Contribute(player);
     }
 }

@@ -61,7 +61,7 @@ public record SpyglassSecondStageContributionData : StageContributionBase
         return GetRequirements(player, Roles.Scholar);
     }
 
-    public List<ActionRequirement> GetRequirements(Player player, Roles quotaRole)
+    public override List<ActionRequirement> GetRequirements(Player player, Roles quotaRole)
     {
         ItemInRoomRequirement isItemInRoomHavingUnfinishedSpyglass =
             new(player.Room, ItemTypes.UnfinishedSpyglass);

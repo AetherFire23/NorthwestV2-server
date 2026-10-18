@@ -126,4 +126,12 @@ public abstract record StageContributionBase
     }
 
     public abstract List<ActionRequirement> GetRequirements(Player player);
+
+    /// <summary>
+    /// Requirements to contribute to a given quota. Stages with a single quota ignore the role.
+    /// </summary>
+    public virtual List<ActionRequirement> GetRequirements(Player player, Roles quotaRole)
+    {
+        return GetRequirements(player);
+    }
 }

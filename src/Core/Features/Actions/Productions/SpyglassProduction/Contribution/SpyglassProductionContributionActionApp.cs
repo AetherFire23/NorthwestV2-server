@@ -1,14 +1,14 @@
 using NorthwestV2.Features.ApplicationsStuff.Repositories;
 using NorthwestV2.Features.Features.Actions.Core.Application.Bases;
 using NorthwestV2.Features.Features.Actions.Core.Domain;
-using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.Instant;
+using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.WithTargets;
 using NorthwestV2.Features.Features.Shared.Entity;
 using NorthwestV2.Features.UseCases.GameActions.Command.ExecuteAction;
 using NorthwestV2.Features.UseCases.GameActions.Queries.GetActions;
 
 namespace NorthwestV2.Features.Features.Actions.Productions.SpyglassProduction.Contribution;
 
-public class SpyglassProductionContributionActionApp : InstantActionBase
+public class SpyglassProductionContributionActionApp : ActionWithTargetsBase
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IPlayerRepository _playerRepository;
@@ -24,11 +24,11 @@ public class SpyglassProductionContributionActionApp : InstantActionBase
         _unitOfWork = unitOfWork;
     }
 
-    public override async Task<InstantActionAvailability?> GetAvailabilityResult(GetActionsRequest request)
+    public override async Task<ActionWithTargetsAvailability?> GetAvailabilityResult(GetActionsRequest request)
     {
         Player player = await _playerRepository.GetPlayerWithRoomAndInventory(request.PlayerId);
 
-        InstantActionAvailability? availability = _spyglassProductionContributionAction.DetermineAvailability(player);
+        ActionWithTargetsAvailability? availability = _spyglassProductionContributionAction.DetermineAvailability(player);
 
         return availability;
     }
@@ -37,8 +37,8 @@ public class SpyglassProductionContributionActionApp : InstantActionBase
     {
         Player player = await _playerRepository.GetPlayerWithRoomAndInventory(request.PlayerId);
 
-        _spyglassProductionContributionAction.Contribute(player);
-        
+        _spyglassProductionContributionAction.Contribute(player, ActionTargetsList.From(request.ActionTargets));
+
         await _unitOfWork.SaveChangesAsync();
     }
 }
