@@ -134,7 +134,14 @@ Match the surrounding code; observed conventions:
 - Constructor injection into `private readonly _camelCase` fields. No primary constructors.
 - Requests/handlers per use case under `UseCases/<Area>/<Name>/` (`XRequest`, `XHandler`); controllers stay thin and only translate session + HTTP into a request.
 - Do not add libraries, or `Async` suffixes to existing method names, without being asked.
-- Comments explain why, not what. Add XML `<summary>` docs to public API-facing types since they feed Swagger.
+- Small functions with names that explain them. Prefer explicit authored data (written-out lists, constants) over clever derivation.
+- Comments explain why, not what. Be verbose only for mid-to-complex operations (branching decisions, edge cases); otherwise keep comments short. Add XML `<summary>` docs to public API-facing types since they feed Swagger.
+
+## Working agreements
+
+- **Verify by building and running tests.** Never launch the app, a dev server or the browser to check a change (the `http` profile wipes and reseeds the database). Run `dotnet build NorthwestV2.sln`, then the relevant tests: `tests/Unit` always, `tests/Integration` when the change touches handlers, repositories or DI (needs Docker). The 10 `RoomFactoryTest` adjacency failures are the known baseline.
+- **Discuss before building.** When a request has big downsides, contradicts an invariant, or would be patchy to implement, say so and discuss it before changing anything, however the request is worded. Propose the better shape; build once agreed.
+- **`docs/` is indexed knowledge, not a byproduct.** When a change touches code that a doc in the "Which doc to read" table covers, update that doc in the same change (including `docs/combat-spec-vs-code.md` status). If a change creates a new mechanical subsystem worth documenting, add a doc and a row to that table. Add a `docs/changes/<date>.md` note only for notable changes.
 
 ## Gotchas
 
