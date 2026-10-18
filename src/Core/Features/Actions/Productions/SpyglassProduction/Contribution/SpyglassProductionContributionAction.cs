@@ -2,6 +2,7 @@ using NorthwestV2.Features.Features.Actions.Core.Domain;
 using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.Instant;
 using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.Requirements;
 using NorthwestV2.Features.Features.Actions.Productions.Core;
+using NorthwestV2.Features.Features.Actions.Productions.SpyglassProduction.Contribution.Stages;
 using NorthwestV2.Features.Features.Actions.Productions.SpyglassProduction.Items;
 using NorthwestV2.Features.Features.Shared.Entity;
 
@@ -40,6 +41,34 @@ public class SpyglassProductionContributionAction
         };
 
         return availability;
+    }
+
+    /// <summary>
+    /// Only the stages that ask for Sentry TP (the second one) offer this action.
+    /// </summary>
+    public InstantActionAvailability? DetermineSentryAvailability(Player player)
+    {
+        UnfinishedSpyglass? unfinishedSpyglass =
+            player.Room.Inventory.Items.OfType<UnfinishedSpyglass>().FirstOrDefault();
+        if (unfinishedSpyglass?.CurrentStageContribution is not SpyglassSecondStageContributionData secondStage)
+        {
+            return null;
+        }
+
+        InstantActionAvailability availability = new InstantActionAvailability
+        {
+            ActionName = ActionNames.SpyglassSentryContribution,
+            DisplayName = $"{secondStage.StageName} (Sentry TP)",
+            ActionRequirements = secondStage.GetRequirements(player, Roles.Sentry),
+        };
+
+        return availability;
+    }
+
+    public void ContributeSentry(Player player)
+    {
+        UnfinishedSpyglass unfinishedSpyglass = player.Room.Inventory.Find<UnfinishedSpyglass>();
+        unfinishedSpyglass.Contribute(player, Roles.Sentry);
     }
 
     public void Contribute(Player player)

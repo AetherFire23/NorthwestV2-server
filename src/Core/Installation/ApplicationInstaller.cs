@@ -31,6 +31,7 @@ public class ApplicationInstaller
         serviceCollection.AddScoped<JwtTokenService>();
         serviceCollection.AddScoped<SpyglassProductionInitiationActionApp>();
         serviceCollection.AddScoped<SpyglassProductionContributionActionApp>();
+        serviceCollection.AddScoped<SpyglassSentryContributionActionApp>();
         serviceCollection.AddScoped<CancelProductionActionApp>();
         serviceCollection.AddScoped<HammerProductionContributionApp>();
 

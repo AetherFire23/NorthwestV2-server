@@ -1,4 +1,4 @@
-﻿using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.WithTargets;
+using NorthwestV2.Features.Features.Actions.Core.Domain.Availability.WithTargets;
 using NorthwestV2.Features.Features.Shared.Entity;
 
 namespace NorthwestV2.Features.Features.Actions.Productions.Core.Entities;
@@ -80,20 +80,29 @@ public abstract class ProductionItemBase : ItemBase
     /// <exception cref="Exception">Thrown when the player does not have enough action points.</exception>
     public void Contribute(Player player)
     {
-        bool wouldHitPointsFallBelowZero = player.ActionPoints - 1 == -1;
-        if (wouldHitPointsFallBelowZero)
+        Contribute(player, this.CurrentStageContribution.RequiredRole);
+    }
+
+    /// <summary>
+    /// Contributes to the quota of the given specialty. Stages with a single quota only accept their own role.
+    /// </summary>
+    public void Contribute(Player player, Roles quotaRole)
+    {
+        if (!this.CurrentStageContribution.IsQuotaOpen(quotaRole))
+        {
+            throw new Exception($"The current stage does not accept {quotaRole} TP.");
+        }
+
+        int actionPointsCost = this.CurrentStageContribution.CalculateCostForContribution(player, quotaRole);
+        if (player.ActionPoints < actionPointsCost)
         {
             throw new Exception("Player does not have enough points to contribute.");
         }
 
-        int actionPointsCost = this.CurrentStageContribution.CalculateCostForContribution(player);
         player.ActionPoints -= actionPointsCost;
 
-        // Increment the current stage by 1 
-        this.CurrentStageContribution = this.CurrentStageContribution with
-        {
-            RequiredContributions = this.CurrentStageContribution.RequiredContributions + 1
-        };
+        // Increment the quota by 1
+        this.CurrentStageContribution = this.CurrentStageContribution.WithContribution(quotaRole);
 
         bool isCurrentStadedEndedButCurrentIsNotComplete =
             this.CurrentStageContribution.IsStageEnded &&

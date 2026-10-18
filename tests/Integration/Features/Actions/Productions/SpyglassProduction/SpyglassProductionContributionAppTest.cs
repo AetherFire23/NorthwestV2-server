@@ -1,4 +1,4 @@
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NorthwestV2.Features.ApplicationsStuff.Repositories;
@@ -159,6 +159,8 @@ public class SpyglassProductionContributionAppTest : NorthwestTestBase
             });
         }
 
+        await ContributeSentryQuota(playerId);
+
         await TeleportPlayerToRoom(playerId, SpyglassProductionThirdStageContributionData.REQUIRED_ROOM);
 
         this.Scope = this.RootServiceProvider.CreateScope();
@@ -203,6 +205,8 @@ public class SpyglassProductionContributionAppTest : NorthwestTestBase
                 PlayerId = playerId,
             });
         }
+
+        await ContributeSentryQuota(playerId);
 
         await TeleportPlayerToRoom(playerId, SpyglassProductionThirdStageContributionData.REQUIRED_ROOM);
 
@@ -250,6 +254,8 @@ public class SpyglassProductionContributionAppTest : NorthwestTestBase
             await Mediator.Send(new ExecuteActionRequest
                 { ActionName = ActionNames.SpyglassContribution, PlayerId = playerId });
         }
+
+        await ContributeSentryQuota(playerId);
 
         await TeleportPlayerToRoom(playerId, SpyglassProductionThirdStageContributionData.REQUIRED_ROOM);
         for (int i = 0; i < SpyglassProductionThirdStageContributionData.SPYGLASS_THIRD_STAGE_CONTRIBUTION_LIMIT; i++)
@@ -326,6 +332,7 @@ public class SpyglassProductionContributionAppTest : NorthwestTestBase
         await TeleportPlayerToRoom(playerId, SpyglassSecondStageContributionData.REQUIRED_ROOM);
 
         await ContributeUntillError(playerId);
+        await ContributeSentryQuota(playerId);
         await TeleportPlayerToRoom(playerId, SpyglassProductionThirdStageContributionData.REQUIRED_ROOM);
 
         await ContributeUntillError(playerId);
@@ -400,6 +407,8 @@ public class SpyglassProductionContributionAppTest : NorthwestTestBase
                 { ActionName = ActionNames.SpyglassContribution, PlayerId = playerId });
         }
 
+        await ContributeSentryQuota(playerId);
+
         await TeleportPlayerToRoom(playerId, SpyglassProductionThirdStageContributionData.REQUIRED_ROOM);
 
         for (int i = 0; i < SpyglassProductionThirdStageContributionData.SPYGLASS_THIRD_STAGE_CONTRIBUTION_LIMIT; i++)
@@ -422,6 +431,69 @@ public class SpyglassProductionContributionAppTest : NorthwestTestBase
         Assert.Contains(playerAfter.Inventory.Items, x => x.ItemType == ItemTypes.Spyglass);
     }
 
+    [Fact]
+    public async Task GivenSecondStage_WhenGetActions_ThenSentryContributionIsOffered()
+    {
+        Guid playerId = await SetupForSpyglassStartAction();
+        await Mediator.Send(new ExecuteActionRequest { ActionName = ActionNames.SpyglassProductionStart, PlayerId = playerId });
+        await ContributeFirstStageQuota(playerId);
+        await TeleportPlayerToRoom(playerId, SpyglassSecondStageContributionData.REQUIRED_ROOM);
+
+        GetActionsResult actions = await Mediator.Send(new GetActionsRequest { PlayerId = playerId });
+
+        Assert.Contains(actions.Actions, x => x.Name == ActionNames.SpyglassSentryContribution);
+    }
+
+    [Fact]
+    public async Task GivenFirstStage_WhenGetActions_ThenSentryContributionIsNotOffered()
+    {
+        Guid playerId = await SetupForSpyglassStartAction();
+        await Mediator.Send(new ExecuteActionRequest { ActionName = ActionNames.SpyglassProductionStart, PlayerId = playerId });
+
+        GetActionsResult actions = await Mediator.Send(new GetActionsRequest { PlayerId = playerId });
+
+        Assert.DoesNotContain(actions.Actions, x => x.Name == ActionNames.SpyglassSentryContribution);
+    }
+
+    [Fact]
+    public async Task GivenPlayerWithoutEnoughTimePoints_WhenContributing_ThenIsRejectedAndPointsAreKept()
+    {
+        Guid playerId = await SetupForSpyglassStartAction();
+        Player player = await Context.Players.FirstAsync(x => x.Id == playerId);
+        player.Role = Roles.Cook;
+        player.ActionPoints = 2;
+        await Context.SaveChangesAsync();
+        await Mediator.Send(new ExecuteActionRequest { ActionName = ActionNames.SpyglassProductionStart, PlayerId = playerId });
+
+        await Assert.ThrowsAnyAsync<Exception>(() => Mediator.Send(new ExecuteActionRequest
+            { ActionName = ActionNames.SpyglassContribution, PlayerId = playerId }).AsTask());
+
+        this.Scope = this.RootServiceProvider.CreateScope();
+        Player playerAfter = Context.Players.First(x => x.Id == playerId);
+        Assert.Equal(2, playerAfter.ActionPoints);
+    }
+
+    private async Task ContributeFirstStageQuota(Guid playerId)
+    {
+        Player player = await Context.Players.FirstAsync(x => x.Id == playerId);
+        player.ActionPoints = 99;
+        await Context.SaveChangesAsync();
+        for (int i = 0; i < SpyglassFirstStageContributionData.SPYGLASS_FIRST_STAGE_CONTRIBUTION_LIMIT; i++)
+        {
+            await Mediator.Send(new ExecuteActionRequest
+                { ActionName = ActionNames.SpyglassContribution, PlayerId = playerId });
+        }
+    }
+
+    private async Task ContributeSentryQuota(Guid playerId)
+    {
+        for (int i = 0; i < SpyglassSecondStageContributionData.SPYGLASS_SECOND_STAGE_SENTRY_CONTRIBUTION_LIMIT; i++)
+        {
+            await Mediator.Send(new ExecuteActionRequest
+                { ActionName = ActionNames.SpyglassSentryContribution, PlayerId = playerId });
+        }
+    }
+
     private async Task ContributePointsUntilCompletion(Guid playerId)
     {
         for (int i = 0; i < SpyglassFirstStageContributionData.SPYGLASS_FIRST_STAGE_CONTRIBUTION_LIMIT; i++)
@@ -436,6 +508,8 @@ public class SpyglassProductionContributionAppTest : NorthwestTestBase
             await Mediator.Send(new ExecuteActionRequest
                 { ActionName = ActionNames.SpyglassContribution, PlayerId = playerId });
         }
+
+        await ContributeSentryQuota(playerId);
 
         await TeleportPlayerToRoom(playerId, SpyglassProductionThirdStageContributionData.REQUIRED_ROOM);
         for (int i = 0; i < SpyglassProductionThirdStageContributionData.SPYGLASS_THIRD_STAGE_CONTRIBUTION_LIMIT; i++)

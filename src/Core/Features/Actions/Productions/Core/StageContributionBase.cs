@@ -26,8 +26,8 @@ public abstract record StageContributionBase
 {
     public string StageName { get; set; }
     public int RequiredContributions { get; set; }
-    public bool IsStageEnded => RequiredContributions >= End;
-    public bool IsProductionComplete => this.RequiredContributions == End && GetNextStage() is null;
+    public virtual bool IsStageEnded => RequiredContributions >= End;
+    public bool IsProductionComplete => IsStageEnded && GetNextStage() is null;
 
     /// <summary>
     /// The required time points to end the current stage. 
@@ -58,9 +58,38 @@ public abstract record StageContributionBase
     }
 
 
+    /// <summary>
+    /// The roles whose specialized TP this stage asks for. Most stages have a single quota (<see cref="RequiredRole"/>).
+    /// </summary>
+    public virtual IReadOnlyList<Roles> ContributionRoles => [RequiredRole];
+
+    /// <summary>
+    /// Whether TP of the given specialty can still be added to the current stage.
+    /// </summary>
+    public virtual bool IsQuotaOpen(Roles quotaRole)
+    {
+        return quotaRole == RequiredRole && !IsStageEnded;
+    }
+
+    /// <summary>
+    /// Immutable update (this is a record saved as json by ef core) that adds one contribution to the given quota.
+    /// </summary>
+    public virtual StageContributionBase WithContribution(Roles quotaRole)
+    {
+        return this with { RequiredContributions = RequiredContributions + 1 };
+    }
+
     public int CalculateCostForContribution(Player player)
     {
-        if (player.Role == RequiredRole)
+        return CalculateCostForContribution(player, RequiredRole);
+    }
+
+    /// <summary>
+    /// Specialized TP given by a non-specialist cost triple (double for the Quartermaster).
+    /// </summary>
+    public int CalculateCostForContribution(Player player, Roles quotaRole)
+    {
+        if (player.Role == quotaRole)
             return 1;
 
         if (player.Role == Roles.QuarterMaster)
