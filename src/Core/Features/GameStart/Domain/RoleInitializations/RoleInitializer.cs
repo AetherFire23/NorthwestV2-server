@@ -1,0 +1,20 @@
+﻿using NorthwestV2.Features.Shared.Entity;
+
+namespace NorthwestV2.Features.GameStart.Domain.RoleInitializations;
+
+/// <summary>
+/// Creates and initializes a <see cref="Player"/> with role-specific stats.
+/// Each role (Captain, Brute, Engineer, etc.) has different starting attributes.
+/// Implemented by <c>PlayerInitializers/*</c> classes.
+/// </summary>
+public abstract class RoleInitializer
+{
+    public abstract Player CreateAndInitializePlayer(RoleInitializationContext context);
+
+    public Roles Role { get; }
+
+    protected RoleInitializer(Roles role)
+    {
+        this.Role = role;
+    }
+}
