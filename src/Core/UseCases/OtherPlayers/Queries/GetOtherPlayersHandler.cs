@@ -23,11 +23,22 @@ public class GetOtherPlayersHandler : IRequestHandler<GetOtherPlayersRequest, Ge
 
         GetOtherPlayersResponse response = new GetOtherPlayersResponse()
         {
-            PlayerNames = playersInSameRoom.Select(x=> x.Role.ToString()).ToList()
+            Players = playersInSameRoom.Select(MapOtherPlayerDto).ToList()
         };
 
         await _unitOfWork.SaveChangesAsync();
 
         return response;
+    }
+
+    private static OtherPlayerDto MapOtherPlayerDto(Player player)
+    {
+        OtherPlayerDto dto = new OtherPlayerDto
+        {
+            Id = player.Id,
+            Role = player.Role
+        };
+
+        return dto;
     }
 }

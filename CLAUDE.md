@@ -63,6 +63,7 @@ Tests mirror this: `tests/Unit/{Actions,Features,UseCases,Dummies}`, `tests/Inte
 | Action system design | `docs/actions.md` |
 | Map and room adjacency | `docs/room-connections.md`, `docs/map-with-names.png` |
 | Overall game spec | `docs/specs.md` |
+| Traitors: acolytes, allegiance, scans/pings (open) | `docs/traitors.md` |
 | Dated change notes | `docs/changes/<date>.md` |
 
 Ignore `Temp.txt`, `package-lock.json`, `docs/*.vsdx` and `docs/dropbox.url`; they are not part of the build.

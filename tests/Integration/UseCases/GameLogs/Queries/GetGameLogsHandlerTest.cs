@@ -9,6 +9,8 @@ namespace NorthwestV2.Integration.UseCases.GameLogs.Queries;
 [TestSubject(typeof(GetGameLogsHandler))]
 public class GetGameLogsHandlerTest : NorthwestTestBase
 {
+    private const string AnyLogMessage = "sdsd";
+
     private GameDataSeed _gameDataSeed;
     private Player ANY_PLAYER;
     private Player ANY_OTHER_PLAYER;
@@ -26,12 +28,15 @@ public class GetGameLogsHandlerTest : NorthwestTestBase
         ANY_OTHER_PLAYER = await Context.Players.FindById(_gameDataSeed.PlayerIds[1]);
         NOT_RELATED_PLAYER = await Context.Players.FindById(_gameDataSeed.PlayerIds[2]);
 
+        // Game creation already announces allegiances; these tests count only the logs they add themselves.
+        Context.Logs.RemoveRange(Context.Logs);
+
         /*
          * Give a log to a player
          */
         ANY_PLAYER.GameLogs.Add(new GameLog
         {
-            Message = "sdsd",
+            Message = AnyLogMessage,
         });
 
         await Context.SaveChangesAsync();

@@ -14,10 +14,11 @@ public class CreateGameHandler : IRequestHandler<CreateGameRequest, Guid>
     private readonly IPlayerRepository _playerRepository;
     private readonly RoomFactory _roomFactory;
     private readonly IRoomRepository _roomRepository;
+    private readonly AllegianceAnnouncer _allegianceAnnouncer;
 
     public CreateGameHandler(PlayerFactory playerFactory, RoomFactory roomFactory, IUserRepository userRepository,
         IUnitOfWork unitOfWork, IGameRepository gameRepository, IPlayerRepository playerRepository,
-        IRoomRepository roomRepository)
+        IRoomRepository roomRepository, AllegianceAnnouncer allegianceAnnouncer)
     {
         _playerFactory = playerFactory;
         _roomFactory = roomFactory;
@@ -26,6 +27,7 @@ public class CreateGameHandler : IRequestHandler<CreateGameRequest, Guid>
         _gameRepository = gameRepository;
         _playerRepository = playerRepository;
         _roomRepository = roomRepository;
+        _allegianceAnnouncer = allegianceAnnouncer;
     }
 
     /// <summary>
@@ -74,7 +76,11 @@ public class CreateGameHandler : IRequestHandler<CreateGameRequest, Guid>
 
         IEnumerable<Player> players = _playerFactory.CreateFreshPlayersForGame(usersInGame.ToList(), game, rooms);
 
-        _playerRepository.AddRange(players);
+        List<Player> playerList = players.ToList();
+
+        _allegianceAnnouncer.AnnounceAllegiances(playerList);
+
+        _playerRepository.AddRange(playerList);
 
         await _unitOfWork.SaveChangesAsync();
 

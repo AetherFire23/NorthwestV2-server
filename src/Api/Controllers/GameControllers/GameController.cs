@@ -7,6 +7,7 @@ using NorthwestV2.UseCases.GameActions.Queries.GetActions;
 using NorthwestV2.UseCases.GameLogs.Queries;
 using NorthwestV2.UseCases.Items.Commands;
 using NorthwestV2.UseCases.Items.Queries;
+using NorthwestV2.UseCases.MyPlayer.Queries;
 using NorthwestV2.UseCases.OtherPlayers.Queries;
 
 namespace NorthwestV2.Api.Controllers.GameControllers;
@@ -75,6 +76,19 @@ public class GameController : ControllerBase
         });
 
         return Ok(getOtherPlayersResponse);
+    }
+
+    [HttpGet("me")]
+    public async Task<ActionResult<GetMyPlayerResponse>> GetMyPlayer()
+    {
+        UserData userData = this.HttpContext.Session.GetUserData();
+
+        GetMyPlayerResponse getMyPlayerResponse = await _mediator.Send(new GetMyPlayerRequest()
+        {
+            PlayerId = userData.PlayerId.Value
+        });
+
+        return Ok(getMyPlayerResponse);
     }
 
     // TODO: Change response type to something real. 

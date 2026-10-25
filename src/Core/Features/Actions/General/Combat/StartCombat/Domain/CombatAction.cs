@@ -88,6 +88,7 @@ public class CombatAction
     /// - A combatant whose toughness reaches 0 loses Health and gets its toughness back
     /// - PushHard attackers flee once the next blow would kill them; ToTheEnd attackers never flee
     /// - At 0 Health a combatant dies if the opponent was lethal, and is stunned otherwise
+    /// - Allegiance is ignored on purpose: two acolytes may fight each other (see docs/traitors.md)
     /// </summary>
     public FightResult MakeTwoPlayerFightTogether(
         Player attackerPlayer,

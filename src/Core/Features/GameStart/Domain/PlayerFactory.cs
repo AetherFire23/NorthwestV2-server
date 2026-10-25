@@ -31,7 +31,31 @@ public class PlayerFactory
 
         List<Player> players = CreateInitializedPlayers(users, game, rooms, allShuffledRoles);
 
+        AssignAcolytes(players);
+
         return players;
+    }
+
+    /// <summary>
+    /// Marks the first <see cref="AllegianceConstants.AcolyteCount"/> eligible players as acolytes.
+    /// No extra random draw is needed: players were created in shuffled-role order, so the first eligible ones
+    /// are already a uniform pick among the eligible roles.
+    /// </summary>
+    /// <param name="shuffledPlayers">
+    /// Must be in random order (here, the shuffled-role creation order).
+    /// </param>
+    /// <remarks>
+    /// This method does not shuffle anything itself. Passing a sorted or otherwise ordered list (by role, by user,
+    /// by id...) makes the acolyte pick biased or even deterministic, with no error to warn about it.
+    /// </remarks>
+    private static void AssignAcolytes(List<Player> shuffledPlayers)
+    {
+        List<Player> acolytes = shuffledPlayers
+            .Where(x => !AllegianceConstants.RolesThatCanNeverBeAcolyte.Contains(x.Role))
+            .Take(AllegianceConstants.AcolyteCount)
+            .ToList();
+
+        acolytes.ForEach(x => x.IsAcolyte = true);
     }
 
     /// <summary>

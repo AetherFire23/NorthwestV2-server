@@ -49,6 +49,14 @@ public class Player : EntityBase
 
     public PlayerLifeStatus LifeStatus { get; set; } = PlayerLifeStatus.Alive;
 
+    /// <summary>
+    /// Allegiance, fixed at game creation. Secret: only the player themselves may ever be told. See docs/traitors.md.
+    /// Never changes during a game (no conversion) and stays secret after death, so it is not tied to
+    /// <see cref="LifeStatus"/>. Nothing in the rules depends on it yet: acolytes may attack each other
+    /// (it can serve as a cover), so combat deliberately ignores it.
+    /// </summary>
+    public bool IsAcolyte { get; set; }
+
     public DefensiveCounters DefensiveCounter { get; set; } = DefensiveCounters.DefaultVsStun;
 
     public AttackTypes AttackTypes { get; set; } = AttackTypes.Kill;

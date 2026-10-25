@@ -28,6 +28,7 @@ public static class DomainInstaller
     {
         serviceCollection.AddScoped<NorthwestDomainService>();
         serviceCollection.AddScoped<RoomFactory>();
+        serviceCollection.AddScoped<AllegianceAnnouncer>();
         serviceCollection.AddScoped<GameActionsWithTargetsValidator>();
         serviceCollection.AddScoped<CombatAction>();
         serviceCollection.AddScoped<CombatAftermath>();
