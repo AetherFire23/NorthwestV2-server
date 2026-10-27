@@ -38,6 +38,7 @@ public static class TestPlayers
                 Username = "toSpeciyfy"
             },
             BaseToughness = toughness,
+            Inventory = new Inventory(),
         };
 
         return player;

@@ -22,7 +22,8 @@ public static class ActionNames
     public static string CancelProduction => "Cancel a production";
     public const string HammerProductionContribution = "HammerProductionContribution";
 
-    public const string ChooseDefensiveStance = nameof(ChooseDefensiveStance);
+    public const string SetCombatReaction = nameof(SetCombatReaction);
+    public const string SetVigilance = nameof(SetVigilance);
 
     /*
      * Fishing pole

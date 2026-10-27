@@ -1,5 +1,6 @@
 using Mediator;
 using NorthwestV2.ApplicationsStuff.Repositories;
+using NorthwestV2.Features.Shared;
 using NorthwestV2.Features.Shared.Entity;
 
 namespace NorthwestV2.UseCases.MyPlayer.Queries;
@@ -23,7 +24,10 @@ public class GetMyPlayerHandler : IRequestHandler<GetMyPlayerRequest, GetMyPlaye
             Id = player.Id,
             Role = player.Role,
             LifeStatus = player.LifeStatus,
-            IsAcolyte = player.IsAcolyte
+            IsAcolyte = player.IsAcolyte,
+            HealthIncrement = StatIncrements.From(player.Health),
+            HopeIncrement = StatIncrements.From(player.Hope),
+            IsVigilant = player.IsVigilant,
         };
 
         return response;

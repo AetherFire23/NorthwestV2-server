@@ -1,4 +1,5 @@
-﻿using NorthwestV2.Features.Shared.Entity;
+﻿using NorthwestV2.Features.Actions.General.Combat.Items;
+using NorthwestV2.Features.Shared.Entity;
 
 namespace NorthwestV2.Features.GameStart.Domain.RoleInitializations.PlayerInitializers;
 
@@ -17,7 +18,7 @@ public class SapperRoleInitializer : RoleInitializer
             Room = context.Rooms.First(),
             User = context.User,
             BaseToughness = ToughnessInitializationConstants.TOUGH,
-            Inventory = new Inventory()
+            Inventory = new Inventory { Items = [new Pistol()] }
         };
     }
 }

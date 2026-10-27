@@ -1,4 +1,5 @@
 using JetBrains.Annotations;
+using Microsoft.EntityFrameworkCore;
 using NorthwestV2.Features.Actions.Core.Domain;
 using NorthwestV2.Features.Actions.Core.Domain.Availability.WithTargets;
 using NorthwestV2.Features.Actions.General.Combat.StartCombat;
@@ -10,6 +11,9 @@ using Xunit.Abstractions;
 
 namespace NorthwestV2.Integration.Features.Actions.General.Combat;
 
+/// <summary>
+/// Every player starts in the same room, so anyone can attack anyone. Players are picked by role, not creation order.
+/// </summary>
 [TestSubject(typeof(CombatActionApp))]
 public class CombatActionAppTest : NorthwestTestBase
 {
@@ -20,125 +24,111 @@ public class CombatActionAppTest : NorthwestTestBase
     [Fact]
     public async Task GivenPlayerInRoom_WhenGettingAvailability_ThenSomePlayersAreVisible()
     {
-        // This test might break if I change spawn rooms locations. 
         GameDataSeed gameDataSeed = await ShareSeeds.ArrangeUntilGameCreation(Mediator, Context);
+        Guid bruteId = await GetPlayerId(gameDataSeed, Roles.Brute);
 
-        GetActionsResult act = await Mediator.Send(new GetActionsRequest()
-        {
-            PlayerId = gameDataSeed.PlayerIds[0]
-        });
+        ActionDto actionDto = await GetCombatAction(bruteId);
 
-        bool hasTarget = act.Actions.First(x => x.Name == ActionNames.CombatAction)
-            .Prompts.First()
-            .ValidTargets.Any();
-
-        Assert.True(hasTarget);
+        Assert.NotEmpty(actionDto.Prompts[CombatAction.PLAYER_PROMPT_INDEX].ValidTargets);
     }
 
-    /*
-     * Tests for choosing the target selection of the defensive counter
-     */
-
-    [Fact]
-    public async Task GivenPlayerInRoom_WhenGettingCombatAction_ThenCanChooseDefensiveStance()
-    {
-        GameDataSeed gameDataSeed = await ShareSeeds.ArrangeUntilGameCreation(Mediator, Context);
-        Guid playerId = gameDataSeed.PlayerIds.First();
-        GetActionsResult combtatAction = await Mediator.Send(new GetActionsRequest()
-        {
-            PlayerId = playerId
-        });
-
-        bool isAttackerStanceCountAvailableAsTargets =
-            combtatAction.Actions.First(x => x.Name == ActionNames.CombatAction).Prompts[1].ValidTargets.Count ==
-            Enum.GetValues<AttackerStances>().Length;
-
-        Assert.True(isAttackerStanceCountAvailableAsTargets);
-    }
-
-    /*
-     * Tests for attacking
-     * TODO: consider making more setup logic to put the defender and attacker into the same room.
-     */
     [Fact]
     public async Task GivenPlayerInRoom_WhenGettingCombatAction_ThenCanChooseAnAttackType()
     {
         GameDataSeed gameDataSeed = await ShareSeeds.ArrangeUntilGameCreation(Mediator, Context);
-        Guid playerId = gameDataSeed.PlayerIds.First();
+        Guid bruteId = await GetPlayerId(gameDataSeed, Roles.Brute);
 
-        ActionDto actionDto = await GetCombatAction(playerId);
+        ActionDto actionDto = await GetCombatAction(bruteId);
 
         Assert.Equal(Enum.GetValues<AttackTypes>().Length,
             actionDto.Prompts[CombatAction.ATTACKTYPE_PROMPT_INDEX].ValidTargets.Count);
     }
 
     [Fact]
-    public async Task GivenPlayerInRoom_WhenAttackingOtherPlayerInRoom_ThenFightEndsWithoutAnyErrors()
+    public async Task GivenMarineStartingLoadout_WhenGettingCombatAction_ThenHeCanShootHisMusket()
     {
         GameDataSeed gameDataSeed = await ShareSeeds.ArrangeUntilGameCreation(Mediator, Context);
-        Guid playerId = gameDataSeed.PlayerIds.First();
+        Guid marineId = await GetPlayerId(gameDataSeed, Roles.Marine);
 
-        Exception? exception = await Record.ExceptionAsync(() => Attack(playerId, AttackerStances.ToTheEnd, AttackTypes.Kill));
+        ActionDto actionDto = await GetCombatAction(marineId);
 
-        Assert.Null(exception);
+        Assert.Contains(actionDto.Prompts[CombatAction.RANGED_WEAPON_PROMPT_INDEX].ValidTargets,
+            x => x.Value == nameof(Weapons.Musket));
     }
 
     [Fact]
-    public async Task GivenAttackToTheEnd_WhenFightEnds_ThenDefenderHealthLossIsPersisted()
+    public async Task GivenChaplain_WhenGettingCombatAction_ThenHeCannotAttack()
     {
         GameDataSeed gameDataSeed = await ShareSeeds.ArrangeUntilGameCreation(Mediator, Context);
-        Guid attackerId = gameDataSeed.PlayerIds.First();
-        Guid defenderId = await GetFirstTargetId(attackerId);
+        Guid chaplainId = await GetPlayerId(gameDataSeed, Roles.Chaplain);
 
-        await Attack(attackerId, AttackerStances.ToTheEnd, AttackTypes.Kill);
-        RefreshScope();
+        ActionDto actionDto = await GetCombatAction(chaplainId);
 
-        Player defender = await PlayerRepository.GetPlayer(defenderId);
-        Assert.True(defender.Health < Player.INITIALIZATION_HEALTH);
+        Assert.False(actionDto.IsExecutable());
     }
 
     [Fact]
-    public async Task GivenAttackToTheEnd_WhenFightEnds_ThenAtLeastOneCombatantIsOutOfTheFight()
+    public async Task GivenBruteAttacksTheEngineerToTheEnd_WhenFightEnds_ThenEngineerIsDead()
     {
         GameDataSeed gameDataSeed = await ShareSeeds.ArrangeUntilGameCreation(Mediator, Context);
-        Guid attackerId = gameDataSeed.PlayerIds.First();
-        Guid defenderId = await GetFirstTargetId(attackerId);
+        Guid bruteId = await GetPlayerId(gameDataSeed, Roles.Brute);
+        Guid engineerId = await GetPlayerId(gameDataSeed, Roles.Engineer);
 
-        await Attack(attackerId, AttackerStances.ToTheEnd, AttackTypes.Kill);
+        await Attack(bruteId, engineerId, AttackerStances.ToTheEnd, AttackTypes.Kill);
         RefreshScope();
 
-        Player attacker = await PlayerRepository.GetPlayer(attackerId);
-        Player defender = await PlayerRepository.GetPlayer(defenderId);
-        Assert.Contains(PlayerLifeStatus.Dead, new[] { attacker.LifeStatus, defender.LifeStatus });
+        Player engineer = await PlayerRepository.GetPlayer(engineerId);
+        Assert.Equal(PlayerLifeStatus.Dead, engineer.LifeStatus);
     }
 
     [Fact]
-    public async Task GivenStunAttackToTheEnd_WhenFightEnds_ThenNobodyIsDead()
+    public async Task GivenBruteStunsTheEngineerToTheEnd_WhenFightEnds_ThenEngineerIsStunned()
     {
         GameDataSeed gameDataSeed = await ShareSeeds.ArrangeUntilGameCreation(Mediator, Context);
-        Guid attackerId = gameDataSeed.PlayerIds.First();
-        Guid defenderId = await GetFirstTargetId(attackerId);
+        Guid bruteId = await GetPlayerId(gameDataSeed, Roles.Brute);
+        Guid engineerId = await GetPlayerId(gameDataSeed, Roles.Engineer);
 
-        await Attack(attackerId, AttackerStances.ToTheEnd, AttackTypes.Stun);
+        await Attack(bruteId, engineerId, AttackerStances.ToTheEnd, AttackTypes.Stun);
         RefreshScope();
 
-        Player attacker = await PlayerRepository.GetPlayer(attackerId);
-        Player defender = await PlayerRepository.GetPlayer(defenderId);
-        Assert.DoesNotContain(PlayerLifeStatus.Dead, new[] { attacker.LifeStatus, defender.LifeStatus });
+        Player engineer = await PlayerRepository.GetPlayer(engineerId);
+        Assert.Equal(PlayerLifeStatus.Stunned, engineer.LifeStatus);
     }
 
     [Fact]
-    public async Task GivenAttackToTheEnd_WhenFightEnds_ThenDefenderIsToldSomethingInTheirLogs()
+    public async Task GivenBruteAttacksTheEngineer_WhenFightEnds_ThenEngineerIsToldSomethingInHisLogs()
     {
         GameDataSeed gameDataSeed = await ShareSeeds.ArrangeUntilGameCreation(Mediator, Context);
-        Guid attackerId = gameDataSeed.PlayerIds.First();
-        Guid defenderId = await GetFirstTargetId(attackerId);
+        Guid bruteId = await GetPlayerId(gameDataSeed, Roles.Brute);
+        Guid engineerId = await GetPlayerId(gameDataSeed, Roles.Engineer);
 
-        await Attack(attackerId, AttackerStances.ToTheEnd, AttackTypes.Kill);
+        await Attack(bruteId, engineerId, AttackerStances.ToTheEnd, AttackTypes.Kill);
         RefreshScope();
 
-        Player defender = await PlayerRepository.GetPlayer(defenderId);
-        Assert.NotEmpty(Context.Entry(defender).Collection(x => x.GameLogs).Query().ToList());
+        Player engineer = await PlayerRepository.GetPlayer(engineerId);
+        Assert.NotEmpty(Context.Entry(engineer).Collection(x => x.GameLogs).Query().ToList());
+    }
+
+    [Fact]
+    public async Task GivenEngineerIsDead_WhenBruteGetsCombatAction_ThenEngineerIsNoLongerATarget()
+    {
+        GameDataSeed gameDataSeed = await ShareSeeds.ArrangeUntilGameCreation(Mediator, Context);
+        Guid bruteId = await GetPlayerId(gameDataSeed, Roles.Brute);
+        Guid engineerId = await GetPlayerId(gameDataSeed, Roles.Engineer);
+        await Attack(bruteId, engineerId, AttackerStances.ToTheEnd, AttackTypes.Kill);
+        RefreshScope();
+
+        ActionDto actionDto = await GetCombatAction(bruteId);
+
+        Assert.DoesNotContain(actionDto.Prompts[CombatAction.PLAYER_PROMPT_INDEX].ValidTargets,
+            x => x.TargetId == engineerId);
+    }
+
+    private async Task<Guid> GetPlayerId(GameDataSeed gameDataSeed, Roles role)
+    {
+        Player player = await Context.Players.SingleAsync(x => x.GameId == gameDataSeed.GameId && x.Role == role);
+
+        return player.Id;
     }
 
     private async Task<ActionDto> GetCombatAction(Guid playerId)
@@ -153,35 +143,37 @@ public class CombatActionAppTest : NorthwestTestBase
         return actionDto;
     }
 
-    private async Task<Guid> GetFirstTargetId(Guid attackerId)
+    /// <summary>
+    /// Melee attack with bare hands. Acolytes get one more prompt (faked Hope): the first value is picked.
+    /// </summary>
+    private async Task Attack(Guid attackerId, Guid defenderId, AttackerStances stance, AttackTypes attackType)
     {
         ActionDto actionDto = await GetCombatAction(attackerId);
-        Guid targetId = actionDto.Prompts[CombatAction.PLAYER_PROMPT_INDEX].ValidTargets.First().TargetId!.Value;
 
-        return targetId;
-    }
+        List<List<ActionTarget>> targets =
+        [
+            [actionDto.Prompts[CombatAction.PLAYER_PROMPT_INDEX].ValidTargets.First(x => x.TargetId == defenderId)],
+            [ValueOf(actionDto, CombatAction.ATTACKERSTANCE_PROMPT_INDEX, stance.ToString())],
+            [ValueOf(actionDto, CombatAction.ATTACKTYPE_PROMPT_INDEX, attackType.ToString())],
+            [ValueOf(actionDto, CombatAction.RANGED_WEAPON_PROMPT_INDEX, CombatAction.NO_RANGED_WEAPON)],
+            [ValueOf(actionDto, CombatAction.MELEE_WEAPON_PROMPT_INDEX, nameof(Weapons.Unarmed))],
+        ];
 
-    private async Task Attack(Guid attackerId, AttackerStances stance, AttackTypes attackType)
-    {
-        ActionDto actionDto = await GetCombatAction(attackerId);
-        ActionTarget player = actionDto.Prompts[CombatAction.PLAYER_PROMPT_INDEX].ValidTargets.First();
-        ActionTarget attackerStance = actionDto.Prompts[CombatAction.ATTACKERSTANCE_PROMPT_INDEX].ValidTargets
-            .First(x => x.Value == stance.ToString());
-        ActionTarget attackTypeTarget = actionDto.Prompts[CombatAction.ATTACKTYPE_PROMPT_INDEX].ValidTargets
-            .First(x => x.Value == attackType.ToString());
+        if (actionDto.Prompts.Count > CombatAction.FAKED_HOPE_PENALTY_PROMPT_INDEX)
+        {
+            targets.Add([actionDto.Prompts[CombatAction.FAKED_HOPE_PENALTY_PROMPT_INDEX].ValidTargets.First()]);
+        }
 
         await Mediator.Send(new ExecuteActionRequest
         {
             ActionName = ActionNames.CombatAction,
             PlayerId = attackerId,
-            ActionTargets = [[player], [attackerStance], [attackTypeTarget]]
+            ActionTargets = targets
         });
     }
 
-    // TODO:
-    /*
-     * What happens when ytou die ?
-     * Dead body retrievable, just like a IsDead property ?
-     * It's not defined.
-     */
+    private static ActionTarget ValueOf(ActionDto actionDto, int promptIndex, string value)
+    {
+        return actionDto.Prompts[promptIndex].ValidTargets.First(x => x.Value == value);
+    }
 }

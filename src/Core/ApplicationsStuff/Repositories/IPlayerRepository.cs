@@ -8,6 +8,11 @@ public interface IPlayerRepository
     public Task<List<Player>> GetOtherPlayersInGame(Guid playerId);
     public Task<Player> GetPlayer(Guid playerid);
     public Task<Player> GetPlayerWithRoomAndInventory(Guid playerId);
+
+    /// <summary>
+    /// With room, carried items and combat reactions: everything a fight is set up from.
+    /// </summary>
+    public Task<Player> GetPlayerForCombat(Guid playerId);
     public Task<List<Player>> GetPlayersInSameGame(Guid playerId);
 
     public void Add(Player player);

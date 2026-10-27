@@ -106,7 +106,7 @@ Request flow: `Controller` -> `Mediator.Send(Request)` -> `Handler` -> domain/en
 
 ## Combat
 
-Rules live in `docs/combat.md` (with **[assumed]** numbers in `CombatConstants`); `docs/combat-spec-vs-code.md` tracks what is implemented. `CombatAction.MakeTwoPlayerFightTogether` resolves a fight and writes Health and `PlayerLifeStatus` onto the players; `CombatAftermath` decides who gets which private game log; `CombatActionApp` saves. The combat action has three prompts: target, stance, attack type.
+Rules live in `docs/combat.md` (numbers in `CombatConstants` and `WeaponCatalog`); `docs/combat-spec-vs-code.md` tracks what is implemented. `CombatSetupFactory` fixes weapons and modifiers before the fight, `CombatResolver` plays it (decisions are made by playing alternatives ahead on a cloned `CombatState`), `CombatAction.MakeTwoPlayerFightTogether` writes Health and `PlayerLifeStatus` onto the players, `CombatAftermath` decides who gets which private game log, `CombatActionApp` saves. The combat action has five prompts (six for acolytes): target, stance, attack type, ranged weapon, melee weapon, faked Hope. Defender settings are `SetCombatReaction` (per opponent and attack type) and `SetVigilance`.
 
 ## Seeding and scenarios
 

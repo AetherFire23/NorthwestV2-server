@@ -1,5 +1,4 @@
 using JetBrains.Annotations;
-using NorthwestV2.Features.Actions.Core.Domain;
 using NorthwestV2.Features.GameStart.Domain.RoleInitializations;
 using NorthwestV2.Features.Shared.Entity;
 using NorthwestV2.Unit.Dummies;
@@ -7,13 +6,11 @@ using NorthwestV2.Unit.Dummies;
 namespace NorthwestV2.Unit.Features.Actions.General.Combat;
 
 /// <summary>
-/// "Combat Core" stats and "Hidden Modifiers" of docs/combat.md: toughness per role, unarmed Strength, sanity.
+/// "Combatant statistics" of docs/combat.md: toughness per role, starting Health and starting weapons.
 /// </summary>
 [TestSubject(typeof(Player))]
 public class CombatStatsTest
 {
-    private const int NORMAL = ToughnessInitializationConstants.NORMAL;
-
     [Theory]
     [InlineData(Roles.Chaplain, ToughnessInitializationConstants.WEAK)]
     [InlineData(Roles.Scholar, ToughnessInitializationConstants.WEAK)]
@@ -48,61 +45,21 @@ public class CombatStatsTest
         Assert.Equal(100, player.Health);
     }
 
-    [Fact]
-    public void GivenToughFighterAndWeakFighter_WhenCalculatingUnarmedStrength_ThenToughFighterHitsHarder()
+    [Theory]
+    [InlineData(Roles.Captain, new[] { ItemTypes.Sword, ItemTypes.Pistol })]
+    [InlineData(Roles.Marine, new[] { ItemTypes.Sword, ItemTypes.Musket })]
+    [InlineData(Roles.Sapper, new[] { ItemTypes.Pistol })]
+    [InlineData(Roles.Ranger, new[] { ItemTypes.Knife, ItemTypes.Musket })]
+    [InlineData(Roles.Cook, new[] { ItemTypes.Knife })]
+    [InlineData(Roles.Engineer, new ItemTypes[0])]
+    public void GivenRole_WhenInitializingThePlayer_ThenStartingWeaponsMatchTheRole(Roles role, ItemTypes[] expected)
     {
-        Player tough = TestFighters.CreateFighter(ToughnessInitializationConstants.TOUGH);
-        Player weak = TestFighters.CreateFighter(ToughnessInitializationConstants.WEAK);
+        RoleInitializer initializer = FindInitializerOf(role);
+        RoleInitializationContext context = CreateContext();
 
-        bool isToughHarder = tough.CalculateStrength(true, AttackerStances.PushHard)
-                             > weak.CalculateStrength(true, AttackerStances.PushHard);
+        Player player = initializer.CreateAndInitializePlayer(context);
 
-        Assert.True(isToughHarder);
-    }
-
-    [Fact]
-    public void GivenUnarmedFighterWithFullSanity_WhenCalculatingStrength_ThenStrengthIsTheirToughness()
-    {
-        Player fighter = TestFighters.CreateFighter(ToughnessInitializationConstants.TOUGH);
-
-        int strength = fighter.CalculateStrength(true, AttackerStances.PushHard);
-
-        Assert.Equal(ToughnessInitializationConstants.TOUGH, strength);
-    }
-
-    [Fact]
-    public void GivenDepressedFighter_WhenCalculatingStrength_ThenStrengthIsWeakerThanAHealthyMind()
-    {
-        Player depressed = TestFighters.CreateFighter(NORMAL);
-        depressed.Sanity = 10;
-        Player healthy = TestFighters.CreateFighter(NORMAL);
-
-        bool isDepressedWeaker = depressed.CalculateStrength(true, AttackerStances.PushHard)
-                                 < healthy.CalculateStrength(true, AttackerStances.PushHard);
-
-        Assert.True(isDepressedWeaker);
-    }
-
-    [Fact]
-    public void GivenDepressedFighterWithAToughnessOfOne_WhenCalculatingStrength_ThenStrengthNeverDropsBelowOne()
-    {
-        Player depressed = TestFighters.CreateFighter(1);
-        depressed.Sanity = 0;
-
-        int strength = depressed.CalculateStrength(true, AttackerStances.PushHard);
-
-        Assert.Equal(1, strength);
-    }
-
-    [Fact]
-    public void GivenDepressedDefender_WhenCalculatingStrength_ThenDefenderIsAlsoWeaker()
-    {
-        Player depressed = TestFighters.CreateFighter(NORMAL);
-        depressed.Sanity = 10;
-
-        int strength = depressed.CalculateStrength(false, AttackerStances.PushHard);
-
-        Assert.True(strength < NORMAL);
+        Assert.Equal(expected, player.Inventory.Items.Select(x => x.ItemType));
     }
 
     private static RoleInitializer FindInitializerOf(Roles role)

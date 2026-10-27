@@ -26,7 +26,7 @@ Status legend: **Fixed** = no more major rework, only tuning. **Open** = still m
 
 ### DTOs
 
-- `OtherPlayerDto` (`Id`, `Role`): the whitelist of what a player may know about another player. Every field is written out on purpose; do not add health, sanity, room, inventory or allegiance without deciding it is public.
+- `OtherPlayerDto` (`Id`, `Role`, `HealthIncrement`): the whitelist of what a player may know about another player. Every field is written out on purpose; do not add exact health, hope, room, inventory or allegiance without deciding it is public. Health in 20% increments is public (docs/combat.md).
 - `GetMyPlayerResponse` (`Id`, `Role`, `LifeStatus`, `IsAcolyte`): only returned to the player themselves, from the session's `PlayerId`.
 
 ## Victory conditions (Open)

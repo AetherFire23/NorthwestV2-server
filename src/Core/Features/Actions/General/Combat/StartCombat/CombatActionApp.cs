@@ -37,7 +37,7 @@ public class CombatActionApp : ActionWithTargetsBase
     /// <returns></returns>
     public override async Task<ActionWithTargetsAvailability?> GetAvailabilityResult(GetActionsRequest request)
     {
-        Player caster = await _playerRepository.GetPlayer(request.PlayerId);
+        Player caster = await _playerRepository.GetPlayerForCombat(request.PlayerId);
 
         List<Player> playersInSameRoom = await _playerRepository.GetPlayersInSameRoom(request.PlayerId);
 
@@ -49,20 +49,19 @@ public class CombatActionApp : ActionWithTargetsBase
 
     public override async Task Execute(ExecuteActionRequest request)
     {
-        Player attackerPlayer = await _playerRepository.GetPlayer(request.PlayerId);
+        Player attackerPlayer = await _playerRepository.GetPlayerForCombat(request.PlayerId);
 
         Guid defenderPlayerId = _combatAction.DetermineDefenderPlayer(request.ActionTargets);
-        Player defenderPlayer = await _playerRepository.GetPlayer(defenderPlayerId);
+        Player defenderPlayer = await _playerRepository.GetPlayerForCombat(defenderPlayerId);
 
-        AttackerStances attackerStance = _combatAction.DetermineAttackerStance(request.ActionTargets);
-        attackerPlayer.AttackTypes = _combatAction.DetermineAttackType(request.ActionTargets);
+        AttackerChoices choices = _combatAction.DetermineAttackerChoices(request.ActionTargets, attackerPlayer);
 
-        // Everyone else in the room sees the fight.
+        // Everyone else conscious in the room sees the fight. Presence is the current room: there are no ticks yet.
         List<Player> witnesses = (await _playerRepository.GetPlayersInSameRoom(request.PlayerId))
-            .Where(x => x.Id != defenderPlayerId)
+            .Where(x => x.Id != defenderPlayerId && x.LifeStatus == PlayerLifeStatus.Alive)
             .ToList();
 
-        FightResult fightResult = _combatAction.MakeTwoPlayerFightTogether(attackerPlayer, defenderPlayer, attackerStance);
+        FightResult fightResult = _combatAction.MakeTwoPlayerFightTogether(attackerPlayer, defenderPlayer, choices);
 
         List<CombatReport> reports = _combatAftermath.CreateReports(fightResult, witnesses);
         AddReportsToGameLogs(reports);

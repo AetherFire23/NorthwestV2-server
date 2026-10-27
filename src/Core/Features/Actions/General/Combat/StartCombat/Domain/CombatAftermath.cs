@@ -3,97 +3,128 @@ using NorthwestV2.Features.Shared.Entity;
 namespace NorthwestV2.Features.Actions.General.Combat.StartCombat.Domain;
 
 /// <summary>
-/// Decides who learns what once a fight is over (docs/combat.md, "Information After Combat").
+/// Decides who learns what once a fight is over (docs/combat.md, "Identification and information").
+/// Every report is private. The only public trace of a combat is the change in Health increments, which other
+/// players read from the player list, not from logs.
 /// </summary>
 public class CombatAftermath
 {
+    public const string DEATH_MESSAGE = "You died.";
+
+    private readonly IRandomProvider _randomProvider;
+
+    public CombatAftermath(IRandomProvider randomProvider)
+    {
+        _randomProvider = randomProvider;
+    }
+
     /// <summary>
-    /// - A combatant who went down for good is told only that they died.
-    /// - If the defender did not die, the post-combat Health of both is shown to the combatants and the witnesses.
-    ///   Nothing says who attacked first, so either can claim self-defense.
-    /// - Witnesses privately get hard proof of who attacked. Nobody else gets it.
-    /// - If the defender died, no state report is made: the attacker controls the narrative.
+    /// - A dead fighter is only told that he died.
+    /// - A defender who was not killed identifies the attacker, except after a hit-and-run that stopped early,
+    ///   where only a random roll does (he always knows he was targeted).
+    /// - The attacker, unless dead, learns how it ended for the defender.
+    /// - Witnesses learn who started the combat and which weapons each fighter struck with.
     /// </summary>
     public List<CombatReport> CreateReports(FightResult fightResult, List<Player> witnesses)
     {
-        Player attacker = fightResult.AttackerFightStats.Player;
-        Player defender = fightResult.DefenderFightStats.Player;
+        Player attacker = fightResult.Attacker.Player;
+        Player defender = fightResult.Defender.Player;
 
         List<CombatReport> reports = [];
 
-        AddDeathNotice(reports, attacker, fightResult.AttackerStatus);
-        AddDeathNotice(reports, defender, fightResult.DefenderStatus);
-        AddStunNotice(reports, attacker, fightResult.AttackerStatus);
-        AddStunNotice(reports, defender, fightResult.DefenderStatus);
+        reports.Add(CreateDefenderReport(fightResult, attacker, defender));
 
-        bool hasDefenderDied = fightResult.DefenderStatus == PlayerLifeStatus.Dead;
-        if (!hasDefenderDied)
-        {
-            reports.Add(CreatePublicHealthReport(attacker, defender, witnesses));
-        }
+        reports.Add(fightResult.AttackerStatus == PlayerLifeStatus.Dead
+            ? new CombatReport { Message = DEATH_MESSAGE, Recipients = [attacker] }
+            : CreateAttackerReport(fightResult, attacker, defender));
 
         if (witnesses.Count > 0)
         {
-            reports.Add(CreateWitnessProof(attacker, defender, witnesses));
+            reports.Add(CreateWitnessProof(fightResult, attacker, defender, witnesses));
         }
 
         return reports;
     }
 
-    private static void AddDeathNotice(List<CombatReport> reports, Player player, PlayerLifeStatus status)
+    private CombatReport CreateDefenderReport(FightResult fightResult, Player attacker, Player defender)
     {
-        if (status != PlayerLifeStatus.Dead)
+        string message = fightResult.DefenderStatus switch
         {
-            return;
-        }
-
-        reports.Add(new CombatReport
-        {
-            Message = "You died.",
-            Recipients = [player],
-        });
-    }
-
-    private static void AddStunNotice(List<CombatReport> reports, Player player, PlayerLifeStatus status)
-    {
-        if (status != PlayerLifeStatus.Stunned)
-        {
-            return;
-        }
-
-        reports.Add(new CombatReport
-        {
-            Message = "You have been knocked out.",
-            Recipients = [player],
-        });
-    }
-
-    private static CombatReport CreatePublicHealthReport(Player attacker, Player defender, List<Player> witnesses)
-    {
-        List<Player> recipients = [attacker, defender, ..witnesses];
-
-        CombatReport report = new CombatReport
-        {
-            Message = $"After the fight: {DescribeHealth(attacker)} and {DescribeHealth(defender)}.",
-            Recipients = recipients,
+            PlayerLifeStatus.Dead => DEATH_MESSAGE,
+            PlayerLifeStatus.Stunned => $"The {attacker.Role} attacked you. You have been knocked out.",
+            _ when fightResult.IsStoppedByHitAndRun => DescribeHitAndRunToDefender(fightResult, attacker),
+            _ => $"The {attacker.Role} attacked you.",
         };
 
-        return report;
+        return new CombatReport { Message = message, Recipients = [defender] };
     }
 
-    private static CombatReport CreateWitnessProof(Player attacker, Player defender, List<Player> witnesses)
+    private string DescribeHitAndRunToDefender(FightResult fightResult, Player attacker)
     {
-        CombatReport report = new CombatReport
+        int identificationPercent = fightResult.WasDefenderSurprised
+            ? CombatConstants.IDENTIFICATION_PERCENT_AFTER_SURPRISE
+            : CombatConstants.IDENTIFICATION_PERCENT_WITHOUT_SURPRISE;
+
+        bool isIdentified = _randomProvider.Next(0, 100) < identificationPercent;
+
+        return isIdentified
+            ? $"The {attacker.Role} targeted you with a hit-and-run."
+            : "Someone targeted you with a hit-and-run. You could not see who.";
+    }
+
+    private static CombatReport CreateAttackerReport(FightResult fightResult, Player attacker, Player defender)
+    {
+        string outcome = fightResult.ExitType switch
         {
-            Message = $"You saw the {attacker.Role} attack the {defender.Role} first.",
-            Recipients = witnesses,
+            FightExitType.StoppedByHitAndRun => "You withdrew after your hit-and-run.",
+            FightExitType.BrokeOffUnderPushHard => "You broke off the attack.",
+            FightExitType.BrokeOffWithoutStrength => "You had no strength left to fight and broke off.",
+            _ => DescribeKnockoutToAttacker(fightResult),
         };
 
-        return report;
+        return new CombatReport
+        {
+            Message = $"You attacked the {defender.Role}. {outcome}",
+            Recipients = [attacker],
+        };
     }
 
-    private static string DescribeHealth(Player player)
+    private static string DescribeKnockoutToAttacker(FightResult fightResult)
     {
-        return $"the {player.Role} has {player.Health}/{Player.INITIALIZATION_HEALTH} health";
+        if (fightResult.AttackerStatus == PlayerLifeStatus.Stunned)
+        {
+            return "You have been knocked out.";
+        }
+
+        return fightResult.DefenderStatus == PlayerLifeStatus.Dead
+            ? "They died."
+            : "They were knocked out.";
+    }
+
+    private static CombatReport CreateWitnessProof(FightResult fightResult, Player attacker, Player defender,
+        List<Player> witnesses)
+    {
+        string message = $"You saw the {attacker.Role} attack the {defender.Role}. " +
+                         $"{DescribeWeapons(attacker, fightResult.Attacker)} " +
+                         $"{DescribeWeapons(defender, fightResult.Defender)}";
+
+        return new CombatReport { Message = message, Recipients = witnesses };
+    }
+
+    private static string DescribeWeapons(Player player, Combatant combatant)
+    {
+        if (combatant.WeaponsUsed.Count == 0)
+        {
+            return $"The {player.Role} did not strike.";
+        }
+
+        string weapons = string.Join(" and ", combatant.WeaponsUsed.Select(DescribeWeapon));
+
+        return $"The {player.Role} fought with {weapons}.";
+    }
+
+    private static string DescribeWeapon(Weapons weapon)
+    {
+        return weapon == Weapons.Unarmed ? "bare hands" : $"a {weapon.ToString().ToLowerInvariant()}";
     }
 }

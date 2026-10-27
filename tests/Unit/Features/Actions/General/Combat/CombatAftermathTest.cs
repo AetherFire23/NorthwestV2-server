@@ -1,221 +1,155 @@
 using JetBrains.Annotations;
 using NorthwestV2.Features.Actions.Core.Domain;
 using NorthwestV2.Features.Actions.General.Combat.StartCombat.Domain;
+using NorthwestV2.Features.GameStart.Domain.RoleInitializations;
 using NorthwestV2.Features.Shared.Entity;
 using NorthwestV2.Unit.Dummies;
 
 namespace NorthwestV2.Unit.Features.Actions.General.Combat;
 
 /// <summary>
-/// "Information After Combat" of docs/combat.md.
+/// "Identification and information" of docs/combat.md.
 /// </summary>
 [TestSubject(typeof(CombatAftermath))]
 public class CombatAftermathTest
 {
-    private const string DEATH_MESSAGE = "You died.";
-    private const string HEALTH_REPORT_PREFIX = "After the fight:";
+    private const int NORMAL = ToughnessInitializationConstants.NORMAL;
 
-    private readonly CombatAftermath _combatAftermath = new CombatAftermath();
+    private readonly Player _attacker = TestFighters.CreateFighter(NORMAL, Roles.Marine);
+    private readonly Player _defender = TestFighters.CreateFighter(NORMAL, Roles.Cook);
 
     [Fact]
-    public void GivenDefenderDied_WhenCreatingReports_ThenDefenderIsOnlyToldTheyDied()
+    public void GivenDefenderDied_WhenCreatingReports_ThenDefenderIsOnlyToldHeDied()
     {
-        Player attacker = TestFighters.CreateFighter(12, Roles.Marine);
-        Player defender = TestFighters.CreateFighter(12, Roles.Cook);
-        FightResult fightResult = CreateFightResult(attacker, defender, PlayerLifeStatus.Alive, PlayerLifeStatus.Dead);
+        FightResult fightResult = CreateFightResult(FightExitType.Knockout, defenderStatus: PlayerLifeStatus.Dead);
 
-        List<CombatReport> reports = _combatAftermath.CreateReports(fightResult, []);
+        List<CombatReport> reports = CreateAftermath().CreateReports(fightResult, []);
 
-        Assert.Equal([DEATH_MESSAGE], MessagesFor(reports, defender));
+        Assert.Equal([CombatAftermath.DEATH_MESSAGE], MessagesFor(reports, _defender));
     }
 
     [Fact]
-    public void GivenDefenderDied_WhenCreatingReports_ThenNoPublicHealthReportIsMade()
+    public void GivenAttackerDied_WhenCreatingReports_ThenAttackerIsOnlyToldHeDied()
     {
-        Player attacker = TestFighters.CreateFighter(12, Roles.Marine);
-        Player defender = TestFighters.CreateFighter(12, Roles.Cook);
-        FightResult fightResult = CreateFightResult(attacker, defender, PlayerLifeStatus.Alive, PlayerLifeStatus.Dead);
+        FightResult fightResult = CreateFightResult(FightExitType.Knockout, attackerStatus: PlayerLifeStatus.Dead);
 
-        List<CombatReport> reports = _combatAftermath.CreateReports(fightResult, []);
+        List<CombatReport> reports = CreateAftermath().CreateReports(fightResult, []);
 
-        Assert.DoesNotContain(reports, x => x.Message.StartsWith(HEALTH_REPORT_PREFIX));
+        Assert.Equal([CombatAftermath.DEATH_MESSAGE], MessagesFor(reports, _attacker));
     }
 
     [Fact]
-    public void GivenDefenderDied_WhenCreatingReports_ThenTheDeathNoticeGoesToNobodyElse()
+    public void GivenDefenderSurvivedAFullCombat_WhenCreatingReports_ThenHeIdentifiesTheAttacker()
     {
-        Player attacker = TestFighters.CreateFighter(12, Roles.Marine);
-        Player defender = TestFighters.CreateFighter(12, Roles.Cook);
-        FightResult fightResult = CreateFightResult(attacker, defender, PlayerLifeStatus.Alive, PlayerLifeStatus.Dead);
+        FightResult fightResult = CreateFightResult(FightExitType.Knockout, attackerStatus: PlayerLifeStatus.Dead);
 
-        List<CombatReport> reports = _combatAftermath.CreateReports(fightResult, []);
+        List<CombatReport> reports = CreateAftermath().CreateReports(fightResult, []);
 
-        Assert.Empty(MessagesFor(reports, attacker));
+        Assert.Equal(["The Marine attacked you."], MessagesFor(reports, _defender));
     }
 
     [Fact]
-    public void GivenAttackerDied_WhenCreatingReports_ThenAttackerIsToldTheyDied()
+    public void GivenDefenderStunned_WhenCreatingReports_ThenHeIdentifiesTheAttackerAndKnowsHeWasKnockedOut()
     {
-        Player attacker = TestFighters.CreateFighter(12, Roles.Marine);
-        Player defender = TestFighters.CreateFighter(12, Roles.Cook);
-        FightResult fightResult = CreateFightResult(attacker, defender, PlayerLifeStatus.Dead, PlayerLifeStatus.Alive);
+        FightResult fightResult = CreateFightResult(FightExitType.Knockout, defenderStatus: PlayerLifeStatus.Stunned);
 
-        List<CombatReport> reports = _combatAftermath.CreateReports(fightResult, []);
+        List<CombatReport> reports = CreateAftermath().CreateReports(fightResult, []);
 
-        Assert.Contains(DEATH_MESSAGE, MessagesFor(reports, attacker));
+        Assert.Equal(["The Marine attacked you. You have been knocked out."], MessagesFor(reports, _defender));
+    }
+
+    [Theory]
+    [InlineData(true, 19, "The Marine targeted you with a hit-and-run.")]
+    [InlineData(true, 20, "Someone targeted you with a hit-and-run. You could not see who.")]
+    [InlineData(false, 59, "The Marine targeted you with a hit-and-run.")]
+    [InlineData(false, 60, "Someone targeted you with a hit-and-run. You could not see who.")]
+    public void GivenHitAndRunStoppedEarly_WhenCreatingReports_ThenDefenderIdentifiesTheAttackerOnlyOnALuckyRoll(
+        bool wasSurprised, int roll, string expected)
+    {
+        FightResult fightResult = CreateFightResult(FightExitType.StoppedByHitAndRun, wasSurprised: wasSurprised);
+
+        List<CombatReport> reports = CreateAftermath(roll).CreateReports(fightResult, []);
+
+        Assert.Equal([expected], MessagesFor(reports, _defender));
     }
 
     [Fact]
-    public void GivenDefenderSurvivedAloneWithAttacker_WhenCreatingReports_ThenAttackerSeesBothHealthStates()
+    public void GivenAttackerBrokeOff_WhenCreatingReports_ThenAttackerIsToldHeBrokeOff()
     {
-        Player attacker = TestFighters.CreateFighter(12, Roles.Marine);
-        Player defender = TestFighters.CreateFighter(12, Roles.Cook);
-        defender.Health = 40;
-        FightResult fightResult = CreateFightResult(attacker, defender, PlayerLifeStatus.Alive, PlayerLifeStatus.Alive);
+        FightResult fightResult = CreateFightResult(FightExitType.BrokeOffUnderPushHard);
 
-        List<CombatReport> reports = _combatAftermath.CreateReports(fightResult, []);
+        List<CombatReport> reports = CreateAftermath().CreateReports(fightResult, []);
 
-        Assert.Equal(
-            $"{HEALTH_REPORT_PREFIX} the Marine has 100/100 health and the Cook has 40/100 health.",
-            Assert.Single(MessagesFor(reports, attacker)));
+        Assert.Equal(["You attacked the Cook. You broke off the attack."], MessagesFor(reports, _attacker));
     }
 
     [Fact]
-    public void GivenDefenderSurvivedAloneWithAttacker_WhenCreatingReports_ThenDefenderSeesTheSameHealthStates()
+    public void GivenWitness_WhenCreatingReports_ThenHeSeesWhoStartedItAndTheWeaponsUsed()
     {
-        Player attacker = TestFighters.CreateFighter(12, Roles.Marine);
-        Player defender = TestFighters.CreateFighter(12, Roles.Cook);
-        defender.Health = 40;
-        FightResult fightResult = CreateFightResult(attacker, defender, PlayerLifeStatus.Alive, PlayerLifeStatus.Alive);
+        Player witness = TestFighters.CreateFighter(NORMAL, Roles.Doctor);
+        FightResult fightResult = CreateFightResult(FightExitType.Knockout, defenderStatus: PlayerLifeStatus.Dead,
+            attackerWeapons: [Weapons.Musket, Weapons.Unarmed]);
 
-        List<CombatReport> reports = _combatAftermath.CreateReports(fightResult, []);
+        List<CombatReport> reports = CreateAftermath().CreateReports(fightResult, [witness]);
 
-        Assert.Equal(MessagesFor(reports, attacker), MessagesFor(reports, defender));
+        Assert.Equal(["You saw the Marine attack the Cook. The Marine fought with a musket and bare hands. " +
+                      "The Cook did not strike."], MessagesFor(reports, witness));
     }
 
     [Fact]
-    public void GivenDefenderSurvivedAloneWithAttacker_WhenCreatingReports_ThenNothingProvesWhoAttackedFirst()
+    public void GivenWitness_WhenCreatingReports_ThenTheProofReachesNoFighter()
     {
-        Player attacker = TestFighters.CreateFighter(12, Roles.Marine);
-        Player defender = TestFighters.CreateFighter(12, Roles.Cook);
-        FightResult fightResult = CreateFightResult(attacker, defender, PlayerLifeStatus.Alive, PlayerLifeStatus.Alive);
+        Player witness = TestFighters.CreateFighter(NORMAL, Roles.Doctor);
+        FightResult fightResult = CreateFightResult(FightExitType.Knockout, defenderStatus: PlayerLifeStatus.Dead);
 
-        List<CombatReport> reports = _combatAftermath.CreateReports(fightResult, []);
+        List<CombatReport> reports = CreateAftermath().CreateReports(fightResult, [witness]);
 
-        Assert.DoesNotContain(reports, x => x.Message.Contains("attack"));
+        Assert.DoesNotContain(reports, x => x.Message.StartsWith("You saw") && x.Recipients.Contains(_attacker));
     }
 
-    [Fact]
-    public void GivenAWitness_WhenCreatingReports_ThenWitnessGetsHardProofOfWhoAttacked()
+    private static CombatAftermath CreateAftermath(int roll = 0)
     {
-        Player attacker = TestFighters.CreateFighter(12, Roles.Marine);
-        Player defender = TestFighters.CreateFighter(12, Roles.Cook);
-        Player witness = TestFighters.CreateFighter(12, Roles.Doctor);
-        FightResult fightResult = CreateFightResult(attacker, defender, PlayerLifeStatus.Alive, PlayerLifeStatus.Alive);
-
-        List<CombatReport> reports = _combatAftermath.CreateReports(fightResult, [witness]);
-
-        Assert.Contains("You saw the Marine attack the Cook first.", MessagesFor(reports, witness));
+        return new CombatAftermath(new FakeRandom([roll]));
     }
 
-    [Fact]
-    public void GivenAWitness_WhenCreatingReports_ThenTheProofIsNotSharedWithTheAttacker()
+    private FightResult CreateFightResult(FightExitType exitType,
+        PlayerLifeStatus attackerStatus = PlayerLifeStatus.Alive,
+        PlayerLifeStatus defenderStatus = PlayerLifeStatus.Alive,
+        bool wasSurprised = false,
+        List<Weapons>? attackerWeapons = null)
     {
-        Player attacker = TestFighters.CreateFighter(12, Roles.Marine);
-        Player defender = TestFighters.CreateFighter(12, Roles.Cook);
-        Player witness = TestFighters.CreateFighter(12, Roles.Doctor);
-        FightResult fightResult = CreateFightResult(attacker, defender, PlayerLifeStatus.Alive, PlayerLifeStatus.Alive);
-
-        List<CombatReport> reports = _combatAftermath.CreateReports(fightResult, [witness]);
-
-        Assert.DoesNotContain(MessagesFor(reports, attacker), x => x.StartsWith("You saw"));
-    }
-
-    [Fact]
-    public void GivenTwoWitnesses_WhenCreatingReports_ThenEachWitnessGetsTheirOwnPrivateProof()
-    {
-        Player attacker = TestFighters.CreateFighter(12, Roles.Marine);
-        Player defender = TestFighters.CreateFighter(12, Roles.Cook);
-        Player firstWitness = TestFighters.CreateFighter(12, Roles.Doctor);
-        Player secondWitness = TestFighters.CreateFighter(12, Roles.Captain);
-        FightResult fightResult = CreateFightResult(attacker, defender, PlayerLifeStatus.Alive, PlayerLifeStatus.Alive);
-
-        List<CombatReport> reports = _combatAftermath.CreateReports(fightResult, [firstWitness, secondWitness]);
-
-        Assert.Equal(MessagesFor(reports, firstWitness), MessagesFor(reports, secondWitness));
-    }
-
-    [Fact]
-    public void GivenAWitnessAndADefenderWhoDied_WhenCreatingReports_ThenWitnessStillGetsTheProof()
-    {
-        Player attacker = TestFighters.CreateFighter(12, Roles.Marine);
-        Player defender = TestFighters.CreateFighter(12, Roles.Cook);
-        Player witness = TestFighters.CreateFighter(12, Roles.Doctor);
-        FightResult fightResult = CreateFightResult(attacker, defender, PlayerLifeStatus.Alive, PlayerLifeStatus.Dead);
-
-        List<CombatReport> reports = _combatAftermath.CreateReports(fightResult, [witness]);
-
-        Assert.Equal(["You saw the Marine attack the Cook first."], MessagesFor(reports, witness));
-    }
-
-    [Fact]
-    public void GivenAWitnessAndASurvivingDefender_WhenCreatingReports_ThenWitnessAlsoSeesTheHealthStates()
-    {
-        Player attacker = TestFighters.CreateFighter(12, Roles.Marine);
-        Player defender = TestFighters.CreateFighter(12, Roles.Cook);
-        Player witness = TestFighters.CreateFighter(12, Roles.Doctor);
-        FightResult fightResult = CreateFightResult(attacker, defender, PlayerLifeStatus.Alive, PlayerLifeStatus.Alive);
-
-        List<CombatReport> reports = _combatAftermath.CreateReports(fightResult, [witness]);
-
-        Assert.Contains(MessagesFor(reports, witness), x => x.StartsWith(HEALTH_REPORT_PREFIX));
-    }
-
-    [Fact]
-    public void GivenDefenderWasStunned_WhenCreatingReports_ThenDefenderIsToldTheyWereKnockedOut()
-    {
-        Player attacker = TestFighters.CreateFighter(12, Roles.Marine);
-        Player defender = TestFighters.CreateFighter(12, Roles.Cook);
-        FightResult fightResult = CreateFightResult(attacker, defender, PlayerLifeStatus.Alive, PlayerLifeStatus.Stunned);
-
-        List<CombatReport> reports = _combatAftermath.CreateReports(fightResult, []);
-
-        Assert.Contains("You have been knocked out.", MessagesFor(reports, defender));
-    }
-
-    [Fact]
-    public void GivenDefenderWasStunned_WhenCreatingReports_ThenDefenderIsNotToldTheyDied()
-    {
-        Player attacker = TestFighters.CreateFighter(12, Roles.Marine);
-        Player defender = TestFighters.CreateFighter(12, Roles.Cook);
-        FightResult fightResult = CreateFightResult(attacker, defender, PlayerLifeStatus.Alive, PlayerLifeStatus.Stunned);
-
-        List<CombatReport> reports = _combatAftermath.CreateReports(fightResult, []);
-
-        Assert.DoesNotContain(DEATH_MESSAGE, MessagesFor(reports, defender));
-    }
-
-    private static FightResult CreateFightResult(Player attacker, Player defender, PlayerLifeStatus attackerStatus,
-        PlayerLifeStatus defenderStatus)
-    {
-        FightResult fightResult = new FightResult
+        return new FightResult
         {
-            AttackerFightStats = attacker.GetPlayerTempFightStats(true, AttackerStances.ToTheEnd),
-            DefenderFightStats = defender.GetPlayerTempFightStats(false, AttackerStances.ToTheEnd),
+            Attacker = CreateCombatant(_attacker, attackerWeapons ?? [Weapons.Unarmed]),
+            Defender = CreateCombatant(_defender, []),
+            Stance = AttackerStances.PushHard,
+            ExitType = exitType,
+            WasDefenderSurprised = wasSurprised,
             AttackerStatus = attackerStatus,
             DefenderStatus = defenderStatus,
         };
+    }
 
-        return fightResult;
+    private static Combatant CreateCombatant(Player player, List<Weapons> weaponsUsed)
+    {
+        return new Combatant
+        {
+            Player = player,
+            Toughness = player.BaseToughness,
+            RangedWeapon = null,
+            MeleeWeapon = Weapons.Unarmed,
+            RangedBasicDamage = 0,
+            MeleeBasicDamage = 0,
+            RangedModifierPercent = 0,
+            MeleeModifierPercent = 0,
+            DamageDealt = AttackTypes.Kill,
+            Health = player.Health,
+            WeaponsUsed = weaponsUsed,
+        };
     }
 
     private static List<string> MessagesFor(List<CombatReport> reports, Player player)
     {
-        List<string> messages = reports
-            .Where(x => x.Recipients.Contains(player))
-            .Select(x => x.Message)
-            .ToList();
-
-        return messages;
+        return reports.Where(x => x.Recipients.Contains(player)).Select(x => x.Message).ToList();
     }
 }

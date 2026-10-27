@@ -6,31 +6,37 @@ using NorthwestV2.Features.Shared.Entity;
 namespace NorthwestV2.Features.Actions.General.Combat.StartCombat.Domain;
 
 /// <summary>
-/// Domain logic for combat resolution. Contains the fight loop, stance mechanics, and damage calculation.
-/// Mutates the players it is given but does not save anything. Use <see cref="CombatActionApp"/> for persistence.
+/// Domain side of the combat action: who may attack whom, the attacker's prompts, and applying a resolved fight to
+/// the players. Resolution itself is <see cref="CombatResolver"/>. Nothing is saved here, see <see cref="CombatActionApp"/>.
+/// Allegiance is ignored on purpose: two acolytes may fight each other (see docs/traitors.md).
 /// </summary>
 public class CombatAction
 {
     public const int PLAYER_PROMPT_INDEX = 0;
-
     public const int ATTACKERSTANCE_PROMPT_INDEX = 1;
-
     public const int ATTACKTYPE_PROMPT_INDEX = 2;
+    public const int RANGED_WEAPON_PROMPT_INDEX = 3;
+    public const int MELEE_WEAPON_PROMPT_INDEX = 4;
 
-    /*
-     * Attack types
-     *  - Kill
-     *  - Stun
-     *
-     * Defensive Counters ( Defined in another action
-     *  - Default vs stun
-     *  - Override - kill counter
-     *
-     * Stances
-     *  - Hit and run -> Disengages immediately if strength gap is too low; attacker avoids damage and likely avoids identification.
-     *  - Push Hard -> Attacker continues until losing inevitable, then flees, if no kill achieved, they are identified.
-     *
-     */
+    /// <summary>
+    /// Only present for acolytes.
+    /// </summary>
+    public const int FAKED_HOPE_PENALTY_PROMPT_INDEX = 5;
+
+    /// <summary>
+    /// Value of the ranged weapon prompt for a melee attack.
+    /// </summary>
+    public const string NO_RANGED_WEAPON = "None";
+
+    private readonly CombatSetupFactory _combatSetupFactory;
+    private readonly CombatResolver _combatResolver;
+
+    public CombatAction(CombatSetupFactory combatSetupFactory, CombatResolver combatResolver)
+    {
+        _combatSetupFactory = combatSetupFactory;
+        _combatResolver = combatResolver;
+    }
+
     public ActionWithTargetsAvailability DetermineAvailability(Player caster, List<Player> otherPlayersInSameRoom)
     {
         if (otherPlayersInSameRoom.Any(x => x.Id == caster.Id))
@@ -38,243 +44,148 @@ public class CombatAction
             throw new Exception("The caster cannot target himself.");
         }
 
-        /*
-         * I don't know the real requirements yet....
-         */
-        List<ActionRequirement> requiresAnyPlayerInTheSameRoom = DetermineRequirements(caster, otherPlayersInSameRoom);
-
-        List<TargetSelectionPrompt> promptWithSingleScreenOfJustPlayers = CreatePrompts(otherPlayersInSameRoom);
+        List<Player> targets = otherPlayersInSameRoom
+            .Where(x => x.LifeStatus == PlayerLifeStatus.Alive)
+            .ToList();
 
         ActionWithTargetsAvailability availability = new ActionWithTargetsAvailability()
         {
             ActionName = ActionNames.CombatAction,
             DisplayName = ActionNames.CombatAction,
-            TargetSelectionPrompts = promptWithSingleScreenOfJustPlayers,
-            ActionRequirements = requiresAnyPlayerInTheSameRoom,
+            TargetSelectionPrompts = CreatePrompts(caster, targets),
+            ActionRequirements = DetermineRequirements(caster, targets),
         };
 
         return availability;
     }
 
-    private List<ActionRequirement> DetermineRequirements(Player caster, List<Player> otherPlayersInSameRoom)
+    private static List<ActionRequirement> DetermineRequirements(Player caster, List<Player> targets)
     {
-        ActionRequirement playersInSameRoomRequirement =
-            ActionRequirement.CreateAnyOtherPlayerExistsInRoomRequirement(caster, otherPlayersInSameRoom);
+        ActionRequirement isConscious = new ActionRequirement(
+            "You must be alive and conscious.",
+            caster.LifeStatus == PlayerLifeStatus.Alive);
 
-        return [playersInSameRoomRequirement];
+        ActionRequirement isNotChaplain = new ActionRequirement(
+            "The Chaplain can never attack humans.",
+            caster.Role != Roles.Chaplain);
+
+        ActionRequirement hasTarget = ActionRequirement.CreateAnyOtherPlayerExistsInRoomRequirement(caster, targets);
+
+        return [isConscious, isNotChaplain, hasTarget];
     }
 
-    private List<TargetSelectionPrompt> CreatePrompts(List<Player> otherPlayersInSameRoom)
+    private static List<TargetSelectionPrompt> CreatePrompts(Player caster, List<Player> targets)
     {
-        TargetSelectionPrompt targetSelection = TargetSelectionPrompt.FromPlayers(otherPlayersInSameRoom);
-        TargetSelectionPrompt selectAttackerStance = TargetSelectionPrompt.FromEnum<AttackerStances>(
-            "Pick your attacker stance"
-        );
+        List<TargetSelectionPrompt> prompts =
+        [
+            TargetSelectionPrompt.FromPlayers(targets),
+            TargetSelectionPrompt.FromEnum<AttackerStances>("Pick your attacker stance"),
+            TargetSelectionPrompt.FromEnum<AttackTypes>("Pick your attack type"),
+            CreateRangedWeaponPrompt(caster),
+            CreateMeleeWeaponPrompt(caster),
+        ];
 
-        TargetSelectionPrompt selectAttackType = TargetSelectionPrompt.FromEnum<AttackTypes>(
-            "Pick your attack type"
-        );
+        if (caster.IsAcolyte)
+        {
+            prompts.Add(TargetSelectionPrompt.FromEnum<FakedHopePenalties>("Pick the Hope penalty you fake"));
+        }
 
-        return [targetSelection, selectAttackerStance, selectAttackType];
+        return prompts;
     }
 
     /// <summary>
-    /// Resolves a fight between two players and applies the outcome (Health and life status) to both entities.
-    /// Persisting is up to the caller (<see cref="CombatActionApp"/>).
-    ///
-    /// Resolution:
-    /// - Early exit when a hit-and-run attacker is weaker than the defender
-    /// - Each round both sides apply their Strength to the other's toughness at the same time
-    /// - A combatant whose toughness reaches 0 loses Health and gets its toughness back
-    /// - PushHard attackers flee once the next blow would kill them; ToTheEnd attackers never flee
-    /// - At 0 Health a combatant dies if the opponent was lethal, and is stunned otherwise
-    /// - Allegiance is ignored on purpose: two acolytes may fight each other (see docs/traitors.md)
+    /// Ignored for a stun attack, which is always unarmed.
     /// </summary>
-    public FightResult MakeTwoPlayerFightTogether(
-        Player attackerPlayer,
-        Player defenderPlayer, AttackerStances attackerStance)
+    private static TargetSelectionPrompt CreateRangedWeaponPrompt(Player caster)
     {
-        // TODO: Ask waht "vigilance" means. I don't see anything anywhere.
-        // 'true' marks the attacker so stance logic so that Strength modifier can be calculated correctly. (ToTheEnd)
-        PlayerTempFightStats attackerStats = attackerPlayer.GetPlayerTempFightStats(true, attackerStance);
-        PlayerTempFightStats defenderStats = defenderPlayer.GetPlayerTempFightStats(false, attackerStance);
+        IEnumerable<string> values = WeaponCatalog
+            .OwnedWeapons(caster, WeaponRanges.Ranged, includeConcealed: true)
+            .Select(x => x.ToString());
 
-        if (MustEarlyExitBecauseOfHitAndRun(attackerStats, defenderStats, out FightResult earlyExitFightResult))
+        return CreateValuePrompt("Pick a ranged weapon (none for a melee attack)", [NO_RANGED_WEAPON, ..values]);
+    }
+
+    private static TargetSelectionPrompt CreateMeleeWeaponPrompt(Player caster)
+    {
+        IEnumerable<string> values = WeaponCatalog
+            .OwnedWeapons(caster, WeaponRanges.Melee, includeConcealed: true)
+            .Select(x => x.ToString());
+
+        return CreateValuePrompt("Pick a melee weapon", [Weapons.Unarmed.ToString(), ..values]);
+    }
+
+    private static TargetSelectionPrompt CreateValuePrompt(string description, List<string> values)
+    {
+        TargetSelectionPrompt prompt = new TargetSelectionPrompt
         {
-            earlyExitFightResult.AttackerFightStats = attackerStats;
-            earlyExitFightResult.DefenderFightStats = defenderStats;
-            earlyExitFightResult.AttackerIdentified = false;
-
-            return earlyExitFightResult;
-        }
-
-        FightExitType fightExitType = EvaluateIfMustExitLoopOrContinue(attackerStats, defenderStats);
-
-        while (fightExitType == FightExitType.Ongoing)
-        {
-            // Both players simultaneously reduce each other's toughness by their Strength.
-            defenderStats.CurrentToughness -= attackerStats.Strength;
-            attackerStats.CurrentToughness -= defenderStats.Strength;
-
-            DealDamageIfToughnessAtZero(attackerStats, defenderStats);
-            DealDamageIfToughnessAtZero(defenderStats, attackerStats);
-
-            fightExitType = EvaluateIfMustExitLoopOrContinue(attackerStats, defenderStats);
-        }
-
-        FightResult fightResult = new FightResult
-        {
-            AttackerFightStats = attackerStats,
-            DefenderFightStats = defenderStats,
-            FightExitType = fightExitType,
+            Description = description,
+            ValidTargets = values
+                .Select(x => new ActionTarget { Name = x, Value = x, TargetId = Guid.Empty })
+                .ToList(),
         };
 
-        if (fightExitType == FightExitType.ExittedBecauseOfPushHard)
-        {
-            // The attacker flees without finishing the defender, so they are identified.
-            ApplyEndFightConditions(fightResult);
-            return fightResult;
-        }
+        return prompt;
+    }
 
-        bool isAttackLethal = attackerStats.AttackType == AttackTypes.Kill;
-        bool isCounterLethal = isAttackLethal || defenderStats.DefensiveCounter == DefensiveCounters.Override;
+    /// <summary>
+    /// Resolves the fight and writes Health and life status onto both players.
+    /// </summary>
+    public FightResult MakeTwoPlayerFightTogether(Player attacker, Player defender, AttackerChoices choices)
+    {
+        bool isOutside = RoomExposure.IsOutside(attacker.Room.RoomEnum);
 
-        fightResult.AttackerStatus = DetermineStatusAfterFight(attackerStats, isCounterLethal);
-        fightResult.DefenderStatus = DetermineStatusAfterFight(defenderStats, isAttackLethal);
-        fightResult.SurvivingPlayer = new[] { attackerStats, defenderStats }
-            .SingleOrDefault(x => x.CurrentHealth > 0);
+        CombatSetup setup = _combatSetupFactory.Create(attacker, defender, choices, isOutside);
+        FightResult fightResult = _combatResolver.Resolve(setup);
 
         ApplyEndFightConditions(fightResult);
+
         return fightResult;
     }
 
     /// <summary>
-    /// A combatant at 0 Health is dead if the blows that took them down were lethal, and stunned otherwise.
-    /// The attacker's blows are lethal with <see cref="AttackTypes.Kill"/>. The defender's blows are lethal when
-    /// the attack is, or when they chose the <see cref="DefensiveCounters.Override"/> kill counter.
+    /// Only Health and life status outlive the fight.
     /// </summary>
-    private static PlayerLifeStatus DetermineStatusAfterFight(PlayerTempFightStats combatant,
-        bool areOpponentBlowsLethal)
+    public void ApplyEndFightConditions(FightResult fightResult)
     {
-        if (combatant.CurrentHealth > 0)
-        {
-            return PlayerLifeStatus.Alive;
-        }
-
-        return areOpponentBlowsLethal ? PlayerLifeStatus.Dead : PlayerLifeStatus.Stunned;
+        ApplyToPlayer(fightResult.Attacker, fightResult.AttackerStatus);
+        ApplyToPlayer(fightResult.Defender, fightResult.DefenderStatus);
     }
 
-    /// <summary>
-    /// Determines whether the attacker should immediately disengage due to the
-    /// <see cref="AttackerStances.HitAndRun"/> stance.
-    ///
-    /// Hit‑and‑Run only happends when the attacker is weaker than the defender.
-    /// If the conditions are met, the fight exits before any damage is exchanged.
-    /// </summary>
-    private static bool MustEarlyExitBecauseOfHitAndRun(PlayerTempFightStats attackerStats,
-        PlayerTempFightStats defenderStats,
-        out FightResult fightResult)
+    private static void ApplyToPlayer(Combatant combatant, PlayerLifeStatus status)
     {
-        bool isHitAndRunStance = attackerStats.AttackerStance == AttackerStances.HitAndRun;
-
-        // Hit‑and‑Run only works when the attacker is weaker than the defender.
-        bool isDefenderStrengthTooHigh = attackerStats.Strength < defenderStats.Strength;
-
-        if (isHitAndRunStance && isDefenderStrengthTooHigh)
-        {
-            fightResult = new FightResult
-            {
-                FightExitType = FightExitType.EarlyExittedBecauseOfHitAndRun,
-            };
-
-            return true;
-        }
-
-        fightResult = new FightResult();
-        return false;
-    }
-
-    /// <summary>
-    /// If Toughness drops to 0, they lose Health and their toughness is restored to full
-    /// </summary>
-    private void DealDamageIfToughnessAtZero(PlayerTempFightStats player, PlayerTempFightStats opponent)
-    {
-        if (player.CurrentToughness <= 0)
-        {
-            player.CurrentToughness = player.BaseToughness;
-            player.CurrentHealth -= opponent.Strength;
-        }
-    }
-
-    /// <summary>
-    /// Evaluates the current state of the fight loop and determines whether combat
-    /// should continue or exit.
-    ///
-    /// Exit conditions:
-    /// • <see cref="FightExitType.ExittedBecauseOfPushHard"/> — attacker is about to die while using PushHard
-    /// • <see cref="FightExitType.ExittedBecauseOfPlayerDeath"/> — either combatant has reached zero (or below) health
-    /// • <see cref="FightExitType.Ongoing"/> — no exit condition met; continue the loop
-    /// </summary>
-    private FightExitType EvaluateIfMustExitLoopOrContinue(PlayerTempFightStats attacker, PlayerTempFightStats defender)
-    {
-        bool isAttackerStancePushHard = attacker.AttackerStance == AttackerStances.PushHard;
-        bool attackerIsAboutToDie = attacker.CurrentHealth - defender.Strength <= 0;
-        if (attackerIsAboutToDie && isAttackerStancePushHard)
-        {
-            return FightExitType.ExittedBecauseOfPushHard;
-        }
-
-        bool isPlayerDown = attacker.CurrentHealth <= 0 || defender.CurrentHealth <= 0;
-
-        if (isPlayerDown)
-        {
-            return FightExitType.ExittedBecauseOfPlayerDeath;
-        }
-
-        return FightExitType.Ongoing;
+        combatant.Player.Health = Math.Max(0, combatant.Health);
+        combatant.Player.LifeStatus = status;
     }
 
     public Guid DetermineDefenderPlayer(List<List<ActionTarget>> requestActionTargets)
     {
-        Guid attackerPlayerId = requestActionTargets[PLAYER_PROMPT_INDEX].First().TargetId ??
+        Guid defenderPlayerId = requestActionTargets[PLAYER_PROMPT_INDEX].First().TargetId ??
                                 throw new Exception("target it cannot be null.");
 
-        return attackerPlayerId;
+        return defenderPlayerId;
     }
 
-    public AttackerStances DetermineAttackerStance(List<List<ActionTarget>> requestActionTargets)
+    public AttackerChoices DetermineAttackerChoices(List<List<ActionTarget>> requestActionTargets, Player attacker)
     {
-        string attackerStanceValue = requestActionTargets[ATTACKERSTANCE_PROMPT_INDEX].First().Value ??
-                                     throw new Exception("Must select an attackerstance ");
+        string rangedValue = ReadValue(requestActionTargets, RANGED_WEAPON_PROMPT_INDEX);
 
-        AttackerStances attackerStance = Enum.Parse<AttackerStances>(attackerStanceValue);
+        AttackerChoices choices = new AttackerChoices
+        {
+            Stance = Enum.Parse<AttackerStances>(ReadValue(requestActionTargets, ATTACKERSTANCE_PROMPT_INDEX)),
+            AttackType = Enum.Parse<AttackTypes>(ReadValue(requestActionTargets, ATTACKTYPE_PROMPT_INDEX)),
+            RangedWeapon = rangedValue == NO_RANGED_WEAPON ? null : Enum.Parse<Weapons>(rangedValue),
+            MeleeWeapon = Enum.Parse<Weapons>(ReadValue(requestActionTargets, MELEE_WEAPON_PROMPT_INDEX)),
+            FakedHopePenalty = attacker.IsAcolyte
+                ? Enum.Parse<FakedHopePenalties>(ReadValue(requestActionTargets, FAKED_HOPE_PENALTY_PROMPT_INDEX))
+                : FakedHopePenalties.MatchTrackedHope,
+        };
 
-        return attackerStance;
+        return choices;
     }
 
-    public AttackTypes DetermineAttackType(List<List<ActionTarget>> requestActionTargets)
+    private static string ReadValue(List<List<ActionTarget>> requestActionTargets, int promptIndex)
     {
-        string attackTypeValue = requestActionTargets[ATTACKTYPE_PROMPT_INDEX].First().Value ??
-                                 throw new Exception("Must select an attack type ");
-
-        AttackTypes attackType = Enum.Parse<AttackTypes>(attackTypeValue);
-
-        return attackType;
-    }
-
-    /// <summary>
-    /// Writes the outcome back to the players. Only Health and life status outlive the fight:
-    /// toughness lives in <see cref="PlayerTempFightStats"/> and is therefore full again next fight.
-    /// </summary>
-    public void ApplyEndFightConditions(FightResult fightResult)
-    {
-        ApplyToPlayer(fightResult.AttackerFightStats, fightResult.AttackerStatus);
-        ApplyToPlayer(fightResult.DefenderFightStats, fightResult.DefenderStatus);
-    }
-
-    private static void ApplyToPlayer(PlayerTempFightStats stats, PlayerLifeStatus status)
-    {
-        stats.Player.Health = Math.Max(0, stats.CurrentHealth);
-        stats.Player.LifeStatus = status;
+        return requestActionTargets[promptIndex].First().Value ??
+               throw new Exception($"Prompt {promptIndex} of the combat action needs a value.");
     }
 }

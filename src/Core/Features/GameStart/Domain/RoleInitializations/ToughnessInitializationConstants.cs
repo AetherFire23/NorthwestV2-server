@@ -1,14 +1,20 @@
 ﻿namespace NorthwestV2.Features.GameStart.Domain.RoleInitializations;
 
 /// <summary>
-/// Starting toughness values for different roles. Toughness acts as a damage buffer - damage is
-/// subtracted from toughness before health is lost.
+/// Starting toughness per role (docs/combat.md). Each time the damage a fighter takes adds up to his toughness,
+/// he loses 1 Health. Public and never changes.
 /// </summary>
 public class ToughnessInitializationConstants
 {
-    public const int WEAK = 8;
-    
-    public const int NORMAL = 12;
-    
-    public const int TOUGH = 15;
+    /// <summary>
+    /// Chaplain, Scholar, Doctor.
+    /// </summary>
+    public const int WEAK = 3;
+
+    public const int NORMAL = 4;
+
+    /// <summary>
+    /// Marine, Brute, Sapper.
+    /// </summary>
+    public const int TOUGH = 5;
 }

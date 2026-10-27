@@ -13,8 +13,8 @@ namespace NorthwestV2.Features.Shared.Entity;
 /// - A <see cref="Role"/> (character class)
 /// - An <see cref="Inventory"/> (items carried)
 ///
-/// Players have health, sanity, and action points. Combat uses BaseToughness to determine
-/// damage absorption before health is lost. Each role has different starting stats.
+/// Players have health, hope, and action points. In combat, every BaseToughness worth of damage
+/// costs 1 Health (docs/combat.md). Each role has different starting stats.
 /// </summary>
 public class Player : EntityBase
 {
@@ -38,8 +38,15 @@ public class Player : EntityBase
 
     public int ActionPoints { get; set; } = 8; // default 8
 
+    /// <summary>
+    /// 0 to 100. Never shown exactly, not even to the player: only in 20% increments.
+    /// </summary>
     public int Health { get; set; } = INITIALIZATION_HEALTH;
-    public int Sanity { get; set; } = INITIALIZATION_HEALTH;
+
+    /// <summary>
+    /// 0 to 100, secret. For acolytes it has no mechanical effect: it only tells them what state to claim.
+    /// </summary>
+    public int Hope { get; set; } = INITIALIZATION_HEALTH;
 
     /// <summary>
     /// How much strength must be accumulated before health is lost.
@@ -52,14 +59,57 @@ public class Player : EntityBase
     /// <summary>
     /// Allegiance, fixed at game creation. Secret: only the player themselves may ever be told. See docs/traitors.md.
     /// Never changes during a game (no conversion) and stays secret after death, so it is not tied to
-    /// <see cref="LifeStatus"/>. Nothing in the rules depends on it yet: acolytes may attack each other
-    /// (it can serve as a cover), so combat deliberately ignores it.
+    /// <see cref="LifeStatus"/>. Acolytes may attack each other (it can serve as a cover), so combat never checks
+    /// allegiance between fighters; it only decides whether a Hope penalty is real or faked.
     /// </summary>
     public bool IsAcolyte { get; set; }
 
-    public DefensiveCounters DefensiveCounter { get; set; } = DefensiveCounters.DefaultVsStun;
+    /// <summary>
+    /// Secret, persistent setting. A player who is not vigilant is surprised when attacked.
+    /// The per-tick Hope (and acolyte rogue gauge) cost is not implemented: there is no tick system yet.
+    /// </summary>
+    public bool IsVigilant { get; set; }
 
-    public AttackTypes AttackTypes { get; set; } = AttackTypes.Kill;
+    /// <summary>
+    /// -30% Strength. Causes (poison, laudanum, curse, exorcism) do not stack and are not implemented yet.
+    /// </summary>
+    public bool IsWeakened { get; set; }
+
+    /// <summary>
+    /// Only the reactions the player changed; see <see cref="GetCombatReaction"/> for the defaults.
+    /// </summary>
+    public ICollection<CombatReaction> CombatReactions { get; set; } = [];
+
+    /// <summary>
+    /// The Sentry always has vigilance for free.
+    /// </summary>
+    public bool IsEffectivelyVigilant => Role == Roles.Sentry || IsVigilant;
+
+    public CombatReaction GetCombatReaction(Guid opponentId, AttackTypes attackType)
+    {
+        CombatReaction reaction = CombatReactions
+                                      .FirstOrDefault(x => x.OpponentId == opponentId && x.AttackType == attackType)
+                                  ?? CombatReaction.CreateDefault(this, opponentId, attackType);
+
+        return reaction;
+    }
+
+    public void SetCombatReaction(Guid opponentId, AttackTypes attackType, AttackTypes counter,
+        WeaponPolicies weaponPolicy, FakedHopePenalties fakedHopePenalty)
+    {
+        CombatReaction? existing = CombatReactions
+            .FirstOrDefault(x => x.OpponentId == opponentId && x.AttackType == attackType);
+
+        CombatReaction reaction = existing ?? CombatReaction.CreateDefault(this, opponentId, attackType);
+        reaction.Counter = counter;
+        reaction.WeaponPolicy = weaponPolicy;
+        reaction.FakedHopePenalty = fakedHopePenalty;
+
+        if (existing is null)
+        {
+            CombatReactions.Add(reaction);
+        }
+    }
 
     public bool Has<T>() where T : ItemBase
     {
@@ -99,44 +149,6 @@ public class Player : EntityBase
         }
     }
 
-    /// <summary>
-    /// Strength = Toughness + Weapon + Various Modifiers
-    ///  + Weakness caused by Sanity 
-    /// + Stance bonus ( ToTheEnd ) 
-    /// - Stun penalty (attacker using <see cref="AttackTypes.Stun"/>)
-    /// + Kill counter bonus (defender using <see cref="DefensiveCounters.Override"/>)
-    /// </summary>
-    /// <returns></returns>
-    public int CalculateStrength(bool isAttacker, AttackerStances attackerStance)
-    {
-        // TODO: Clarify at what Threshold the sanity weakness applies
-        // initial strength is base toughness. 
-        int strength = this.BaseToughness;
-
-        if (this.Sanity < 50)
-        {
-            // TODO: Clarifiy what is the minimum strength possible
-            strength = Math.Max(1, strength - 1); // -1 replace by constant for sanity decrease
-        }
-
-        if (attackerStance == AttackerStances.ToTheEnd && isAttacker)
-        {
-            strength += CombatConstants.TO_THE_END_STRENGTH_BONUS;
-        }
-
-        if (isAttacker && this.AttackTypes == AttackTypes.Stun)
-        {
-            strength = Math.Max(1, strength - CombatConstants.STUN_STRENGTH_PENALTY);
-        }
-
-        if (!isAttacker && this.DefensiveCounter == DefensiveCounters.Override)
-        {
-            strength += CombatConstants.KILL_COUNTER_STRENGTH_BONUS;
-        }
-
-        return strength;
-    }
-
     public ActionTarget ToTarget()
     {
         ActionTarget actionTarget = new ActionTarget()
@@ -146,22 +158,6 @@ public class Player : EntityBase
         };
 
         return actionTarget;
-    }
-
-    // May add services 
-    public PlayerTempFightStats GetPlayerTempFightStats(bool isAttacker, AttackerStances attackerStance)
-    {
-        PlayerTempFightStats player1Strength =
-            new PlayerTempFightStats(this.CalculateStrength(isAttacker, attackerStance), this.BaseToughness,
-                this.Health,
-                this.BaseToughness, attackerStance)
-            {
-                Player = this,
-                AttackType = this.AttackTypes,
-                DefensiveCounter = this.DefensiveCounter,
-            };
-
-        return player1Strength;
     }
 
     public override string ToString()

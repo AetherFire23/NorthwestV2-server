@@ -5,7 +5,8 @@ using NorthwestV2.Features.Actions.ActDeDebg.Instant;
 using NorthwestV2.Features.Actions.ActDeDebg.Targets;
 using NorthwestV2.Features.Actions.Cooking.CookRation;
 using NorthwestV2.Features.Actions.Core.Domain;
-using NorthwestV2.Features.Actions.General.Combat.ChooseDefensiveCounter;
+using NorthwestV2.Features.Actions.General.Combat.SetCombatReaction;
+using NorthwestV2.Features.Actions.General.Combat.SetVigilance;
 using NorthwestV2.Features.Actions.General.Combat.StartCombat.Domain;
 using NorthwestV2.Features.Actions.General.Movement;
 using NorthwestV2.Features.Actions.Productions.CancelProduction;
@@ -31,6 +32,8 @@ public static class DomainInstaller
         serviceCollection.AddScoped<AllegianceAnnouncer>();
         serviceCollection.AddScoped<GameActionsWithTargetsValidator>();
         serviceCollection.AddScoped<CombatAction>();
+        serviceCollection.AddScoped<CombatSetupFactory>();
+        serviceCollection.AddScoped<CombatResolver>();
         serviceCollection.AddScoped<CombatAftermath>();
         serviceCollection.AddScoped<DebugTargetAction>();
         serviceCollection.AddScoped<DebugInstantAction>();
@@ -56,7 +59,8 @@ public static class DomainInstaller
 
     private static void InstallActionServices(IServiceCollection serviceCollection)
     {
-        serviceCollection.AddScoped<ChooseDefensiveCounter>();
+        serviceCollection.AddScoped<SetCombatReactionAction>();
+        serviceCollection.AddScoped<SetVigilanceAction>();
     }
 
     private static void InstallRoleServices(IServiceCollection services)

@@ -27,6 +27,12 @@ public class ItemBase : EntityBase
     /// </summary>
     public int CarryValue { get; set; }
 
+    /// <summary>
+    /// Secretly carried. A defender reacting with "strongest owned and not concealed" leaves it unused.
+    /// No action sets it yet.
+    /// </summary>
+    public bool IsConcealed { get; set; }
+
     public ItemBase()
     {
     }

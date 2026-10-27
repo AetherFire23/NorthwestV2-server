@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using NorthwestV2.Features.Actions.Cooking.Items;
+using NorthwestV2.Features.Actions.General.Combat.Items;
 using NorthwestV2.Features.Actions.Productions.Core;
 using NorthwestV2.Features.Actions.Productions.Core.Entities;
 using NorthwestV2.Features.Actions.Productions.FishingPole;
@@ -26,6 +27,7 @@ public class NorthwestContext : DbContext, IUnitOfWork
     public DbSet<ItemBase> Items { get; set; }
     public DbSet<GameLog> Logs { get; set; }
     public DbSet<Inventory> Inventories { get; set; }
+    public DbSet<CombatReaction> CombatReactions { get; set; }
 
 
     public NorthwestContext(DbContextOptions<NorthwestContext> options) : base(options)
@@ -47,7 +49,16 @@ public class NorthwestContext : DbContext, IUnitOfWork
             .HasValue<UnfinishedHammer>(nameof(UnfinishedHammer))
             .HasValue<Scrap>(nameof(Scrap))
             .HasValue<Can>(nameof(Can))
-            .HasValue<Ration>(nameof(Ration));
+            .HasValue<Ration>(nameof(Ration))
+            .HasValue<Knife>(nameof(Knife))
+            .HasValue<Sword>(nameof(Sword))
+            .HasValue<Pistol>(nameof(Pistol))
+            .HasValue<Musket>(nameof(Musket));
+
+        modelBuilder.Entity<Player>()
+            .HasMany(x => x.CombatReactions)
+            .WithOne(x => x.Owner)
+            .HasForeignKey(x => x.OwnerId);
 
         modelBuilder.Entity<ProductionItemBase>(x =>
         {

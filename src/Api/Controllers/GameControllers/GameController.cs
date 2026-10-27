@@ -2,6 +2,7 @@
 using Mediator;
 using Microsoft.AspNetCore.Mvc;
 using NorthwestV2.Features.Actions.Core.Domain.Availability.WithTargets;
+using NorthwestV2.UseCases.Combat.Queries;
 using NorthwestV2.UseCases.GameActions.Command.ExecuteAction;
 using NorthwestV2.UseCases.GameActions.Queries.GetActions;
 using NorthwestV2.UseCases.GameLogs.Queries;
@@ -91,7 +92,24 @@ public class GameController : ControllerBase
         return Ok(getMyPlayerResponse);
     }
 
-    // TODO: Change response type to something real. 
+    /// <summary>
+    /// The player's combat reactions against every other player and attack type, defaults included.
+    /// Changed through the SetCombatReaction action.
+    /// </summary>
+    [HttpGet("me/combat-reactions")]
+    public async Task<ActionResult<GetMyCombatReactionsResponse>> GetMyCombatReactions()
+    {
+        UserData userData = this.HttpContext.Session.GetUserData();
+
+        GetMyCombatReactionsResponse response = await _mediator.Send(new GetMyCombatReactionsRequest()
+        {
+            PlayerId = userData.PlayerId.Value
+        });
+
+        return Ok(response);
+    }
+
+    // TODO: Change response type to something real.
     [HttpGet("available-items")]
     public async Task<ActionResult<GetAvailableItemsResponse>> GetAvailableItems()
     {

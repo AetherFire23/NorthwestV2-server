@@ -1,50 +1,61 @@
 # Combat: spec vs code
 
-Audit of `docs/combat.md` (original text) against the code in `src/Core/Features/Actions/General/Combat`, `Player.cs` and the role initializers, followed by what was changed. Status after the change is marked **Fixed**, **Partly** or **Open**.
+Status of `docs/combat.md` (final version) in the code. **Done** is implemented and covered by tests, **Open** is not implemented, usually because the subsystem it depends on does not exist yet.
 
-## What the code already got right
+Code lives in `src/Core/Features/Actions/General/Combat`:
 
-- Role toughness tiers match the spec exactly: Weak 8 (Chaplain, Scholar, Doctor), Tough 15 (Marine, Brute, Sapper), Normal 12 (the other six).
-- Health starts at 100; fights are deterministic rounds with simultaneous Strength application; Toughness at 0 converts to Health loss and resets.
-- Unarmed Strength equals Toughness.
-- To the end gives the attacker only a small boost and never flees; hit-and-run exits before damage when weaker; push hard flees when about to die.
-- Toughness carries across rounds within a fight.
+| Piece | Role |
+|---|---|
+| `StartCombat/Domain/WeaponCatalog` | Weapon table (inside/outside), unarmed = Toughness × 5, specialist bonuses, owned/strongest weapons |
+| `StartCombat/Domain/CombatModifiers` | Health, Hope, faked Hope and stance percentages |
+| `StartCombat/Domain/CombatSetupFactory` | Fixes weapons and modifiers of both fighters before the combat; reads the defender's `CombatReaction` |
+| `StartCombat/Domain/CombatResolver` | Surprise attack, hit-and-run check, closing in, rounds, push hard, end of combat. Decisions are made by playing alternatives ahead on a cloned `CombatState` |
+| `StartCombat/Domain/CombatAftermath` | Private game logs: death, identification (random rolls through `IRandomProvider`), attacker outcome, witness proof |
+| `StartCombat/Domain/CombatAction` | Availability, prompts, writing Health and `PlayerLifeStatus` back onto the players |
+| `SetCombatReaction/`, `SetVigilance/` | The defender's settings, made in advance |
+| `Shared/Entity/CombatReaction` | One stored reaction per (owner, opponent, attack type); missing rows mean the defaults |
 
-## Divergences found
+## Status
 
-| # | Spec | Code before | Status |
-|---|------|-------------|--------|
-| 1 | Only Health damage persists after a fight | `CombatActionApp` discarded the `FightResult`; Health was never written back | **Fixed**: `ApplyEndFightConditions` writes Health and life status to both players |
-| 2 | Down at Health 0 | Loop ended on `attacker <= 0 \|\| defender < 0`, winner chosen with `attacker >= 0`: a defender at exactly 0 survived, an attacker at 0 "won", simultaneous knockout went to the attacker | **Fixed**: down at `<= 0`, winner is whoever still has Health, mutual knockout has no winner |
-| 3 | n/a (bugs) | `FightResult` left both fight stats null on a knockout, `DeadPlayer` returned the survivor | **Fixed** |
-| 4 | Dead vs stunned | No life status existed | **Fixed**: `PlayerLifeStatus` (Alive, Stunned, Dead) on `Player`, with an EF migration (`AddPlayerLifeStatus`) |
-| 5 | Kill vs Stun attack types | `Player.AttackTypes` never read, never settable | **Fixed**: third combat prompt (attack type); Stun is weaker and non-lethal |
-| 6 | Defensive counters | Stored on the player, never used | **Fixed**: Override adds Strength and makes the defender lethal even against a stun |
-| 7 | Hit-and-run avoids identification, push hard flees identified | No notion of identification | **Fixed**: `FightResult.AttackerIdentified` |
-| 8 | Info after combat (death, survivors, witnesses) | `ApplyEndFightConditions` was a `Console.WriteLine`; no game logs | **Fixed**: `CombatAftermath` produces private game logs per the spec rules |
-| 9 | Sanity weakens Strength | Flat -1 below an arbitrary 50 | **Partly**: unchanged and now covered by tests; numbers need a decision |
-| 10 | Hit-and-run "gap too low" / push hard "losing inevitable" | Any deficit / single-blow check | **Open**: kept, documented as assumptions |
-| 11 | Weapons and public/secret modifiers | None | **Open**: no weapon concept exists |
-| 12 | Vigilance / surprise, cultists faking weakness | None (code TODO: "ask what vigilance means") | **Open**: spec itself undefined |
-| 13 | Ghost chat for dead players | None | **Open** |
-| 14 | n/a | `CombatStances` duplicated `AttackerStances`; `ChooseDefensiveCounterApp` injected its dependency twice; `DefensiveCounters` doc was `???` | **Fixed** |
+| Spec section | Status | Notes |
+|---|---|---|
+| 1. Deterministic outcome, same room, uses the defender's reactions | **Done** | The only randomness is identification after an early hit-and-run stop |
+| 1. Chaplain can never attack humans | **Done** | Unfulfilled requirement on the combat action. Inuits do not exist yet |
+| 2. Health 0-100, shown in 20% increments | **Done** | `StatIncrements`; `HealthIncrement` on `OtherPlayerDto` and `GetMyPlayerResponse`, never the exact value |
+| 2. Hope (loyals), known in 20% increments | **Done** | `Player.Sanity` renamed `Hope`; `HopeIncrement` on `GetMyPlayerResponse` only. Death at 0 Hope is **Open** |
+| 2. Hope (acolytes) has no mechanical effect | **Done** | Acolytes never suffer the Hope penalty; they apply a faked one |
+| 2. Vigilance: persistent, secret, Sentry for free | **Done** | `Player.IsVigilant`, `SetVigilance` action, `IsEffectivelyVigilant` |
+| 2. Vigilance costs 1 Hope per tick (+2 rogue gauge for acolytes) | **Open** | No tick system and no rogue gauge yet |
+| 2. Toughness 3 / 4 / 5, 1 Health per Toughness of damage, leftover discarded | **Done** | `ToughnessInitializationConstants`, `Combatant.ReceiveStrike` |
+| 2. Weapon table, specialists, strongest weapon | **Done** | Knife, Sword, Pistol, Musket items; starting loadouts per `docs/conception/items.md` |
+| 2. Inside / outside | **Done** | `RoomExposure`: CrowsNest, MainDeck, ForeCastle, QuarterDeck are outside |
+| 2. Health (melee) and Hope penalties, stance, stun, weakness; additive, can reach 0 | **Done** | Percentages are summed and applied once to the basic damage, clamped at 0; Strength is `decimal` |
+| 2. Causes of weakness (poison, laudanum, curse, exorcism) | **Open** | `Player.IsWeakened` exists, nothing sets it |
+| 2. Explosives are not weapons | **Done** | Not in `WeaponCatalog` |
+| 3. Kill / stun damage, stun always unarmed | **Done** | A stun attack ignores the weapon prompts |
+| 4. Attacker choices: attack type, weapons, faked Hope (acolytes), stance | **Done** | Prompts: target, stance, attack type, ranged weapon (`None` + owned), melee weapon (`Unarmed` + owned), faked Hope (acolytes only) |
+| 4. Push hard, to the end, hit-and-run | **Done** | Push hard and hit-and-run look ahead by playing the rest of the combat |
+| 5. Combat reactions per opponent and attack type, weapon policy, faked Hope | **Done** | `SetCombatReaction` action, `GET game/me/combat-reactions` |
+| 5. Concealed weapons | **Partly** | `ItemBase.IsConcealed` is honoured by the "not concealed" policy; no action conceals an item yet |
+| 5. Default settings | **Done** | `CombatReaction.CreateDefault` |
+| 6. Surprise attack, doubled in melee | **Done** | |
+| 6. Closing in, "better result", free strike | **Done** | Attacker compares closing in with ranged rounds, then the defender does; ties stay at range |
+| 6. Rounds, 0-Strength break-off, no free strike on break-off | **Done** | |
+| 7. Leftover discarded, 75% of stun Health loss given back, rounded up | **Done** | Status is decided before the refund: a stunned fighter stays `Stunned` |
+| 8. Hit-and-run identification 20% / 60%, defender knows he was targeted | **Done** | The roll depends on whether the defender was surprised |
+| 8. Defender identifies the attacker after a combat, unless killed | **Done** | |
+| 8. Dead get only the fact of death; witnesses get proof and weapons | **Done** | Witnesses are the conscious players in the current room |
+| 8. Witnesses "in the same room according to Meta" (presence for the whole tick) | **Open** | No ticks: presence is the current room |
 
-## Numbers the implementation chose (see `CombatConstants`)
+## Not in the spec, decided during implementation
 
-Stun -1 Strength (minimum 1), Override +1 Strength, To the end +1 Strength, Health lost on a Toughness break equals the opponent's Strength. All are listed as **[assumed]** in `docs/combat.md`.
+- Dead and stunned players can neither attack nor be targeted. How a stun ends is **Open**.
+- The attacker gets a private log about how it ended (defender dead, knocked out, or the attacker broke off).
+- A defender picks bare hands over a weapon of equal damage, so he does not reveal a weapon for nothing.
+- `Player.AttackTypes` and `Player.DefensiveCounter` were removed: the attack type is a per-attack choice and reactions are per opponent.
 
-## Tests added (all `Given_When_Then`, one assert each)
+## Tests
 
-In `tests/Unit/Features/Actions/General/Combat`:
+`tests/Unit/Features/Actions/General/Combat`: `WeaponCatalogTest`, `CombatantTest`, `CombatSetupFactoryTest`, `CombatResolverTest` (each scenario worked out by hand in its comment), `CombatActionTest`, `CombatAftermathTest`, `SetCombatReactionActionTest`, `CombatStatsTest` (toughness per role, starting weapons). `tests/Unit/Features/StatIncrementsTest`.
 
-- `CombatResolutionTest`: rounds, exact-zero death, simultaneous knockout, persistence of Health and status, Toughness carry-over.
-- `CombatAttackTypesTest`: Stun and Kill strength, counters, who dies vs who is stunned.
-- `CombatStancesTest`: hit-and-run, push hard and to the end, including identification.
-- `CombatStatsTest`: toughness per role (all twelve roles), unarmed Strength, sanity.
-- `CombatAftermathTest`: death notices, health reports, witness proof privacy.
-
-In `tests/Integration/.../CombatActionAppTest`: attack type prompt, Health persisted after an attack, a Kill fight leaves a dead combatant, a Stun fight leaves nobody dead, the defender receives a log.
-
-## Behaviour change to be aware of
-
-The combat action now has a **third prompt (attack type)** after the player and stance prompts. Clients must send three target screens. The frontend client needs regenerating with orval.
+`tests/Integration/Features/Actions/General/Combat`: `CombatActionAppTest`, `SetCombatReactionActionAppTest` (reaction matrix, stored reaction used in a fight, vigilance).

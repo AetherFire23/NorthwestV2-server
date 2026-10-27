@@ -17,4 +17,8 @@ public enum ItemTypes
 
     Can,
     Ration,
+
+    Knife,
+    Pistol,
+    Musket,
 }

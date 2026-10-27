@@ -1,54 +1,33 @@
-﻿using NorthwestV2.Features.Shared.Entity;
+﻿using NorthwestV2.Features.Actions.Core.Domain;
+using NorthwestV2.Features.Shared.Entity;
 
 namespace NorthwestV2.Features.Actions.General.Combat.StartCombat.Domain;
 
+/// <summary>
+/// How a combat ended. <see cref="Combatant.Health"/> is the final Health, stun refund included.
+/// </summary>
 public class FightResult
 {
-    public FightExitType FightExitType { get; set; } = FightExitType.ExittedBecauseOfPlayerDeath;
+    public required Combatant Attacker { get; init; }
+    public required Combatant Defender { get; init; }
+    public required AttackerStances Stance { get; init; }
+    public required FightExitType ExitType { get; init; }
+    public required bool WasDefenderSurprised { get; init; }
 
-    public PlayerTempFightStats AttackerFightStats { get; set; }
-    public PlayerTempFightStats DefenderFightStats { get; set; }
+    public required PlayerLifeStatus AttackerStatus { get; init; }
+    public required PlayerLifeStatus DefenderStatus { get; init; }
 
-    public PlayerLifeStatus AttackerStatus { get; set; } = PlayerLifeStatus.Alive;
-    public PlayerLifeStatus DefenderStatus { get; set; } = PlayerLifeStatus.Alive;
-
-    /// <summary>
-    /// False when the attacker got away unseen (hit-and-run).
-    /// </summary>
-    public bool AttackerIdentified { get; set; } = true;
-
-    /*
-     * There may be no stricit *winner* depending on the exit type. Only Exitted Becausae of playr deaht causes a winner / loser.
-     */
-    /// <summary>
-    /// The combatant still standing (Health above 0) when the fight ended by a knockout.
-    /// Null when both went down at the same time, and for fights that ended by fleeing.
-    /// </summary>
-    public PlayerTempFightStats? SurvivingPlayer { get; set; }
+    public bool IsStoppedByHitAndRun => ExitType == FightExitType.StoppedByHitAndRun;
 
     /// <summary>
-    /// The combatant who ended up <see cref="PlayerLifeStatus.Dead"/>. Null when nobody died or both did.
+    /// The fighter still up after a knockout. Null when the combat ended by the attacker leaving.
     /// </summary>
-    public PlayerTempFightStats? DeadPlayer
-    {
-        get
-        {
-            bool attackerDead = AttackerStatus == PlayerLifeStatus.Dead;
-            bool defenderDead = DefenderStatus == PlayerLifeStatus.Dead;
-
-            if (attackerDead == defenderDead)
-            {
-                return null;
-            }
-
-            return attackerDead ? AttackerFightStats : DefenderFightStats;
-        }
-    }
+    public Combatant? Winner => ExitType != FightExitType.Knockout
+        ? null
+        : AttackerStatus != PlayerLifeStatus.Alive ? Defender : Attacker;
 
     public bool IsWinner(Player player)
     {
-        bool isWinner = SurvivingPlayer is not null && Equals(this.SurvivingPlayer.Player, player);
-
-        return isWinner;
+        return Winner is not null && Equals(Winner.Player, player);
     }
 }

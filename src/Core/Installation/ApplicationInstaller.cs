@@ -3,7 +3,8 @@ using NorthwestV2.Features.Actions.ActDeDebg.Instant;
 using NorthwestV2.Features.Actions.ActDeDebg.Targets;
 using NorthwestV2.Features.Actions.Cooking.CookRation;
 using NorthwestV2.Features.Actions.Core.Application;
-using NorthwestV2.Features.Actions.General.Combat.ChooseDefensiveCounter;
+using NorthwestV2.Features.Actions.General.Combat.SetCombatReaction;
+using NorthwestV2.Features.Actions.General.Combat.SetVigilance;
 using NorthwestV2.Features.Actions.General.Combat.StartCombat;
 using NorthwestV2.Features.Actions.General.Movement;
 using NorthwestV2.Features.Actions.Productions.CancelProduction;
@@ -23,7 +24,8 @@ public class ApplicationInstaller
     {
         serviceCollection.AddSingleton(ActionCatalog.Scan(typeof(ActionCatalog).Assembly));
         serviceCollection.AddScoped<ActionServices>();
-        serviceCollection.AddScoped<ChooseDefensiveCounterApp>();
+        serviceCollection.AddScoped<SetCombatReactionActionApp>();
+        serviceCollection.AddScoped<SetVigilanceActionApp>();
         serviceCollection.AddScoped<CombatActionApp>();
         serviceCollection.AddScoped<DebugInstantActionApp>();
         serviceCollection.AddScoped<DebugTargetsActionApp>();
